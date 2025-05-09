@@ -85,9 +85,9 @@ const mockReviews: Record<string, Review[]> = {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const businessId = params.id;
+  const businessId = context.params.id;
   
   // Get reviews for the business
   const reviews = mockReviews[businessId] || [];
