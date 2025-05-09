@@ -1,7 +1,7 @@
 "use client";
 
-import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { useState, useRef, useEffect } from "react";
+import { useLanguage, Language } from "@/contexts/LanguageContext";
 
 export default function LanguageSelector() {
   const { language, setLanguage, t } = useLanguage();
@@ -27,22 +27,25 @@ export default function LanguageSelector() {
     { code: "nl", label: t("language.dutch"), flag: "🇳🇱" },
   ];
 
-  const currentLanguage = languages.find((lang) => lang.code === language);
+  // Find current language data
+  const currentLanguage = languages.find(lang => lang.code === language) || languages[0];
 
   return (
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm transition-colors hover:bg-gray-50"
+        className="flex items-center space-x-2 rounded-full bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <span className="text-base">{currentLanguage?.flag}</span>
-        <span className="hidden sm:inline">{currentLanguage?.label}</span>
+        <span className="text-lg">{currentLanguage.flag}</span>
+        <span className="hidden md:inline">{currentLanguage.label}</span>
         <svg
-          className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className="h-4 w-4 text-gray-500"
+          xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
+          aria-hidden="true"
         >
           <path
             fillRule="evenodd"
@@ -53,7 +56,7 @@ export default function LanguageSelector() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-40 rounded-md border border-gray-200 bg-white py-1 shadow-lg">
+        <div className="absolute right-0 mt-2 w-48 rounded-md border border-gray-100 bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
           {languages.map((lang) => (
             <button
               key={lang.code}
@@ -61,12 +64,17 @@ export default function LanguageSelector() {
                 setLanguage(lang.code);
                 setIsOpen(false);
               }}
-              className={`flex w-full items-center px-4 py-2 text-sm hover:bg-gray-100 ${
-                language === lang.code ? "bg-gray-50 font-medium text-blue-600" : "text-gray-700"
+              className={`flex w-full items-center px-4 py-3 text-sm hover:bg-gray-50 transition-colors ${
+                language === lang.code ? "bg-blue-50 font-medium text-blue-600" : "text-gray-700"
               }`}
             >
-              <span className="mr-2 text-base">{lang.flag}</span>
-              {lang.label}
+              <span className="mr-3 text-xl">{lang.flag}</span>
+              <span className="flex-1 text-left">{lang.label}</span>
+              {language === lang.code && (
+                <svg className="h-4 w-4 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              )}
             </button>
           ))}
         </div>
