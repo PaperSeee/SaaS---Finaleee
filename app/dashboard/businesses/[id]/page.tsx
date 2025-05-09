@@ -1,14 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import ReviewCard from "@/components/businesses/ReviewCard";
 import { Review, Platform } from "@/lib/types";
 import ReviewFilters from "@/components/businesses/ReviewFilters";
 
 export default function BusinessDetails({ params }: { params: { id: string } }) {
+  // Unwrap params with React.use() to access properties safely
+  const unwrappedParams = React.use(params);
+  const businessId = unwrappedParams.id;
+  
   const [business, setBusiness] = useState({
-    id: params.id,
+    id: businessId,
     name: "Loading...",
     reviewCount: 0,
     averageRating: 0,
@@ -16,6 +20,15 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
   
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  const [replyModalOpen, setReplyModalOpen] = useState(false);
+  const [currentReviewId, setCurrentReviewId] = useState<string>("");
+  const [currentReviewPlatform, setCurrentReviewPlatform] = useState<Platform | "">("");
+  const [replyText, setReplyText] = useState("");
+  const [replyStatus, setReplyStatus] = useState<{
+    loading: boolean;
+    error?: string;
+    success?: string;
+  }>({ loading: false });
   const [filters, setFilters] = useState({
     platform: "all" as Platform | "all",
     rating: 0,
@@ -24,11 +37,11 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
   });
 
   useEffect(() => {
-    // In a real app, fetch data from API
+    // Using businessId instead of params.id
     setTimeout(() => {
       setBusiness({
-        id: params.id,
-        name: params.id === "1" ? "Coffee Shop" : "Business " + params.id,
+        id: businessId,
+        name: businessId === "1" ? "Coffee Shop" : "Business " + businessId,
         reviewCount: 12,
         averageRating: 4.2,
       });
@@ -41,7 +54,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
           rating: 5,
           date: "2023-12-15",
           platform: "google",
-          businessId: params.id,
+          businessId: businessId,
         },
         {
           id: "r2",
@@ -50,7 +63,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
           rating: 4,
           date: "2023-11-30",
           platform: "facebook",
-          businessId: params.id,
+          businessId: businessId,
         },
         {
           id: "r3",
@@ -59,13 +72,13 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
           rating: 3,
           date: "2023-11-10",
           platform: "google",
-          businessId: params.id,
+          businessId: businessId,
         },
       ]);
       
       setLoading(false);
     }, 1000);
-  }, [params.id]);
+  }, [businessId]);
 
   // Filter reviews based on selected filters
   const filteredReviews = reviews.filter((review) => {
@@ -88,9 +101,69 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
     return true;
   });
 
-  const handleReply = (reviewId: string) => {
-    alert(`Opening reply interface for review ${reviewId}`);
-    // In a real app, this would open a modal or navigate to a reply page
+  const handleReply = (reviewId: string, platform: Platform) => {
+    setCurrentReviewId(reviewId);
+    setCurrentReviewPlatform(platform);
+    setReplyText("");
+    setReplyStatus({ loading: false });
+    setReplyModalOpen(true);
+  };
+
+  const closeReplyModal = () => {
+    setReplyModalOpen(false);
+    setCurrentReviewId("");
+    setCurrentReviewPlatform("");
+    setReplyText("");
+  };
+
+  const submitReply = async () => {
+    if (!replyText.trim()) {
+      return;
+    }
+
+    setReplyStatus({ loading: true });
+
+    try {
+      const response = await fetch('/api/reviews/reply', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          reviewId: currentReviewId,
+          platform: currentReviewPlatform,
+          message: replyText,
+          businessId: businessId
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit reply');
+      }
+
+      if (data.fallbackUrl) {
+        // If we received a fallback URL, show it to the user
+        setReplyStatus({ 
+          loading: false, 
+          success: 'API connection not available. Please use the direct link below to reply manually.',
+          error: `<a href="${data.fallbackUrl}" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline">Reply on ${currentReviewPlatform}</a>`
+        });
+      } else {
+        setReplyStatus({ loading: false, success: 'Reply submitted successfully!' });
+        
+        // Close the modal after a short delay
+        setTimeout(() => {
+          closeReplyModal();
+        }, 2000);
+      }
+    } catch (err) {
+      setReplyStatus({ 
+        loading: false, 
+        error: err instanceof Error ? err.message : 'An unexpected error occurred'
+      });
+    }
   };
 
   return (
@@ -132,7 +205,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
                   <ReviewCard
                     key={review.id}
                     review={review}
-                    onReply={() => handleReply(review.id)}
+                    onReply={() => handleReply(review.id, review.platform)}
                   />
                 ))
               )}
@@ -140,6 +213,72 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
           </>
         )}
       </div>
+
+      {/* Reply Modal */}
+      {replyModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div 
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+              onClick={closeReplyModal}
+              aria-hidden="true"
+            ></div>
+
+            <span className="hidden sm:inline-block sm:h-screen sm:align-middle" aria-hidden="true">&#8203;</span>
+
+            <div className="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mt-3 w-full text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <h3 className="text-lg font-medium leading-6 text-gray-900">
+                      Reply to Review
+                    </h3>
+                    <div className="mt-2">
+                      <textarea
+                        className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                        rows={4}
+                        placeholder="Type your reply here..."
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                      ></textarea>
+                    </div>
+
+                    {replyStatus.error && (
+                      <div 
+                        className="mt-2 text-sm text-red-600" 
+                        dangerouslySetInnerHTML={{ __html: replyStatus.error }}
+                      ></div>
+                    )}
+                    
+                    {replyStatus.success && (
+                      <div className="mt-2 text-sm text-green-600">
+                        {replyStatus.success}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                <button
+                  type="button"
+                  className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                  onClick={submitReply}
+                  disabled={replyStatus.loading || !replyText.trim()}
+                >
+                  {replyStatus.loading ? 'Submitting...' : 'Submit Reply'}
+                </button>
+                <button
+                  type="button"
+                  className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+                  onClick={closeReplyModal}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </DashboardLayout>
   );
 }

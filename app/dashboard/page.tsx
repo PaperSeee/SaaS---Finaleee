@@ -41,18 +41,39 @@ export default function Dashboard() {
         setCompanies(data || []);
       } catch (err: any) {
         console.error("Erreur lors de la récupération des entreprises:", err);
+        
+        // Enhanced debugging information
+        console.debug("Error type:", typeof err);
+        console.debug("Error is object:", err instanceof Object);
+        console.debug("Error keys:", err ? Object.keys(err) : "null/undefined");
+        
         // Improved error handling for empty objects or missing message property
         let errorMessage = "Une erreur s'est produite lors de la récupération de vos entreprises";
         
-        if (err) {
-          if (err.message) {
-            errorMessage = err.message;
-          } else if (Object.keys(err).length > 0) {
-            // If there's content in the error but no message property
-            errorMessage = `Erreur: ${JSON.stringify(err)}`;
-          } else if (typeof err === 'string') {
-            errorMessage = err;
+        try {
+          if (err) {
+            if (typeof err === 'string') {
+              errorMessage = err;
+            } else if (err instanceof Object) {
+              if (err.message) {
+                errorMessage = err.message;
+              } else if (Object.keys(err).length > 0) {
+                // If there's content in the error but no message property
+                errorMessage = `Erreur: ${JSON.stringify(err)}`;
+              } else {
+                // Empty object case which is causing our current issue
+                errorMessage = "Erreur de connexion à la base de données (objet d'erreur vide)";
+                console.warn("Empty error object received from Supabase");
+              }
+            } else {
+              // Non-object, non-string error
+              errorMessage = `Erreur inattendue: ${String(err)}`;
+            }
           }
+        } catch (parseErr) {
+          // Catch any errors during error handling itself
+          console.error("Erreur lors de l'analyse de l'erreur:", parseErr);
+          errorMessage = "Erreur système inattendue";
         }
         
         setError(errorMessage);
