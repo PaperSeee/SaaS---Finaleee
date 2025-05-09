@@ -1,0 +1,56 @@
+{
+  "header.signIn": "Inloggen",
+  "header.getStarted": "Beginnen",
+  "header.dashboard": "Dashboard",
+  
+  "hero.title.part1": "Beheer ",
+  "hero.title.highlight": "klantbeoordelingen",
+  "hero.title.part2": " op één plek",
+  "hero.subtitle": "Centraliseer feedback van Google, Facebook en meer. Reageer op beoordelingen en verbeter uw online reputatie met Kritiqo.",
+  "hero.cta.getStarted": "Gratis beginnen",
+  "hero.cta.learnMore": "Meer informatie",
+  
+  "features.title": "Belangrijkste functies",
+  "features.subtitle": "Alles wat u nodig heeft om uw online beoordelingen efficiënt te beheren",
+  "features.aggregation.title": "Beoordelingsaggregatie",
+  "features.aggregation.description": "Verzamel automatisch beoordelingen van meerdere platforms in één uniform dashboard, waardoor u uren handmatig werk bespaart.",
+  "features.response.title": "Snelle reactie",
+  "features.response.description": "Reageer op al uw beoordelingen vanuit één interface, bespaar tijd en behoud consistentie op alle platforms.",
+  "features.analytics.title": "Analyses en inzichten",
+  "features.analytics.description": "Krijg waardevolle inzichten uit uw beoordelingen met gedetailleerde analyses en trendrapportages om uw bedrijfsstrategie te verbeteren.",
+  
+  "how.title": "Hoe het werkt",
+  "how.subtitle": "Begin met Kritiqo in drie eenvoudige stappen",
+  "how.step1.title": "Maak een account aan",
+  "how.step1.description": "Registreer gratis en stel uw bedrijfsprofiel in minder dan een minuut in.",
+  "how.step2.title": "Verbind uw platforms",
+  "how.step2.description": "Koppel uw Google Business- en Facebook-pagina's om automatisch beoordelingen te importeren.",
+  "how.step3.title": "Beheer beoordelingen",
+  "how.step3.description": "Bekijk, reageer op en analyseer al uw beoordelingen vanuit één dashboard.",
+  "how.cta": "Nu beginnen",
+  
+  "testimonials.title": "Wat onze klanten zeggen",
+  "testimonials.subtitle": "Geloof ons niet op ons woord - hoor van bedrijven die hun beoordelingsbeheer hebben verbeterd",
+  "testimonials.person1.name": "Marie Dubois",
+  "testimonials.person1.role": "Restauranteigenaar",
+  "testimonials.person1.quote": "Kritiqo heeft onze manier van omgaan met klantbeoordelingen getransformeerd. We hebben onze reactietijd verbeterd en onze algemene beoordeling is met een halve ster gestegen!",
+  "testimonials.person2.name": "Thomas Martin",
+  "testimonials.person2.role": "Hotelmanager",
+  "testimonials.person2.quote": "De analysetools hebben ons ongelooflijke inzichten gegeven in wat het belangrijkst is voor onze gasten. We hebben gerichte verbeteringen aangebracht en directe resultaten gezien.",
+  "testimonials.person3.name": "Sophie Bernard",
+  "testimonials.person3.role": "Winkeleigenaar",
+  "testimonials.person3.quote": "Voor Kritiqo misten we beoordelingen op verschillende platforms. Nu vangen we alles op en kunnen we snel reageren, wat onze klanten laat zien dat we om hen geven.",
+  
+  "cta.title": "Klaar om uw beoordelingsbeheer te transformeren?",
+  "cta.subtitle": "Begin vandaag gratis — geen creditcard vereist.",
+  "cta.button": "Gratis beginnen",
+  
+  "footer.terms": "Voorwaarden",
+  "footer.privacy": "Privacy",
+  "footer.contact": "Contact",
+  "footer.copyright": "© {year} Kritiqo. Alle rechten voorbehouden.",
+  
+  "language.english": "Engels",
+  "language.french": "Frans",
+  "language.dutch": "Nederlands"
+}

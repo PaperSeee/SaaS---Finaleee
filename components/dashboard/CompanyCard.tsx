@@ -24,10 +24,7 @@ export default function CompanyCard({ company }: CompanyCardProps) {
   const averageRating = company.average_rating || 0;
 
   return (
-    <Link
-      href={`/dashboard/businesses/${company.id}`}
-      className="block rounded-lg border bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
-    >
+    <div className="block rounded-lg border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-center">
         {company.logo_url ? (
           <img 
@@ -67,6 +64,21 @@ export default function CompanyCard({ company }: CompanyCardProps) {
           </div>
         </div>
       </div>
-    </Link>
+      
+      <div className="mt-4 flex space-x-2">
+        <Link
+          href={`/dashboard/businesses/${company.id}`}
+          className="flex-1 rounded-md bg-gray-100 px-3 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-200"
+        >
+          Détails
+        </Link>
+        <Link
+          href={`/dashboard/businesses/${company.id}/reviews`}
+          className="flex-1 rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-700"
+        >
+          Voir les avis
+        </Link>
+      </div>
+    </div>
   );
 }

@@ -1,0 +1,56 @@
+{
+  "header.signIn": "Se connecter",
+  "header.getStarted": "Démarrer",
+  "header.dashboard": "Tableau de bord",
+  
+  "hero.title.part1": "Gérez les ",
+  "hero.title.highlight": "avis clients",
+  "hero.title.part2": " en un seul endroit",
+  "hero.subtitle": "Centralisez les retours de Google, Facebook et plus encore. Répondez aux avis et améliorez votre réputation en ligne avec Kritiqo.",
+  "hero.cta.getStarted": "Commencer gratuitement",
+  "hero.cta.learnMore": "En savoir plus",
+  
+  "features.title": "Fonctionnalités clés",
+  "features.subtitle": "Tout ce dont vous avez besoin pour gérer efficacement vos avis en ligne",
+  "features.aggregation.title": "Agrégation d'avis",
+  "features.aggregation.description": "Collectez automatiquement les avis de plusieurs plateformes dans un tableau de bord unifié, vous faisant gagner des heures de travail manuel.",
+  "features.response.title": "Réponse rapide",
+  "features.response.description": "Répondez à tous vos avis depuis une seule interface, gagnant du temps et maintenant la cohérence sur toutes les plateformes.",
+  "features.analytics.title": "Analyses et insights",
+  "features.analytics.description": "Obtenez des insights précieux de vos avis avec des analyses détaillées et des rapports de tendances pour améliorer votre stratégie d'entreprise.",
+  
+  "how.title": "Comment ça marche",
+  "how.subtitle": "Démarrez avec Kritiqo en trois étapes simples",
+  "how.step1.title": "Créez un compte",
+  "how.step1.description": "Inscrivez-vous gratuitement et configurez votre profil d'entreprise en moins d'une minute.",
+  "how.step2.title": "Connectez vos plateformes",
+  "how.step2.description": "Liez vos pages Google Business et Facebook pour importer automatiquement les avis.",
+  "how.step3.title": "Gérez les avis",
+  "how.step3.description": "Visualisez, répondez et analysez tous vos avis depuis un seul tableau de bord.",
+  "how.cta": "Commencer maintenant",
+  
+  "testimonials.title": "Ce que disent nos clients",
+  "testimonials.subtitle": "Ne nous croyez pas sur parole - écoutez les entreprises qui ont amélioré leur gestion des avis",
+  "testimonials.person1.name": "Marie Dubois",
+  "testimonials.person1.role": "Propriétaire de restaurant",
+  "testimonials.person1.quote": "Kritiqo a transformé notre façon de gérer les avis clients. Nous avons amélioré notre temps de réponse et notre note globale a augmenté d'une demi-étoile !",
+  "testimonials.person2.name": "Thomas Martin",
+  "testimonials.person2.role": "Directeur d'hôtel",
+  "testimonials.person2.quote": "Les outils d'analyse nous ont donné des insights incroyables sur ce qui compte le plus pour nos clients. Nous avons apporté des améliorations ciblées et vu des résultats directs.",
+  "testimonials.person3.name": "Sophie Bernard",
+  "testimonials.person3.role": "Propriétaire de magasin",
+  "testimonials.person3.quote": "Avant Kritiqo, nous manquions des avis sur différentes plateformes. Maintenant, nous capturons tout et pouvons répondre rapidement, montrant à nos clients que nous nous soucions d'eux.",
+  
+  "cta.title": "Prêt à transformer votre gestion des avis ?",
+  "cta.subtitle": "Commencez gratuitement aujourd'hui — aucune carte de crédit requise.",
+  "cta.button": "Démarrer gratuitement",
+  
+  "footer.terms": "Conditions",
+  "footer.privacy": "Confidentialité",
+  "footer.contact": "Contact",
+  "footer.copyright": "© {year} Kritiqo. Tous droits réservés.",
+  
+  "language.english": "Anglais",
+  "language.french": "Français",
+  "language.dutch": "Néerlandais"
+}

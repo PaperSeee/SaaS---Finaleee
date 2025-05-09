@@ -23,6 +23,10 @@ export interface Review {
     content: string;
     date: string;
   };
+  // Nouveaux champs pour Google Reviews
+  profilePhoto?: string;
+  language?: string;
+  relativeTimeDescription?: string;
 }
 
 // User Types

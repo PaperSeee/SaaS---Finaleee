@@ -1,0 +1,56 @@
+{
+  "header.signIn": "Sign In",
+  "header.getStarted": "Get Started",
+  "header.dashboard": "Dashboard",
+  
+  "hero.title.part1": "Manage ",
+  "hero.title.highlight": "customer reviews",
+  "hero.title.part2": " all in one place",
+  "hero.subtitle": "Centralize feedback from Google, Facebook, and more. Respond to reviews and improve your online reputation with Kritiqo.",
+  "hero.cta.getStarted": "Get Started For Free",
+  "hero.cta.learnMore": "Learn More",
+  
+  "features.title": "Key Features",
+  "features.subtitle": "Everything you need to manage your online reviews efficiently",
+  "features.aggregation.title": "Review Aggregation",
+  "features.aggregation.description": "Automatically collect reviews from multiple platforms in a unified dashboard, saving you hours of manual work.",
+  "features.response.title": "Quick Response",
+  "features.response.description": "Respond to all your reviews from a single interface, saving time and maintaining consistency across all platforms.",
+  "features.analytics.title": "Analytics & Insights",
+  "features.analytics.description": "Gain valuable insights from your reviews with detailed analytics and trend reports to improve your business strategy.",
+  
+  "how.title": "How It Works",
+  "how.subtitle": "Get started with Kritiqo in three simple steps",
+  "how.step1.title": "Create an account",
+  "how.step1.description": "Sign up for free and set up your business profile in less than a minute.",
+  "how.step2.title": "Connect your platforms",
+  "how.step2.description": "Link your Google Business and Facebook pages to automatically import reviews.",
+  "how.step3.title": "Manage reviews",
+  "how.step3.description": "View, respond to, and analyze all your reviews from a single dashboard.",
+  "how.cta": "Get Started Now",
+  
+  "testimonials.title": "What Our Customers Say",
+  "testimonials.subtitle": "Don't take our word for it - hear from businesses who have improved their review management",
+  "testimonials.person1.name": "Marie Dubois",
+  "testimonials.person1.role": "Restaurant Owner",
+  "testimonials.person1.quote": "Kritiqo has transformed how we handle customer reviews. We've improved our response time and our overall rating has increased by half a star!",
+  "testimonials.person2.name": "Thomas Martin",
+  "testimonials.person2.role": "Hotel Manager",
+  "testimonials.person2.quote": "The analytics tools have given us incredible insights into what our guests care about most. We've made targeted improvements and seen direct results.",
+  "testimonials.person3.name": "Sophie Bernard",
+  "testimonials.person3.role": "Retail Store Owner",
+  "testimonials.person3.quote": "Before Kritiqo, we were missing reviews across different platforms. Now we catch everything and can respond promptly, showing our customers we care.",
+  
+  "cta.title": "Ready to transform your review management?",
+  "cta.subtitle": "Start for free today — no credit card required.",
+  "cta.button": "Get Started Free",
+  
+  "footer.terms": "Terms",
+  "footer.privacy": "Privacy",
+  "footer.contact": "Contact",
+  "footer.copyright": "© {year} Kritiqo. All rights reserved.",
+  
+  "language.english": "English",
+  "language.french": "French",
+  "language.dutch": "Dutch"
+}
