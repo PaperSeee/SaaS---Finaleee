@@ -41,7 +41,21 @@ export default function Dashboard() {
         setCompanies(data || []);
       } catch (err: any) {
         console.error("Erreur lors de la récupération des entreprises:", err);
-        setError(err.message || "Une erreur s'est produite lors de la récupération de vos entreprises");
+        // Improved error handling for empty objects or missing message property
+        let errorMessage = "Une erreur s'est produite lors de la récupération de vos entreprises";
+        
+        if (err) {
+          if (err.message) {
+            errorMessage = err.message;
+          } else if (Object.keys(err).length > 0) {
+            // If there's content in the error but no message property
+            errorMessage = `Erreur: ${JSON.stringify(err)}`;
+          } else if (typeof err === 'string') {
+            errorMessage = err;
+          }
+        }
+        
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
