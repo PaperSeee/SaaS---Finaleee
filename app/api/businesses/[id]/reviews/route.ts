@@ -74,9 +74,9 @@ async function getBusinessPlatformIds(businessId: string) {
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
-  const businessId = context.params.id;
+  const businessId = params.id;
   
   try {
     // Récupérer les identifiants des plateformes pour cette entreprise
