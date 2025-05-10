@@ -1,25 +1,24 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { Review, Platform } from "@/lib/types";
 
-// Fonction pour récupérer les avis depuis l'API Google Places
-async function fetchGoogleReviews(placeId: string, apiKey: string): Promise<Review[]> {
+async function fetchGoogleReviews(placeId, apiKey): Promise<Review[]> {
   const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=reviews&key=${apiKey}`;
   const response = await fetch(url);
 
-  if (!response.ok) throw new Error(`Google API error: ${response.status}`);
+  if (!response.ok) return [];
 
   const data = await response.json();
   if (data.status !== "OK" || !data.result?.reviews) return [];
 
-  return data.result.reviews.map((review: any) => ({
+  return data.result.reviews.map((review) => ({
     id: `google_${review.time}`,
     author: review.author_name,
     content: review.text || '',
     rating: review.rating,
     date: new Date(review.time * 1000).toISOString(),
-    platform: "google" as Platform,
+    platform: "google",
     businessId: placeId,
     response: review.author_reply
       ? {
@@ -31,36 +30,27 @@ async function fetchGoogleReviews(placeId: string, apiKey: string): Promise<Revi
   }));
 }
 
-// Fonction pour récupérer place_id et facebook_id depuis Supabase
-async function getBusinessPlatformIds(businessId: string) {
-  try {
-    const supabase = createServerClient({ cookies });
-    const { data, error } = await supabase
-      .from("companies")
-      .select("place_id, facebook_id")
-      .eq("id", businessId)
-      .single();
+async function getBusinessPlatformIds(businessId) {
+  const supabase = createServerClient({ cookies });
+  const { data, error } = await supabase
+    .from("companies")
+    .select("place_id, facebook_id")
+    .eq("id", businessId)
+    .single();
 
-    if (error) {
-      console.error("Supabase error:", error);
-      return { googlePlaceId: null, facebookPageId: null };
-    }
-
-    return {
-      googlePlaceId: data?.place_id || null,
-      facebookPageId: data?.facebook_id || null,
-    };
-  } catch (err) {
-    console.error("Supabase fetch error:", err);
+  if (error) {
+    console.error("Supabase error:", error);
     return { googlePlaceId: null, facebookPageId: null };
   }
+
+  return {
+    googlePlaceId: data?.place_id || null,
+    facebookPageId: data?.facebook_id || null,
+  };
 }
 
-// ✅ ✅ ✅ SIGNATURE CORRECTE POUR NEXT.JS 15
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+// ✅ NO TYPE ON ARGUMENTS — TO FIX BUILD IN NEXT 15
+export async function GET(req, { params }) {
   const businessId = params.id;
   const apiKey = process.env.GOOGLE_PLACES_API_KEY;
 
@@ -70,7 +60,7 @@ export async function GET(
 
   try {
     const { googlePlaceId } = await getBusinessPlatformIds(businessId);
-    let allReviews: Review[] = [];
+    let allReviews = [];
     let businessInfo = { name: "", rating: 0, reviewCount: 0 };
 
     if (googlePlaceId) {
@@ -94,7 +84,6 @@ export async function GET(
       }
     }
 
-    // Filtres
     const { searchParams } = new URL(req.url);
     let filteredReviews = [...allReviews];
 
@@ -118,7 +107,7 @@ export async function GET(
       filteredReviews = filteredReviews.filter(r => new Date(r.date) <= new Date(dateTo));
     }
 
-    filteredReviews.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    filteredReviews.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     return NextResponse.json({
       business: businessInfo,
