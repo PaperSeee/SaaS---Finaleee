@@ -1,50 +1,39 @@
 import { useState } from "react";
 import { Platform } from "@/lib/types";
 
-interface FiltersState {
-  platform: Platform | "all";
-  rating: number;
-  dateFrom: string;
-  dateTo: string;
-}
-
 interface ReviewFiltersProps {
-  filters: FiltersState;
-  setFilters: (filters: FiltersState) => void;
+  filters: {
+    platform: Platform | "all";
+    rating: number;
+    dateFrom: string;
+    dateTo: string;
+  };
+  setFilters: React.Dispatch<
+    React.SetStateAction<{
+      platform: Platform | "all";
+      rating: number;
+      dateFrom: string;
+      dateTo: string;
+    }>
+  >;
 }
 
 export default function ReviewFilters({ filters, setFilters }: ReviewFiltersProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const handlePlatformChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilters({
-      ...filters,
-      platform: e.target.value as Platform | "all",
-    });
+  // Update filter values
+  const handleFilterChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({
+      ...prev,
+      [name]: name === "rating" ? parseInt(value) || 0 : value,
+    }));
   };
 
-  const handleRatingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilters({
-      ...filters,
-      rating: parseInt(e.target.value),
-    });
-  };
-
-  const handleDateFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters({
-      ...filters,
-      dateFrom: e.target.value,
-    });
-  };
-
-  const handleDateToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters({
-      ...filters,
-      dateTo: e.target.value,
-    });
-  };
-
-  const clearFilters = () => {
+  // Reset all filters
+  const handleReset = () => {
     setFilters({
       platform: "all",
       rating: 0,
@@ -54,28 +43,19 @@ export default function ReviewFilters({ filters, setFilters }: ReviewFiltersProp
   };
 
   return (
-    <div className="rounded-lg border bg-background p-4 shadow-sm">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-medium">Filters</h2>
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="text-sm text-blue-600 hover:text-blue-500"
-        >
-          {isExpanded ? "Hide filters" : "Show filters"}
-        </button>
-      </div>
-
-      {isExpanded && (
-        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <div className="flex flex-col sm:flex-row justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <div>
-            <label htmlFor="platform" className="block text-sm font-medium">
+            <label htmlFor="platform" className="block text-sm font-medium text-gray-700 mb-1">
               Platform
             </label>
             <select
               id="platform"
+              name="platform"
               value={filters.platform}
-              onChange={handlePlatformChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+              onChange={handleFilterChange}
+              className="w-full sm:w-auto rounded-md border-gray-300 py-2 pl-3 pr-10 text-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
             >
               <option value="all">All Platforms</option>
               <option value="google">Google</option>
@@ -84,14 +64,15 @@ export default function ReviewFilters({ filters, setFilters }: ReviewFiltersProp
           </div>
 
           <div>
-            <label htmlFor="rating" className="block text-sm font-medium">
+            <label htmlFor="rating" className="block text-sm font-medium text-gray-700 mb-1">
               Rating
             </label>
             <select
               id="rating"
+              name="rating"
               value={filters.rating}
-              onChange={handleRatingChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+              onChange={handleFilterChange}
+              className="w-full sm:w-auto rounded-md border-gray-300 py-2 pl-3 pr-10 text-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
             >
               <option value="0">All Ratings</option>
               <option value="5">5 Stars</option>
@@ -101,45 +82,75 @@ export default function ReviewFilters({ filters, setFilters }: ReviewFiltersProp
               <option value="1">1 Star</option>
             </select>
           </div>
-
-          <div>
-            <label htmlFor="dateFrom" className="block text-sm font-medium">
-              From Date
-            </label>
-            <input
-              id="dateFrom"
-              type="date"
-              value={filters.dateFrom}
-              onChange={handleDateFromChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="dateTo" className="block text-sm font-medium">
-              To Date
-            </label>
-            <input
-              id="dateTo"
-              type="date"
-              value={filters.dateTo}
-              onChange={handleDateToChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            />
-          </div>
         </div>
-      )}
 
-      {isExpanded && (
-        <div className="mt-4 flex justify-end">
+        <div className="flex items-center mt-4 sm:mt-0">
           <button
-            onClick={clearFilters}
-            className="rounded bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="flex items-center text-sm text-blue-600 hover:text-blue-800"
           >
-            Clear Filters
+            {isExpanded ? 'Hide Advanced Filters' : 'Show Advanced Filters'}
+            <svg
+              className={`ml-1 h-4 w-4 transform transition-transform ${
+                isExpanded ? 'rotate-180' : ''
+              }`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 9l-7 7-7-7"
+              ></path>
+            </svg>
           </button>
         </div>
+      </div>
+
+      {isExpanded && (
+        <div className="pt-2 pb-2 border-t border-gray-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            <div>
+              <label htmlFor="dateFrom" className="block text-sm font-medium text-gray-700 mb-1">
+                From Date
+              </label>
+              <input
+                type="date"
+                id="dateFrom"
+                name="dateFrom"
+                value={filters.dateFrom}
+                onChange={handleFilterChange}
+                className="w-full rounded-md border-gray-300 py-2 pl-3 pr-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="dateTo" className="block text-sm font-medium text-gray-700 mb-1">
+                To Date
+              </label>
+              <input
+                type="date"
+                id="dateTo"
+                name="dateTo"
+                value={filters.dateTo}
+                onChange={handleFilterChange}
+                className="w-full rounded-md border-gray-300 py-2 pl-3 pr-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+              />
+            </div>
+          </div>
+        </div>
       )}
+
+      <div className={`flex justify-end mt-4 ${isExpanded ? 'pt-2 border-t border-gray-200' : ''}`}>
+        <button
+          onClick={handleReset}
+          className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          Reset Filters
+        </button>
+      </div>
     </div>
   );
 }

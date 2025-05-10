@@ -6,6 +6,7 @@ import ReviewCard from "@/components/businesses/ReviewCard";
 import { Review, Platform } from "@/lib/types";
 import ReviewFilters from "@/components/businesses/ReviewFilters";
 import Link from "next/link";
+import Image from "next/image";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -314,7 +315,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
 
   return (
     <DashboardLayout>
-      <div className="p-6 min-h-screen bg-gradient-to-tr from-gray-50 to-blue-50">
+      <div className="p-4 sm:p-6 min-h-screen bg-gradient-to-tr from-gray-50 to-blue-50">
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="flex flex-col items-center">
@@ -342,29 +343,46 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
             
             <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-4 sm:mb-0">
-                <Link href="/dashboard/businesses" className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 mb-3 transition-colors">
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                  </svg>
-                  Back to Businesses
-                </Link>
-                <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                <div className="flex flex-wrap items-center mb-3 gap-2">
+                  <Link href="/dashboard/businesses" className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors">
+                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to Businesses
+                  </Link>
+                  
+                  <div className="flex items-center ml-0 sm:ml-4">
+                    <Image 
+                      src="/logo.png" 
+                      alt="Kritiqo Logo" 
+                      width={40} 
+                      height={40} 
+                      className="mr-2"
+                    />
+                    <span className="text-lg font-bold text-gray-800">Kritiqo</span>
+                  </div>
+                </div>
+                
+                <h1 className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
                   {business.name}
                 </h1>
-                <div className="mt-2 flex items-center">
+                
+                <div className="mt-2 flex flex-wrap items-center gap-2">
                   <div className="flex items-center px-3 py-1 bg-yellow-50 rounded-full">
                     <span className="text-yellow-600 font-medium text-sm">{business.averageRating.toFixed(1)}</span>
                     <svg className="ml-1 h-4 w-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   </div>
-                  <span className="mx-2 text-sm text-gray-400">•</span>
-                  <span className="text-sm text-gray-600">{business.reviewCount} reviews</span>
+                  <div className="flex items-center">
+                    <span className="hidden sm:inline-block mx-2 text-sm text-gray-400">•</span>
+                    <span className="text-sm text-gray-600">{business.reviewCount} reviews</span>
+                  </div>
                 </div>
               </div>
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <button 
-                  className="inline-flex items-center px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
                   onClick={openEditModal}
                 >
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -373,7 +391,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
                   </svg>
                   Edit Business
                 </button>
-                <button className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                <button className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                   </svg>
@@ -382,8 +400,8 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
               </div>
             </div>
 
-            <div className="mb-8">
-              <div className="p-5 bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="mb-8 overflow-x-auto">
+              <div className="p-4 sm:p-5 bg-white rounded-xl shadow-sm border border-gray-100 min-w-[320px]">
                 <h2 className="text-lg font-semibold mb-4">Review Filters</h2>
                 <ReviewFilters filters={filters} setFilters={setFilters} />
               </div>
@@ -415,17 +433,15 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
       {/* Reply Modal */}
       {replyModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto backdrop-blur-sm">
-          <div className="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+          <div className="flex min-h-screen items-end sm:items-center justify-center p-4 sm:p-0">
             <div 
               className="fixed inset-0 bg-gray-500 bg-opacity-50 transition-opacity" 
               onClick={closeReplyModal}
               aria-hidden="true"
             ></div>
 
-            <span className="hidden sm:inline-block sm:h-screen sm:align-middle" aria-hidden="true">&#8203;</span>
-
-            <div className="inline-block transform overflow-hidden rounded-2xl bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
-              <div className="bg-white px-6 pt-6 pb-4">
+            <div className="inline-block w-full transform overflow-hidden rounded-t-xl sm:rounded-2xl bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:max-w-lg sm:align-middle">
+              <div className="bg-white px-4 sm:px-6 pt-5 pb-4 sm:pt-6">
                 <div className="sm:flex sm:items-start">
                   <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
                     <svg className="h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -438,7 +454,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
                     </h3>
                     <div className="mt-4">
                       <textarea
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors resize-none"
+                        className="w-full rounded-lg border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors resize-none"
                         rows={4}
                         placeholder="Type your reply here..."
                         value={replyText}
@@ -467,15 +483,15 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
                   </div>
                 </div>
               </div>
-              <div className="bg-gray-50 px-6 py-4 flex flex-row-reverse">
+              <div className="bg-gray-50 px-4 sm:px-6 py-3 sm:py-4 flex flex-col-reverse sm:flex-row-reverse gap-2 sm:gap-0">
                 <button
                   type="button"
-                  className="ml-3 inline-flex justify-center rounded-lg border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto sm:ml-3 inline-flex justify-center rounded-lg border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={submitReply}
                   disabled={replyStatus.loading || !replyText.trim()}
                 >
                   {replyStatus.loading ? (
-                    <span className="flex items-center">
+                    <span className="flex items-center justify-center">
                       <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -486,7 +502,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
                 </button>
                 <button
                   type="button"
-                  className="inline-flex justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors"
+                  className="w-full sm:w-auto inline-flex justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors"
                   onClick={closeReplyModal}
                 >
                   Cancel
@@ -500,18 +516,16 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
       {/* Edit Business Modal */}
       {editModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto backdrop-blur-sm">
-          <div className="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+          <div className="flex min-h-screen items-end sm:items-center justify-center p-4 sm:p-0">
             <div 
               className="fixed inset-0 bg-gray-500 bg-opacity-50 transition-opacity" 
               onClick={closeEditModal}
               aria-hidden="true"
             ></div>
 
-            <span className="hidden sm:inline-block sm:h-screen sm:align-middle" aria-hidden="true">&#8203;</span>
-
-            <div className="inline-block transform overflow-hidden rounded-2xl bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
+            <div className="inline-block w-full transform overflow-hidden rounded-t-xl sm:rounded-2xl bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:max-w-lg sm:align-middle">
               <form onSubmit={submitBusinessEdit}>
-                <div className="bg-white px-6 pt-6 pb-4">
+                <div className="bg-white px-4 sm:px-6 pt-5 pb-4 sm:pt-6">
                   <div className="sm:flex sm:items-start">
                     <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
                       <svg className="h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -586,14 +600,14 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-6 py-4 flex flex-row-reverse">
+                <div className="bg-gray-50 px-4 sm:px-6 py-3 sm:py-4 flex flex-col-reverse sm:flex-row-reverse gap-2 sm:gap-0">
                   <button
                     type="submit"
-                    className="ml-3 inline-flex justify-center rounded-lg border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full sm:w-auto sm:ml-3 inline-flex justify-center rounded-lg border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={editStatus.loading || !editFormData.name.trim()}
                   >
                     {editStatus.loading ? (
-                      <span className="flex items-center">
+                      <span className="flex items-center justify-center">
                         <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -604,7 +618,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
                   </button>
                   <button
                     type="button"
-                    className="inline-flex justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors"
+                    className="w-full sm:w-auto inline-flex justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors"
                     onClick={closeEditModal}
                   >
                     Cancel
