@@ -56,12 +56,12 @@ async function getBusinessPlatformIds(businessId: string) {
   }
 }
 
-// Route GET
+// ✅ ✅ ✅ SIGNATURE CORRECTE POUR NEXT.JS 15
 export async function GET(
-  request: NextRequest,
-  context: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: { id: string } }
 ) {
-  const businessId = context.params.id;
+  const businessId = params.id;
   const apiKey = process.env.GOOGLE_PLACES_API_KEY;
 
   if (!apiKey) {
@@ -95,7 +95,7 @@ export async function GET(
     }
 
     // Filtres
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = new URL(req.url);
     let filteredReviews = [...allReviews];
 
     const platform = searchParams.get("platform");
