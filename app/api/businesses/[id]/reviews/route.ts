@@ -72,10 +72,10 @@ async function getBusinessPlatformIds(businessId: string) {
   }
 }
 
-// Fix: Update the function signature to use proper destructuring for route params
+// Fix: Update the function signature to match Next.js App Router API route requirements
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  params: { id: string }
 ) {
   const businessId = params.id;
   
