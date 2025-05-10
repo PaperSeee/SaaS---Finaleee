@@ -75,9 +75,9 @@ async function getBusinessPlatformIds(businessId: string) {
 // Fix: Update the function signature to match Next.js App Router API route requirements
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const businessId = params.id;
+  const businessId = context.params.id;
   
   try {
     // Récupérer les identifiants des plateformes pour cette entreprise
