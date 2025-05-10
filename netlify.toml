@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Disable unnecessary language installations
+  NETLIFY_USE_YARN = "true"
+  NODE_VERSION = "18"
+  # Explicitly disable Go installation
+  GO_VERSION = ""
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
