@@ -11,9 +11,8 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function BusinessDetails({ params }: { params: { id: string } }) {
-  // Unwrap params with React.use() to access properties safely
-  const unwrappedParams = React.use(params);
-  const businessId = unwrappedParams.id;
+  // Access the ID directly from params instead of using React.use()
+  const businessId = params.id;
   
   const { user } = useAuth();
   const supabase = createClientComponentClient();
