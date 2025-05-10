@@ -72,11 +72,12 @@ async function getBusinessPlatformIds(businessId: string) {
   }
 }
 
+// Fix: Change the parameter type from destructured to a named parameter
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const businessId = params.id;
+  const businessId = context.params.id;
   
   try {
     // Récupérer les identifiants des plateformes pour cette entreprise
