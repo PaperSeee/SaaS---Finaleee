@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import LanguageSelector from "@/components/LanguageSelector";
+import { HomeIcon, BuildingOfficeIcon, ChartBarIcon, MagnifyingGlassIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -66,6 +67,14 @@ const DashboardLayout = memo(({ children }: DashboardLayoutProps) => {
       </div>
     );
   }
+
+  const navigation = [
+    { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
+    { name: "Entreprises", href: "/dashboard/businesses", icon: BuildingOfficeIcon },
+    { name: "Statistiques", href: "/dashboard/stats", icon: ChartBarIcon },
+    { name: "Trouver mon Place ID", href: "/dashboard/find-place-id", icon: MagnifyingGlassIcon },
+    { name: "Paramètres", href: "/dashboard/settings", icon: Cog6ToothIcon },
+  ];
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">

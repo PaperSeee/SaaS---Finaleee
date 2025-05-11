@@ -6,6 +6,8 @@ export interface Business {
   averageRating: number;
   googleUrl?: string;
   facebookUrl?: string;
+  placeId?: string;  // Add explicit placeId field to store the extracted Google Place ID
+  placeIdVerified?: boolean; // Add a flag to indicate if the Place ID has been verified
 }
 
 // Review Types

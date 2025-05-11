@@ -111,12 +111,12 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
         
         console.log("Données de l'entreprise:", companyData);
         
-        // 2. Récupérer le Place ID si nécessaire
+        // 2. Utiliser directement le Place ID s'il existe, sinon essayer de l'extraire
         let placeId = companyData.place_id;
         let placeIdRefreshNeeded = false;
         
         if (!placeId && companyData.google_url) {
-          console.log("Tentative d'extraction du place_id depuis l'URL Google:", companyData.google_url);
+          console.log("Aucun Place ID trouvé, tentative d'extraction depuis l'URL Google:", companyData.google_url);
           try {
             placeId = await extractPlaceIdFromUrl(companyData.google_url, companyData.id);
           } catch (extractError) {
@@ -128,21 +128,26 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
         if (placeId) {
           console.log(`Place ID avant nettoyage: "${placeId}"`);
           
-          // Supprimer les espaces et caractères spéciaux qui pourraient causer des problèmes
-          placeId = placeId.trim().replace(/['"\\]/g, '');
+          // Importer la fonction de validation depuis apiUtils.ts
+          const { validatePlaceId } = await import('@/lib/apiUtils');
+          const validation = validatePlaceId(placeId);
           
-          // Valider le format du Place ID
-          if (!(placeId.startsWith('ChI') || placeId.startsWith('0x'))) {
-            console.warn("Format de Place ID non standard:", placeId);
+          if (!validation.valid) {
+            console.warn(`Format de Place ID invalide: ${placeId}, raison: ${validation.message}`);
+            placeId = validation.cleanedPlaceId || '';
+          } else {
+            placeId = validation.cleanedPlaceId || placeId;
           }
           
           console.log(`Place ID après nettoyage: "${placeId}"`);
           
-          // Mettre à jour la base de données avec la version nettoyée
-          await supabase
-            .from('companies')
-            .update({ place_id: placeId })
-            .eq('id', businessId);
+          // Mettre à jour la base de données avec la version nettoyée si différente
+          if (placeId && placeId !== companyData.place_id) {
+            await supabase
+              .from('companies')
+              .update({ place_id: placeId })
+              .eq('id', businessId);
+          }
         }
         
         if (!placeId) {
@@ -153,14 +158,15 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
           });
           setReviews([]);
           setLoading(false);
-          setError("Aucun Place ID trouvé pour cette entreprise. Veuillez ajouter une URL Google Business valide dans les paramètres de l'entreprise.");
+          setError("Aucun Place ID trouvé pour cette entreprise. Veuillez ajouter un Place ID ou une URL Google Business valide dans les paramètres de l'entreprise.");
           return;
         }
         
         console.log("Place ID utilisé:", placeId);
         
-        // 3. Construire les paramètres pour filtrer les avis
+        // 3. Construire les paramètres pour récupérer les avis avec le Place ID
         const queryParams = new URLSearchParams();
+        queryParams.append("place_id", placeId);
         
         if (filters.platform !== "all") {
           queryParams.append("platform", filters.platform);
@@ -179,31 +185,40 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
         }
 
         // 4. Récupérer les avis depuis l'API Google
-        // Important: Utiliser "place_id" et non "placeId" comme nom de paramètre 
-        const googleReviewsUrl = `/api/google-reviews?place_id=${encodeURIComponent(placeId)}&${queryParams.toString()}`;
+        const googleReviewsUrl = `/api/google-reviews?${queryParams.toString()}`;
         console.log("Appel à l'API:", googleReviewsUrl);
         
         try {
           const response = await fetch(googleReviewsUrl);
           
+          // Log des détails de la réponse
+          console.log(`Réponse API status: ${response.status} ${response.statusText}`);
+          
+          // Add detailed error handling
           if (!response.ok) {
-            // Log détaillé de la réponse d'erreur
-            console.error(`Réponse API non valide: ${response.status} ${response.statusText}`);
-            let errorResponse;
-            try {
-              errorResponse = await response.json();
-              console.error("Détails de l'erreur:", errorResponse);
-            } catch (parseError) {
-              console.error("Impossible de parser la réponse d'erreur:", parseError);
-              errorResponse = { error: `Erreur ${response.status}`, message: "Détails non disponibles" };
+            // Import the safe JSON parser
+            const { safeJsonParse } = await import('@/lib/apiUtils');
+            const errorData = await safeJsonParse(response);
+            
+            console.error("Détails de l'erreur:", errorData);
+            
+            // Check for specific Google API errors
+            if (errorData.status === "REQUEST_DENIED" || 
+                errorData.status === "INVALID_REQUEST" ||
+                errorData.details?.status === "REQUEST_DENIED" ||
+                errorData.details?.status === "INVALID_REQUEST") {
+              
+              console.error("Erreur d'authentification Google API ou requête invalide");
+              throw new Error(`Erreur d'API Google: ${errorData.message || errorData.details?.error_message || response.statusText}`);
             }
             
             // Vérifier si c'est une erreur de Place ID invalide
             if ((response.status === 400) && 
-                (errorResponse.error?.includes("NOT_FOUND") || 
-                errorResponse.message?.includes("Invalid") ||
-                errorResponse.message?.includes("invalid") ||
-                errorResponse.message?.includes("place"))) {
+                (errorData.error?.includes("NOT_FOUND") || 
+                errorData.message?.includes("Invalid") ||
+                errorData.message?.includes("invalid") ||
+                errorData.message?.includes("place") ||
+                errorData.status === "NOT_FOUND")) {
               // Marquer le Place ID comme nécessitant une mise à jour
               placeIdRefreshNeeded = true;
               
@@ -211,7 +226,7 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
               await supabase
                 .from('companies')
                 .update({ place_id: null })
-                .eq('id', companyId);
+                .eq('id', businessId);
                 
               throw new Error(
                 "Le Place ID Google n'est plus valide. " +
@@ -219,10 +234,12 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
               );
             }
             
-            throw new Error(`Erreur lors de la récupération des avis: ${errorResponse.message || response.statusText}`);
+            throw new Error(`Erreur lors de la récupération des avis: ${errorData.message || errorData.error || response.statusText}`);
           }
           
-          const responseData = await response.json();
+          // Use the safe JSON parser for the response data
+          const { safeJsonParse } = await import('@/lib/apiUtils');
+          const responseData = await safeJsonParse(response);
           console.log("Données reçues:", responseData);
           
           setBusiness({

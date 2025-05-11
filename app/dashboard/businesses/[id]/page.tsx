@@ -32,6 +32,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
     name: "",
     googleUrl: "",
     facebookUrl: "",
+    placeId: "",  // Add Place ID to form data
   });
   const [editStatus, setEditStatus] = useState<{
     loading: boolean;
@@ -234,6 +235,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
       name: business.name,
       googleUrl: business.googleUrl,
       facebookUrl: business.facebookUrl,
+      placeId: business.placeId || '',  // Include Place ID
     });
     setEditModalOpen(true);
     setEditStatus({ loading: false });
@@ -275,6 +277,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
             name: editFormData.name.trim(),
             google_url: editFormData.googleUrl.trim(),
             facebook_url: editFormData.facebookUrl.trim(),
+            place_id: editFormData.placeId.trim() || null,  // Include Place ID
           })
           .eq('id', businessId)
           .eq('user_id', user.id);
@@ -293,6 +296,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
         name: editFormData.name.trim(),
         googleUrl: editFormData.googleUrl.trim(),
         facebookUrl: editFormData.facebookUrl.trim(),
+        placeId: editFormData.placeId.trim(),  // Include Place ID
       }));
       
       setEditStatus({ 
@@ -533,12 +537,12 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
                     </div>
                     <div className="mt-3 w-full text-center sm:mt-0 sm:ml-4 sm:text-left">
                       <h3 className="text-lg font-medium leading-6 text-gray-900">
-                        Edit Business Details
+                        Modifier les détails de l'entreprise
                       </h3>
                       <div className="mt-4 space-y-4">
                         <div>
                           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                            Business Name
+                            Nom de l'entreprise
                           </label>
                           <input
                             type="text"
@@ -550,9 +554,35 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
                             required
                           />
                         </div>
+                        
+                        {/* Place ID field - prioritized position */}
+                        <div className="bg-blue-50 border-l-4 border-blue-400 p-3 rounded-md">
+                          <label htmlFor="placeId" className="block text-sm font-medium text-blue-700">
+                            Google Place ID
+                            <span className="ml-2 text-xs font-normal text-blue-600">
+                              (<Link href="/dashboard/find-place-id" className="text-blue-700 hover:text-blue-600 hover:underline">Trouver mon Place ID</Link>)
+                            </span>
+                          </label>
+                          <input
+                            type="text"
+                            name="placeId"
+                            id="placeId"
+                            className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border bg-white"
+                            value={editFormData.placeId}
+                            onChange={handleEditInputChange}
+                            placeholder="Ex: ChIJN1t_tDeuEmsRUsoyG83frY4"
+                          />
+                          <p className="mt-1 text-xs text-blue-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline mr-1" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z" clipRule="evenodd" />
+                            </svg>
+                            Le Place ID est nécessaire pour récupérer automatiquement les avis Google
+                          </p>
+                        </div>
+                        
                         <div>
                           <label htmlFor="googleUrl" className="block text-sm font-medium text-gray-700">
-                            Google Maps URL
+                            URL Google Maps (alternative)
                           </label>
                           <input
                             type="url"
@@ -563,11 +593,11 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
                             onChange={handleEditInputChange}
                             placeholder="https://maps.google.com/place/your-business"
                           />
-                          <p className="mt-1 text-xs text-gray-500">URL to your Google Business profile</p>
+                          <p className="mt-1 text-xs text-gray-500">URL vers votre profil Google Business (si vous n'avez pas le Place ID)</p>
                         </div>
                         <div>
                           <label htmlFor="facebookUrl" className="block text-sm font-medium text-gray-700">
-                            Facebook Page URL
+                            URL Page Facebook
                           </label>
                           <input
                             type="url"
@@ -578,7 +608,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
                             onChange={handleEditInputChange}
                             placeholder="https://facebook.com/your-business"
                           />
-                          <p className="mt-1 text-xs text-gray-500">URL to your Facebook business page</p>
+                          <p className="mt-1 text-xs text-gray-500">URL vers votre page Facebook professionnelle</p>
                         </div>
                       </div>
 

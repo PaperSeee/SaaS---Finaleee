@@ -1,96 +1,180 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Review } from '@/lib/types';
+import { createClient } from '@supabase/supabase-js';
+import { validatePlaceId, safeJsonParse } from '@/lib/apiUtils';
+
+// Initialize Supabase client (use environment variables in production)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function GET(request: NextRequest) {
   try {
-    // Récupérer les paramètres de la requête
-    const { searchParams } = new URL(request.url);
-    const placeId = searchParams.get('placeId');
-    const preview = searchParams.get('preview') === 'true';
-
-    if (!placeId) {
-      return NextResponse.json({ error: 'place_id est requis' }, { status: 400 });
-    }
-
-    // Récupérer la clé API Google Places depuis les variables d'environnement
-    const apiKey = process.env.GOOGLE_PLACES_API_KEY;
+    // Get the place_id from the query string
+    const searchParams = request.nextUrl.searchParams;
+    const rawPlaceId = searchParams.get('place_id');
+    const previewMode = searchParams.get('preview') === 'true';
     
-    if (!apiKey) {
-      console.error('Clé API Google Places non configurée');
+    if (!rawPlaceId) {
       return NextResponse.json(
-        { error: 'Configuration serveur incorrecte. GOOGLE_PLACES_API_KEY manquante.' },
-        { status: 500 }
-      );
-    }
-
-    console.log(`Récupération des avis pour le place_id: ${placeId}`);
-
-    // Construire l'URL de l'API Google Places Details
-    const fields = preview 
-      ? 'name,rating,user_ratings_total'
-      : 'name,rating,user_ratings_total,reviews';
-    
-    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=${fields}&language=fr&key=${apiKey}`;
-    
-    // Appel à l'API Google Places
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      console.error(`Google API a répondu avec le statut : ${response.status}`);
-      return NextResponse.json(
-        { error: `Google API a répondu avec le statut : ${response.status}` },
-        { status: response.status }
-      );
-    }
-    
-    const data = await response.json();
-    
-    if (data.status !== 'OK') {
-      console.error('Erreur API Google:', data);
-      return NextResponse.json(
-        { 
-          error: `Erreur API Google Places: ${data.status}`,
-          message: data.error_message || 'Aucun détail disponible'
-        },
+        { error: "Missing place_id parameter" },
         { status: 400 }
       );
     }
 
-    // Extraire les informations de base du lieu
-    const result = data.result || {};
-    const businessInfo = {
-      name: result.name || '',
-      rating: result.rating || 0,
-      reviewCount: result.user_ratings_total || 0
-    };
-
-    // Si c'est juste un aperçu, ne pas récupérer tous les avis
-    if (preview) {
-      return NextResponse.json({ business: businessInfo });
+    // Validate and clean place_id format
+    const validation = validatePlaceId(rawPlaceId);
+    
+    if (!validation.valid) {
+      console.error(`Invalid place_id format: ${rawPlaceId}, reason: ${validation.message}`);
+      return NextResponse.json(
+        { 
+          error: "Invalid place_id format", 
+          details: validation.message,
+          suggestedPlaceId: validation.cleanedPlaceId
+        },
+        { status: 400 }
+      );
     }
-
-    // Convertir les avis Google au format attendu par l'application
-    const reviews: Review[] = (result.reviews || []).map((review: any) => ({
-      id: `google_${review.time}`,
-      author: review.author_name,
-      content: review.text || '',
-      rating: review.rating,
-      date: new Date(review.time * 1000).toISOString(),
-      platform: 'google',
-      businessId: placeId,
-      profilePhoto: review.profile_photo_url,
-      relativeTimeDescription: review.relative_time_description,
-      language: review.language
-    }));
-
+    
+    // Use the cleaned version
+    const placeId = validation.cleanedPlaceId;
+    console.log(`Fetching reviews for place_id: ${placeId}`);
+    
+    // Get Google Places API key from environment
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
+    if (!apiKey) {
+      console.error("Google Places API key not found in environment variables");
+      return NextResponse.json(
+        { error: "Google Places API key not configured" },
+        { status: 500 }
+      );
+    }
+    
+    // Get optional filter parameters
+    const platform = searchParams.get('platform');
+    const rating = searchParams.get('rating');
+    const dateFrom = searchParams.get('dateFrom');
+    const dateTo = searchParams.get('dateTo');
+    
+    // Call the Google Places API with fields parameter to get reviews
+    const fieldsParam = previewMode
+      ? 'name,rating,user_ratings_total' // Only basic info in preview mode
+      : 'name,rating,user_ratings_total,reviews'; // Include reviews in full mode
+      
+    const googleApiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${encodeURIComponent(placeId)}&fields=${fieldsParam}&key=${apiKey}`;
+    
+    console.log(`Making API request to Google Places API with place_id: ${placeId}`);
+    
+    const response = await fetch(googleApiUrl);
+    
+    if (!response.ok) {
+      // Use safe parsing to avoid "body stream already read" errors
+      const errorData = await safeJsonParse(response);
+      console.error(`Google Places API error (${response.status}):`, errorData);
+      
+      return NextResponse.json(
+        { 
+          error: "Failed to fetch data from Google Places API", 
+          status: response.status,
+          statusText: response.statusText,
+          details: errorData
+        },
+        { status: response.status }
+      );
+    }
+    
+    // Parse JSON safely
+    const data = await safeJsonParse(response);
+    
+    if (data.status !== "OK" || !data.result) {
+      console.error(`Google API returned status: ${data.status}`);
+      console.error("Error details:", JSON.stringify(data.error_message || data));
+      
+      return NextResponse.json(
+        { 
+          error: "Invalid response from Google Places API", 
+          status: data.status,
+          message: data.error_message || "No error message provided" 
+        },
+        { status: 400 }
+      );
+    }
+    
+    // Format the business information
+    const business = {
+      name: data.result.name || "Unknown Business",
+      rating: data.result.rating || 0,
+      reviewCount: data.result.user_ratings_total || 0
+    };
+    
+    // If in preview mode, just return the business info without reviews
+    if (previewMode) {
+      return NextResponse.json({ business });
+    }
+    
+    // Format the reviews from Google's response
+    let reviews: Review[] = [];
+    
+    if (data.result.reviews && Array.isArray(data.result.reviews)) {
+      reviews = data.result.reviews.map(googleReview => {
+        const reviewDate = new Date(googleReview.time * 1000);
+        
+        return {
+          id: `google_${googleReview.time}_${Math.random().toString(36).substring(2, 10)}`,
+          author: googleReview.author_name,
+          content: googleReview.text || "",
+          rating: googleReview.rating,
+          date: reviewDate.toISOString(),
+          platform: "google" as const,
+          businessId: placeId,
+          profilePhoto: googleReview.profile_photo_url,
+          language: googleReview.language || "en",
+          relativeTimeDescription: googleReview.relative_time_description || "",
+          response: googleReview.author_reply ? {
+            content: googleReview.author_reply.text || "",
+            date: new Date(googleReview.author_reply.time * 1000).toISOString()
+          } : undefined
+        };
+      });
+    }
+    
+    // Apply filters
+    let filteredReviews = reviews;
+    
+    if (platform && platform !== "all") {
+      filteredReviews = filteredReviews.filter(review => review.platform === platform);
+    }
+    
+    if (rating) {
+      const ratingValue = parseInt(rating);
+      filteredReviews = filteredReviews.filter(review => review.rating === ratingValue);
+    }
+    
+    if (dateFrom) {
+      const fromDate = new Date(dateFrom);
+      filteredReviews = filteredReviews.filter(review => new Date(review.date) >= fromDate);
+    }
+    
+    if (dateTo) {
+      const toDate = new Date(dateTo);
+      filteredReviews = filteredReviews.filter(review => new Date(review.date) <= toDate);
+    }
+    
+    // Sort by date (newest first)
+    filteredReviews.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    
+    // Return the response
     return NextResponse.json({
-      business: businessInfo,
-      reviews: reviews
+      business,
+      reviews: filteredReviews
     });
+    
   } catch (error) {
-    console.error('Erreur lors de la récupération des avis Google:', error);
+    console.error("Error in Google Reviews API:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Erreur inconnue' },
+      { error: "Internal server error", message: (error as Error).message },
       { status: 500 }
     );
   }

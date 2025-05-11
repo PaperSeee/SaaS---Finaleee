@@ -1,34 +1,44 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    // Récupérer l'URL à appeler depuis les query params
-    const { searchParams } = new URL(request.url);
-    const url = searchParams.get("url");
-
+    // Get the URL parameter
+    const searchParams = request.nextUrl.searchParams;
+    const url = searchParams.get('url');
+    
     if (!url) {
       return NextResponse.json(
-        { error: "URL parameter is required" },
+        { error: "Missing url parameter" },
         { status: 400 }
       );
     }
-
-    // Appel à l'API Google en utilisant le serveur comme proxy
-    const response = await fetch(url);
     
-    if (!response.ok) {
+    // Validate that the URL is for Google Maps API
+    if (!url.startsWith('https://maps.googleapis.com/')) {
       return NextResponse.json(
-        { error: `API responded with status: ${response.status}` },
-        { status: response.status }
+        { error: "Invalid API URL" },
+        { status: 400 }
       );
     }
     
+    // Forward the request to Google Places API
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    });
+    
+    // Get the response data
     const data = await response.json();
+    
+    // Return the response
     return NextResponse.json(data);
+    
   } catch (error) {
-    console.error("Error proxying request:", error);
+    console.error("Error in proxy API:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unknown error" },
+      { error: "An error occurred while processing your request", message: (error as Error).message },
       { status: 500 }
     );
   }

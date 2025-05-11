@@ -2,32 +2,99 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { Review, Platform } from "@/lib/types";
+import { validatePlaceId, safeJsonParse } from '@/lib/apiUtils';
 
-async function fetchGoogleReviews(placeId, apiKey): Promise<Review[]> {
-  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=reviews&key=${apiKey}`;
-  const response = await fetch(url);
+// Helper function to fetch reviews from Google API directly
+async function fetchGoogleReviews(placeId: string, apiKey: string): Promise<{
+  reviews: Review[];
+  businessInfo: { name: string; rating: number; reviewCount: number };
+  error?: string;
+}> {
+  // Validate place_id before sending to Google API
+  const validation = validatePlaceId(placeId);
+  if (!validation.valid) {
+    console.error(`Invalid place_id format: ${placeId}, reason: ${validation.message}`);
+    return { 
+      reviews: [], 
+      businessInfo: { name: "", rating: 0, reviewCount: 0 },
+      error: `Invalid place_id: ${validation.message}`
+    };
+  }
+  
+  // Use the cleaned place_id
+  const cleanedPlaceId = validation.cleanedPlaceId!;
+  
+  // Use the same fields and format as our google-reviews endpoint
+  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${encodeURIComponent(cleanedPlaceId)}&fields=name,rating,user_ratings_total,reviews&key=${apiKey}`;
+  
+  try {
+    const response = await fetch(url);
 
-  if (!response.ok) return [];
+    if (!response.ok) {
+      console.error(`Google API error: ${response.status}`);
+      // Use safe parsing to avoid "body stream already read" errors
+      const errorData = await safeJsonParse(response);
+      return { 
+        reviews: [], 
+        businessInfo: { name: "", rating: 0, reviewCount: 0 },
+        error: `Google API error: ${JSON.stringify(errorData)}`
+      };
+    }
 
-  const data = await response.json();
-  if (data.status !== "OK" || !data.result?.reviews) return [];
+    // Parse JSON safely
+    const data = await safeJsonParse(response);
+    
+    if (data.status !== "OK" || !data.result) {
+      console.error(`Invalid Google API response: ${data.status}`);
+      return { 
+        reviews: [], 
+        businessInfo: { name: "", rating: 0, reviewCount: 0 },
+        error: `Google API returned status: ${data.status}. ${data.error_message || ""}`
+      };
+    }
 
-  return data.result.reviews.map((review) => ({
-    id: `google_${review.time}`,
-    author: review.author_name,
-    content: review.text || '',
-    rating: review.rating,
-    date: new Date(review.time * 1000).toISOString(),
-    platform: "google",
-    businessId: placeId,
-    response: review.author_reply
-      ? {
-          content: review.author_reply.text || '',
-          date: new Date(review.author_reply.time * 1000).toISOString(),
-        }
-      : undefined,
-    profilePhoto: review.profile_photo_url,
-  }));
+    // Extract business info
+    const businessInfo = {
+      name: data.result.name || "",
+      rating: data.result.rating || 0,
+      reviewCount: data.result.user_ratings_total || 0,
+    };
+
+    // Extract and format reviews
+    let reviews: Review[] = [];
+    
+    if (data.result.reviews && Array.isArray(data.result.reviews)) {
+      reviews = data.result.reviews.map(googleReview => {
+        const reviewDate = new Date(googleReview.time * 1000);
+        
+        return {
+          id: `google_${googleReview.time}_${Math.random().toString(36).substring(2, 10)}`,
+          author: googleReview.author_name,
+          content: googleReview.text || "",
+          rating: googleReview.rating,
+          date: reviewDate.toISOString(),
+          platform: "google" as Platform,
+          businessId: placeId,
+          profilePhoto: googleReview.profile_photo_url,
+          language: googleReview.language || "en",
+          relativeTimeDescription: googleReview.relative_time_description || "",
+          response: googleReview.author_reply ? {
+            content: googleReview.author_reply.text || "",
+            date: new Date(googleReview.author_reply.time * 1000).toISOString()
+          } : undefined
+        };
+      });
+    }
+
+    return { reviews, businessInfo };
+  } catch (error) {
+    console.error("Error fetching Google reviews:", error);
+    return {
+      reviews: [],
+      businessInfo: { name: "", rating: 0, reviewCount: 0 },
+      error: error instanceof Error ? error.message : "Unknown error fetching reviews"
+    };
+  }
 }
 
 async function getBusinessPlatformIds(businessId) {
@@ -56,40 +123,29 @@ async function getBusinessPlatformIds(businessId) {
 // ✅ NO TYPE ON ARGUMENTS — TO FIX BUILD IN NEXT 15
 export async function GET(req, { params }) {
   const businessId = params.id;
-  const apiKey = process.env.GOOGLE_PLACES_API_KEY;
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
 
   if (!apiKey) {
-    return NextResponse.json({ error: "API key not configured" }, { status: 500 });
+    return NextResponse.json({ error: "Google Places API key not configured" }, { status: 500 });
   }
 
   try {
     const { googlePlaceId } = await getBusinessPlatformIds(businessId);
-    let allReviews = [];
-    let businessInfo = { name: "", rating: 0, reviewCount: 0 };
-
-    if (googlePlaceId) {
-      const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${googlePlaceId}&fields=name,rating,user_ratings_total,reviews&key=${apiKey}`;
-      const res = await fetch(url);
-
-      if (res.ok) {
-        const data = await res.json();
-
-        if (data.status === "OK" && data.result) {
-          businessInfo = {
-            name: data.result.name || "",
-            rating: data.result.rating || 0,
-            reviewCount: data.result.user_ratings_total || 0,
-          };
-
-          if (data.result.reviews) {
-            allReviews = await fetchGoogleReviews(googlePlaceId, apiKey);
-          }
-        }
-      }
+    
+    if (!googlePlaceId) {
+      return NextResponse.json({ 
+        business: { name: "", rating: 0, reviewCount: 0 },
+        reviews: [],
+        error: "No Google Place ID found for this business"
+      }, { status: 200 }); // Return empty data but with 200 status
     }
-
+    
+    // Fetch reviews from Google
+    const { reviews: googleReviews, businessInfo } = await fetchGoogleReviews(googlePlaceId, apiKey);
+    
+    // Apply filters from request
     const { searchParams } = new URL(req.url);
-    let filteredReviews = [...allReviews];
+    let filteredReviews = [...googleReviews];
 
     const platform = searchParams.get("platform");
     if (platform && platform !== "all") {
@@ -98,20 +154,24 @@ export async function GET(req, { params }) {
 
     const rating = searchParams.get("rating");
     if (rating) {
-      filteredReviews = filteredReviews.filter(r => r.rating === parseInt(rating));
+      const ratingValue = parseInt(rating);
+      filteredReviews = filteredReviews.filter(r => r.rating === ratingValue);
     }
 
     const dateFrom = searchParams.get("dateFrom");
     if (dateFrom) {
-      filteredReviews = filteredReviews.filter(r => new Date(r.date) >= new Date(dateFrom));
+      const fromDate = new Date(dateFrom);
+      filteredReviews = filteredReviews.filter(r => new Date(r.date) >= fromDate);
     }
 
     const dateTo = searchParams.get("dateTo");
     if (dateTo) {
-      filteredReviews = filteredReviews.filter(r => new Date(r.date) <= new Date(dateTo));
+      const toDate = new Date(dateTo);
+      filteredReviews = filteredReviews.filter(r => new Date(r.date) <= toDate);
     }
 
-    filteredReviews.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // Sort by date (newest first)
+    filteredReviews.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return NextResponse.json({
       business: businessInfo,
