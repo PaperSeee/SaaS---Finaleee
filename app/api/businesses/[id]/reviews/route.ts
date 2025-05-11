@@ -31,7 +31,11 @@ async function fetchGoogleReviews(placeId, apiKey): Promise<Review[]> {
 }
 
 async function getBusinessPlatformIds(businessId) {
-  const supabase = createServerClient({ cookies });
+  const cookieStore = cookies();
+  const supabase = createServerClient({
+    cookies: () => cookieStore,
+  });
+  
   const { data, error } = await supabase
     .from("companies")
     .select("place_id, facebook_id")
