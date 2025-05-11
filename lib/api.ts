@@ -5,7 +5,9 @@ export const api = {
   // Business endpoints
   businesses: {
     list: async (): Promise<Business[]> => {
-      const res = await fetch('/api/businesses');
+      const res = await fetch('/api/businesses', {
+        next: { revalidate: 300 } // Cache results for 5 minutes
+      });
       if (!res.ok) throw new Error('Failed to fetch businesses');
       return res.json();
     },

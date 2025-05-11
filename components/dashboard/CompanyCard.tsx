@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { memo } from 'react';
+import Image from 'next/image';
 
 type Company = {
   id: string;
@@ -15,7 +17,8 @@ type CompanyCardProps = {
   company: Company;
 };
 
-export default function CompanyCard({ company }: CompanyCardProps) {
+// Memoize the component to prevent unnecessary re-renders
+export default memo(function CompanyCard({ company }: CompanyCardProps) {
   // Format date en français
   const formattedDate = format(new Date(company.created_at), 'dd MMMM yyyy', { locale: fr });
   
@@ -27,10 +30,13 @@ export default function CompanyCard({ company }: CompanyCardProps) {
     <div className="block rounded-lg border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-center">
         {company.logo_url ? (
-          <img 
+          <Image 
             src={company.logo_url} 
-            alt={company.name} 
-            className="h-12 w-12 rounded-full object-cover"
+            alt={`${company.name} logo`}
+            width={64}
+            height={64}
+            className="rounded-lg"
+            loading="lazy"
           />
         ) : (
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-xl font-medium text-blue-600">
@@ -81,4 +87,4 @@ export default function CompanyCard({ company }: CompanyCardProps) {
       </div>
     </div>
   );
-}
+});

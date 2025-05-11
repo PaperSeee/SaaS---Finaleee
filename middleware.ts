@@ -3,27 +3,30 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(req: NextRequest) {
-  // Create a Supabase client configured to use cookies
+  // Create supabase middleware client
   const res = NextResponse.next();
   const supabase = createMiddlewareClient({ req, res });
-
-  // Refresh session if expired - required for Server Components
-  const { data: { session } } = await supabase.auth.getSession();
-
-  // If accessing a protected route without being authenticated
-  const isProtectedRoute = req.nextUrl.pathname.startsWith('/dashboard');
   
-  if (isProtectedRoute && !session) {
-    // Redirect to login page
-    const redirectUrl = new URL('/auth/login', req.url);
-    redirectUrl.searchParams.set('redirect', req.nextUrl.pathname);
-    return NextResponse.redirect(redirectUrl);
-  }
+  // Refresh session if expired
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
+  // Performance optimization: Only refresh token if URL is not for static assets
+  const isStaticAsset = req.nextUrl.pathname.startsWith('/_next/') || 
+                        req.nextUrl.pathname.match(/\.(jpg|jpeg|png|gif|svg|ico|css|js)$/);
+  
+  if (session && !isStaticAsset) {
+    await supabase.auth.refreshSession();
+  }
+  
   return res;
 }
 
-// Specify which paths should trigger this middleware
+// Only run the middleware on specific paths
 export const config = {
-  matcher: ['/dashboard/:path*'],
-}
+  matcher: [
+    // Apply to all routes except static assets, api routes, and resources
+    '/((?!_next/static|_next/image|favicon.ico|api/public|resources).*)',
+  ],
+};

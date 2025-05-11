@@ -2,9 +2,13 @@
 
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSelector from "@/components/LanguageSelector";
+import { throttle } from "@/lib/utils";
+
+// Lazy load non-critical components
+const FAQSection = lazy(() => import('@/components/FAQSection'));
 
 export default function Home() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -13,15 +17,15 @@ export default function Home() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
-  // Handle header scroll effect
+  // Handle header scroll effect with throttling for better performance
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       if (window.scrollY > 10) {
         setScrolled(true);
       } else {
         setScrolled(false);
       }
-    };
+    }, 100); // Throttle to once every 100ms
     
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -382,69 +386,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section id="faq" className="py-24 bg-white">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold sm:text-4xl">Foire Aux Questions</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-              Tout ce que vous devez savoir sur Kritiqo
-            </p>
-          </div>
-
-          <div className="mt-12 space-y-5">
-            {faqs.map((faq, index) => (
-              <div 
-                key={index} 
-                className={`border rounded-xl overflow-hidden transition-all duration-300 ${
-                  activeFaq === index ? 'border-blue-200 bg-blue-50 shadow-md' : 'border-gray-200 bg-white'
-                }`}
-              >
-                <button
-                  className="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none"
-                  onClick={() => toggleFaq(index)}
-                >
-                  <span className="text-lg font-medium">{faq.question}</span>
-                  <svg 
-                    className={`h-6 w-6 transform transition-transform duration-300 ${
-                      activeFaq === index ? 'rotate-180 text-blue-600' : 'text-gray-400'
-                    }`}
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                <div 
-                  className={`transition-all duration-300 ease-in-out ${
-                    activeFaq === index 
-                      ? 'opacity-100 max-h-96 pb-6' 
-                      : 'opacity-0 max-h-0 overflow-hidden'
-                  }`}
-                >
-                  <p className="px-6 text-gray-700">{faq.answer}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <p className="text-gray-600">
-              Vous ne trouvez pas de réponse à votre question ?
-            </p>
-            <Link 
-              href="/contact" 
-              className="mt-3 inline-flex items-center text-blue-600 hover:text-blue-500"
-            >
-              Contactez-nous
-              <svg className="ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Lazy load the FAQ section since it's below the fold */}
+      <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading FAQs...</div>}>
+        <FAQSection faqs={faqs} activeFaq={activeFaq} toggleFaq={toggleFaq} />
+      </Suspense>
 
       {/* Testimonials section */}
       <section className="py-24 bg-gray-50">

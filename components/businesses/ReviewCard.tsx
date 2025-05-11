@@ -1,13 +1,16 @@
 import { Review } from "@/lib/types";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
+import { memo } from 'react';
+import Image from 'next/image';
 
 interface ReviewCardProps {
   review: Review;
   onReply: () => void;
 }
 
-export default function ReviewCard({ review, onReply }: ReviewCardProps) {
+// Memoize the component to prevent unnecessary re-renders
+export default memo(function ReviewCard({ review, onReply }: ReviewCardProps) {
   // Afficher la date relative si disponible, sinon calculer à partir de la date
   const displayDate = review.relativeTimeDescription || 
     formatDistanceToNow(new Date(review.date), { 
@@ -21,10 +24,12 @@ export default function ReviewCard({ review, onReply }: ReviewCardProps) {
         <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-2">
           {review.profilePhoto ? (
             <div className="mr-3 flex-shrink-0">
-              <img 
+              <Image 
                 src={review.profilePhoto} 
                 alt={`Photo de ${review.author}`} 
-                className="h-10 w-10 rounded-full"
+                width={40}
+                height={40}
+                className="rounded-full"
                 loading="lazy"
               />
             </div>
@@ -108,4 +113,4 @@ export default function ReviewCard({ review, onReply }: ReviewCardProps) {
       </div>
     </div>
   );
-}
+});

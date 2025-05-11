@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useMemo, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
@@ -8,6 +8,7 @@ import ReviewCard from "@/components/businesses/ReviewCard";
 import ReviewFilters from "@/components/businesses/ReviewFilters";
 import { Review, Platform } from "@/lib/types";
 import { useRouter } from "next/navigation";
+import { throttle } from "@/lib/utils";
 
 interface Business {
   name: string;
@@ -54,6 +55,34 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
   }>({ loading: false });
 
   const supabase = createClientComponentClient();
+
+  // Memoize the filter function to improve performance
+  const filteredReviews = useMemo(() => {
+    if (!reviews.length) return [];
+    
+    return reviews.filter(review => {
+      // Apply platform filter
+      if (filters.platform !== "all" && review.platform !== filters.platform) {
+        return false;
+      }
+      
+      // Apply rating filter
+      if (filters.rating > 0 && review.rating !== filters.rating) {
+        return false;
+      }
+      
+      // Apply date filters
+      if (filters.dateFrom && new Date(review.date) < new Date(filters.dateFrom)) {
+        return false;
+      }
+      
+      if (filters.dateTo && new Date(review.date) > new Date(filters.dateTo)) {
+        return false;
+      }
+      
+      return true;
+    });
+  }, [reviews, filters]);
 
   // Récupérer les informations de l'entreprise et ses avis
   useEffect(() => {
@@ -299,21 +328,21 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
     }
   };
 
-  // Gestion des réponses aux avis
-  const handleReply = (reviewId: string, platform: Platform) => {
+  // Throttled functions for better performance
+  const handleReply = useCallback((reviewId: string, platform: Platform) => {
     setCurrentReviewId(reviewId);
     setCurrentReviewPlatform(platform);
     setReplyText("");
     setReplyStatus({ loading: false });
     setReplyModalOpen(true);
-  };
+  }, []);
 
-  const closeReplyModal = () => {
+  const closeReplyModal = useCallback(() => {
     setReplyModalOpen(false);
     setCurrentReviewId("");
     setCurrentReviewPlatform("");
     setReplyText("");
-  };
+  }, []);
 
   const submitReply = async () => {
     if (!replyText.trim()) {
@@ -490,7 +519,7 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
             </div>
 
             <div className="mt-6 space-y-4">
-              {reviews.length === 0 ? (
+              {filteredReviews.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 rounded-xl bg-white border border-gray-200 text-center">
                   <svg className="h-16 w-16 text-gray-300 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -502,7 +531,7 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-4 sm:gap-6">
-                  {reviews.map((review) => (
+                  {filteredReviews.map((review) => (
                     <div key={review.id} className="transform transition-all duration-200 hover:translate-y-[-2px] hover:shadow-md">
                       <ReviewCard
                         review={review}
