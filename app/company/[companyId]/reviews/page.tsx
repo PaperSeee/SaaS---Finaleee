@@ -2,26 +2,22 @@
 
 import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { Review } from "@/lib/types";
+import { Review, FilterOptions, SortOption, Platform } from "@/lib/types";
 import ReviewCard from "@/components/businesses/ReviewCard";
-
-interface FiltersState {
-  platform: string;
-  rating: number;
-  dateFrom: string;
-  dateTo: string;
-}
+import ReviewFilters from "@/components/businesses/ReviewFilters";
 
 export default function CompanyReviews({ params }: { params: { companyId: string } }) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState<string>("");
-  const [filters, setFilters] = useState<FiltersState>({
+  const [filters, setFilters] = useState<FilterOptions>({
     platform: "all",
     rating: 0,
     dateFrom: "",
-    dateTo: ""
+    dateTo: "",
+    sortBy: "date_desc",
+    hasResponse: null
   });
 
   // Charger les avis lors du chargement de la page
@@ -48,6 +44,14 @@ export default function CompanyReviews({ params }: { params: { companyId: string
           queryParams.append("dateTo", filters.dateTo);
         }
         
+        if (filters.sortBy && filters.sortBy !== "date_desc") {
+          queryParams.append("sortBy", filters.sortBy);
+        }
+        
+        if (filters.hasResponse !== null) {
+          queryParams.append("hasResponse", filters.hasResponse.toString());
+        }
+        
         const url = `/api/reviews/${params.companyId}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
         
         const response = await fetch(url);
@@ -70,17 +74,6 @@ export default function CompanyReviews({ params }: { params: { companyId: string
     fetchReviews();
   }, [params.companyId, filters]);
 
-  // Gérer les changements de filtres
-  const handleFilterChange = (name: keyof FiltersState, value: string | number) => {
-    setFilters(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleReply = (reviewId: string) => {
-    // Implémentation de la réponse aux avis
-    console.log(`Répondre à l'avis ${reviewId}`);
-    // Ici, vous pourriez ouvrir une modal ou naviguer vers une page de réponse
-  };
-
   return (
     <DashboardLayout>
       <div className="px-4 py-6 sm:px-6 lg:px-8">
@@ -99,72 +92,10 @@ export default function CompanyReviews({ params }: { params: { companyId: string
           </div>
         )}
 
-        {/* Filtres */}
+        {/* Improved filters using our enhanced ReviewFilters component */}
         <div className="mb-8 rounded-lg border bg-white p-4 shadow-sm">
           <h2 className="mb-4 font-medium">Filtrer les avis</h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
-            <div>
-              <label htmlFor="platform" className="block text-sm font-medium">
-                Plateforme
-              </label>
-              <select
-                id="platform"
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none"
-                value={filters.platform}
-                onChange={(e) => handleFilterChange("platform", e.target.value)}
-              >
-                <option value="all">Toutes les plateformes</option>
-                <option value="google">Google</option>
-                <option value="facebook">Facebook</option>
-                <option value="trustpilot">Trustpilot</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="rating" className="block text-sm font-medium">
-                Note minimale
-              </label>
-              <select
-                id="rating"
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none"
-                value={filters.rating}
-                onChange={(e) => handleFilterChange("rating", parseInt(e.target.value))}
-              >
-                <option value="0">Toutes les notes</option>
-                <option value="5">5 étoiles</option>
-                <option value="4">4 étoiles ou plus</option>
-                <option value="3">3 étoiles ou plus</option>
-                <option value="2">2 étoiles ou plus</option>
-                <option value="1">1 étoile ou plus</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="dateFrom" className="block text-sm font-medium">
-                À partir de
-              </label>
-              <input
-                id="dateFrom"
-                type="date"
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none"
-                value={filters.dateFrom}
-                onChange={(e) => handleFilterChange("dateFrom", e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="dateTo" className="block text-sm font-medium">
-                Jusqu'à
-              </label>
-              <input
-                id="dateTo"
-                type="date"
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none"
-                value={filters.dateTo}
-                onChange={(e) => handleFilterChange("dateTo", e.target.value)}
-              />
-            </div>
-          </div>
+          <ReviewFilters filters={filters} setFilters={setFilters} />
         </div>
 
         {/* Liste des avis */}

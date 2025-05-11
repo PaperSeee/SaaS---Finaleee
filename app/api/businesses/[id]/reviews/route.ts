@@ -25,7 +25,8 @@ async function fetchGoogleReviews(placeId: string, apiKey: string): Promise<{
   const cleanedPlaceId = validation.cleanedPlaceId!;
   
   // Use the same fields and format as our google-reviews endpoint
-  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${encodeURIComponent(cleanedPlaceId)}&fields=name,rating,user_ratings_total,reviews&key=${apiKey}`;
+  // Add language=fr parameter to prioritize French reviews
+  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${encodeURIComponent(cleanedPlaceId)}&fields=name,rating,user_ratings_total,reviews&language=fr&key=${apiKey}`;
   
   try {
     const response = await fetch(url);
@@ -147,17 +148,20 @@ export async function GET(req, { params }) {
     const { searchParams } = new URL(req.url);
     let filteredReviews = [...googleReviews];
 
+    // Platform filter
     const platform = searchParams.get("platform");
     if (platform && platform !== "all") {
       filteredReviews = filteredReviews.filter(r => r.platform === platform);
     }
 
+    // Rating filter
     const rating = searchParams.get("rating");
     if (rating) {
       const ratingValue = parseInt(rating);
       filteredReviews = filteredReviews.filter(r => r.rating === ratingValue);
     }
 
+    // Date range filters
     const dateFrom = searchParams.get("dateFrom");
     if (dateFrom) {
       const fromDate = new Date(dateFrom);
@@ -169,13 +173,41 @@ export async function GET(req, { params }) {
       const toDate = new Date(dateTo);
       filteredReviews = filteredReviews.filter(r => new Date(r.date) <= toDate);
     }
+    
+    // Response status filter
+    const hasResponse = searchParams.get('hasResponse');
+    if (hasResponse === 'true') {
+      filteredReviews = filteredReviews.filter(review => review.response !== undefined);
+    } else if (hasResponse === 'false') {
+      filteredReviews = filteredReviews.filter(review => review.response === undefined);
+    }
 
-    // Sort by date (newest first)
-    filteredReviews.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    // Sorting
+    const sortBy = searchParams.get('sortBy') || 'date_desc';
+    switch (sortBy) {
+      case 'date_asc':
+        filteredReviews.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        break;
+      case 'rating_desc':
+        filteredReviews.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'rating_asc':
+        filteredReviews.sort((a, b) => a.rating - b.rating);
+        break;
+      case 'date_desc':
+      default:
+        filteredReviews.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        break;
+    }
 
     return NextResponse.json({
       business: businessInfo,
       reviews: filteredReviews,
+      limitations: {
+        maxReviews: 5,
+        sortingLimited: true,
+        message: "Pour des raisons techniques imposées par Google, seuls 5 avis peuvent être affichés. Ils ne représentent pas l'ensemble des avis disponibles sur votre fiche Google."
+      }
     });
   } catch (err) {
     console.error("Handler error:", err);

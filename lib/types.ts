@@ -11,7 +11,18 @@ export interface Business {
 }
 
 // Review Types
-export type Platform = "google" | "facebook";
+export type Platform = "google" | "facebook" | "trustpilot" | "yelp";
+
+export type SortOption = "date_desc" | "date_asc" | "rating_desc" | "rating_asc";
+
+export interface FilterOptions {
+  platform: Platform | "all";
+  rating: number;
+  dateFrom: string;
+  dateTo: string;
+  sortBy: SortOption;
+  hasResponse?: boolean | null;
+}
 
 export interface Review {
   id: string;

@@ -16,11 +16,14 @@ interface Business {
   reviewCount: number;
 }
 
+// Update FilterState to use our new FilterOptions type
 interface FiltersState {
   platform: Platform | "all";
   rating: number;
   dateFrom: string;
   dateTo: string;
+  sortBy: SortOption;
+  hasResponse: boolean | null;
 }
 
 export default function BusinessReviews({ params }: { params: { id: string } }) {
@@ -42,7 +45,9 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
     platform: "all",
     rating: 0,
     dateFrom: "",
-    dateTo: ""
+    dateTo: "",
+    sortBy: "date_desc",
+    hasResponse: null
   });
   const [replyModalOpen, setReplyModalOpen] = useState(false);
   const [currentReviewId, setCurrentReviewId] = useState<string>("");
@@ -53,6 +58,7 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
     error?: string;
     success?: string;
   }>({ loading: false });
+  const [limitationsWarning, setLimitationsWarning] = useState<string | null>(null);
 
   const supabase = createClientComponentClient();
 
@@ -166,7 +172,6 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
         
         // 3. Construire les paramètres pour récupérer les avis avec le Place ID
         const queryParams = new URLSearchParams();
-        queryParams.append("place_id", placeId);
         
         if (filters.platform !== "all") {
           queryParams.append("platform", filters.platform);
@@ -183,6 +188,17 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
         if (filters.dateTo) {
           queryParams.append("dateTo", filters.dateTo);
         }
+        
+        if (filters.sortBy && filters.sortBy !== "date_desc") {
+          queryParams.append("sortBy", filters.sortBy);
+        }
+        
+        if (filters.hasResponse !== null) {
+          queryParams.append("hasResponse", filters.hasResponse.toString());
+        }
+
+        // Ajouter le place_id aux paramètres de requête - correction de l'erreur
+        queryParams.append("place_id", placeId);
 
         // 4. Récupérer les avis depuis l'API Google
         const googleReviewsUrl = `/api/google-reviews?${queryParams.toString()}`;
@@ -249,6 +265,11 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
           });
           
           setReviews(responseData.reviews || []);
+          
+          // Store limitations warning if present
+          if (responseData.limitations?.message) {
+            setLimitationsWarning(responseData.limitations.message);
+          }
           
         } catch (apiError) {
           console.error("Erreur API:", apiError);
@@ -405,7 +426,7 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
     } catch (err) {
       setReplyStatus({ 
         loading: false, 
-        error: err instanceof Error ? err.message : 'Une erreur inattendue est survenue'
+        error: err instanceof Error ? err.message : 'Une erreur inattendue s\'est survenue'
       });
     }
   };
@@ -532,7 +553,11 @@ export default function BusinessReviews({ params }: { params: { id: string } }) 
 
             {/* Enhanced Filter Component */}
             <div className="mb-6 transition-all duration-200 ease-in-out transform hover:shadow-md rounded-xl bg-white border border-gray-200 shadow-sm overflow-hidden">
-              <ReviewFilters filters={filters} setFilters={setFilters} />
+              <ReviewFilters 
+                filters={filters} 
+                setFilters={setFilters} 
+                showGoogleLimitationWarning={true} 
+              />
             </div>
 
             <div className="mt-6 space-y-4">
