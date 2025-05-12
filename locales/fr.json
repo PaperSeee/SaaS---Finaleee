@@ -52,5 +52,26 @@
   
   "language.english": "Anglais",
   "language.french": "Français",
-  "language.dutch": "Néerlandais"
+  "language.dutch": "Néerlandais",
+  
+  "header.home": "Accueil",
+  "header.features": "Fonctionnalités",
+  "header.pricing": "Tarifs",
+  "header.testimonials": "Témoignages",
+  "header.contact": "Contact",
+  
+  "features.badge": "Fonctionnalités",
+  "showcase.badge": "En Vedette",
+  "showcase.title": "Une interface intuitive pour tous vos besoins",
+  "showcase.description": "Notre tableau de bord centralisé vous permet de gérer facilement toutes vos interactions avec les clients et de suivre votre réputation en ligne.",
+  "showcase.feature1": "Vue d'ensemble simplifiée de toutes vos plateformes d'avis",
+  "showcase.feature2": "Notifications en temps réel pour les nouvelles critiques",
+  "showcase.feature3": "Outils d'analyse avancés pour mesurer votre performance",
+  
+  "how.badge": "Comment ça marche",
+  "faq.badge": "FAQ",
+  "faq.title": "Questions fréquentes",
+  "faq.subtitle": "Tout ce que vous devez savoir pour commencer avec Kritiqo",
+  "faq.more.question": "Vous ne trouvez pas votre réponse?",
+  "faq.more.action": "Contactez notre équipe"
 }

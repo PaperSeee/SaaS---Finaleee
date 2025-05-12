@@ -3,26 +3,43 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [
-      'lh3.googleusercontent.com', // For Google profile photos
-      'graph.facebook.com', // For Facebook profile photos
+      'randomuser.me',
+      'lh3.googleusercontent.com',
+      'graph.facebook.com',
       'platform-lookaside.fbsbx.com',
       'static.xx.fbcdn.net',
     ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'graph.facebook.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'platform-lookaside.fbsbx.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'static.xx.fbcdn.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'randomuser.me',
+      },
+    ],
   },
-  // Enable Brotli compression for smaller bundle sizes
   compress: true,
-  // Add experimental features for better performance
   experimental: {
-    // Optimize CSS by hoisting
     optimizeCss: true,
-    // Optimize React server components
     serverComponents: true,
-    // Enable memory cache for faster builds
     memoryBasedWorkersCount: true,
   },
-  swcMinify: true, // Use SWC minifier for faster builds
+  swcMinify: true,
   compiler: {
-    // Remove console.log statements in production
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
     } : false,

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import Footer from "@/components/Footer";
 
 export default function PricingPage() {
   const { isAuthenticated } = useAuth();
@@ -455,30 +456,7 @@ export default function PricingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white">
-        <div className="mx-auto max-w-7xl overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
-          <nav className="flex flex-wrap justify-center">
-            <div className="px-5 py-2">
-              <Link href="/confidentialite" className="text-base text-gray-500 hover:text-gray-900">
-                Confidentialité
-              </Link>
-            </div>
-            <div className="px-5 py-2">
-              <Link href="/conditions" className="text-base text-gray-500 hover:text-gray-900">
-                Conditions
-              </Link>
-            </div>
-            <div className="px-5 py-2">
-              <Link href="/contact" className="text-base text-gray-500 hover:text-gray-900">
-                Contact
-              </Link>
-            </div>
-          </nav>
-          <p className="mt-8 text-center text-base text-gray-500">
-            &copy; {new Date().getFullYear()} Kritiqo. Tous droits réservés.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

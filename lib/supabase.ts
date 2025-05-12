@@ -13,7 +13,11 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
         'Cache-Control': 'no-cache',
         'x-client-info': 'supabase-js',
       };
-      return fetch(url, { ...options, headers });
+      
+      return fetch(url, {
+        ...options,
+        headers,
+      });
     },
   },
 });

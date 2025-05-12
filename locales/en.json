@@ -52,5 +52,26 @@
   
   "language.english": "English",
   "language.french": "French",
-  "language.dutch": "Dutch"
+  "language.dutch": "Dutch",
+  
+  "header.home": "Home",
+  "header.features": "Features",
+  "header.pricing": "Pricing",
+  "header.testimonials": "Testimonials",
+  "header.contact": "Contact",
+  
+  "features.badge": "Features",
+  "showcase.badge": "Featured",
+  "showcase.title": "An intuitive interface for all your needs",
+  "showcase.description": "Our centralized dashboard allows you to easily manage all your customer interactions and track your online reputation.",
+  "showcase.feature1": "Simplified overview of all your review platforms",
+  "showcase.feature2": "Real-time notifications for new reviews",
+  "showcase.feature3": "Advanced analytics tools to measure your performance",
+  
+  "how.badge": "How It Works",
+  "faq.badge": "FAQ",
+  "faq.title": "Frequently Asked Questions",
+  "faq.subtitle": "Everything you need to know to get started with Kritiqo",
+  "faq.more.question": "Can't find your answer?",
+  "faq.more.action": "Contact our team"
 }

@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface SidebarProps {
   isMobile?: boolean;
@@ -67,7 +68,7 @@ export default function Sidebar({ isMobile = false, onClose }: SidebarProps) {
   };
 
   return (
-    <div className={`flex flex-col ${isMobile ? "h-full" : "h-screen"} bg-white border-r border-gray-100 shadow-sm`}>
+    <div className={`flex flex-col ${isMobile ? "h-full" : "h-screen"} bg-white border-r border-gray-100 shadow-sm dark:bg-gray-800 dark:border-gray-700`}>
       {/* Header/Logo */}
       <div className="flex flex-shrink-0 items-center px-5 py-6">
         <Link href="/dashboard" className="flex items-center">
@@ -84,7 +85,7 @@ export default function Sidebar({ isMobile = false, onClose }: SidebarProps) {
         {isMobile && (
           <button
             onClick={onClose}
-            className="ml-auto text-gray-500 hover:text-gray-700 transition-colors"
+            className="ml-auto text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-300 dark:hover:text-gray-100"
             aria-label="Close menu"
           >
             <svg
@@ -102,6 +103,11 @@ export default function Sidebar({ isMobile = false, onClose }: SidebarProps) {
             </svg>
           </button>
         )}
+        
+        {/* Add theme toggle */}
+        <div className="ml-auto">
+          <ThemeToggle />
+        </div>
       </div>
 
       {/* Navigation Links */}
@@ -113,11 +119,11 @@ export default function Sidebar({ isMobile = false, onClose }: SidebarProps) {
             onClick={isMobile ? onClose : undefined}
             className={`group flex items-center rounded-xl px-4 py-3 text-sm font-medium transition-all ${
               isActive(item.href)
-                ? "bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 shadow-sm"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                ? "bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 shadow-sm dark:from-blue-900/20 dark:to-indigo-900/20 dark:text-blue-400"
+                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
             }`}
           >
-            <div className={`mr-3 transition-colors ${isActive(item.href) ? "text-blue-600" : "text-gray-400 group-hover:text-gray-500"}`}>
+            <div className={`mr-3 transition-colors ${isActive(item.href) ? "text-blue-600 dark:text-blue-400" : "text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300"}`}>
               {item.icon}
             </div>
             {item.name}
@@ -126,23 +132,23 @@ export default function Sidebar({ isMobile = false, onClose }: SidebarProps) {
       </nav>
 
       {/* User info and logout */}
-      <div className="border-t border-gray-100 p-4 mt-auto">
-        <div className="flex items-center p-2 rounded-xl hover:bg-gray-50 transition-colors">
+      <div className="border-t border-gray-100 p-4 mt-auto dark:border-gray-700">
+        <div className="flex items-center p-2 rounded-xl hover:bg-gray-50 transition-colors dark:hover:bg-gray-700">
           <div className="relative">
             <div className="mr-3 h-10 w-10 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center text-white font-medium shadow-sm">
               {user?.email?.charAt(0).toUpperCase() || "U"}
             </div>
-            <span className="absolute bottom-0 right-2 h-3 w-3 rounded-full border-2 border-white bg-green-400"></span>
+            <span className="absolute bottom-0 right-2 h-3 w-3 rounded-full border-2 border-white bg-green-400 dark:border-gray-800"></span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
+            <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-100">
               {user?.email || "User"}
             </p>
-            <p className="text-xs text-gray-500 truncate">Online</p>
+            <p className="text-xs text-gray-500 truncate dark:text-gray-400">Online</p>
           </div>
           <button
             onClick={handleSignOut}
-            className="ml-2 flex-shrink-0 rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 transition-all"
+            className="ml-2 flex-shrink-0 rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 transition-all dark:hover:bg-gray-700 dark:hover:text-gray-300"
             title="Sign out"
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

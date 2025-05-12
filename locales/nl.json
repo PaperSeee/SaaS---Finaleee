@@ -52,5 +52,26 @@
   
   "language.english": "Engels",
   "language.french": "Frans",
-  "language.dutch": "Nederlands"
+  "language.dutch": "Nederlands",
+  
+  "header.home": "Home",
+  "header.features": "Functies",
+  "header.pricing": "Prijzen",
+  "header.testimonials": "Getuigenissen",
+  "header.contact": "Contact",
+  
+  "features.badge": "Functies",
+  "showcase.badge": "Uitgelicht",
+  "showcase.title": "Een intuïtieve interface voor al uw behoeften",
+  "showcase.description": "Ons gecentraliseerd dashboard stelt u in staat om eenvoudig al uw klantinteracties te beheren en uw online reputatie te volgen.",
+  "showcase.feature1": "Vereenvoudigd overzicht van al uw reviewplatforms",
+  "showcase.feature2": "Realtime meldingen voor nieuwe beoordelingen",
+  "showcase.feature3": "Geavanceerde analysetools om uw prestaties te meten",
+  
+  "how.badge": "Hoe het werkt",
+  "faq.badge": "FAQ",
+  "faq.title": "Veelgestelde vragen",
+  "faq.subtitle": "Alles wat u moet weten om met Kritiqo te beginnen",
+  "faq.more.question": "Kunt u uw antwoord niet vinden?",
+  "faq.more.action": "Neem contact op met ons team"
 }
