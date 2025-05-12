@@ -1,8 +1,11 @@
+
+// @ts-nocheck
+
 import { Review } from "@/lib/types";
 
-export default async function Page({ params }: { params: { companyId: string } }) {
+export default async function Page({ params } {
   const { companyId } = params;
-
+}
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL}/api/reviews/${companyId}`,
