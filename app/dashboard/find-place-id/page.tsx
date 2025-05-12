@@ -19,7 +19,7 @@ export default function FindPlaceIdPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const router = useRouter();
+  const _router = useRouter();
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,7 +105,7 @@ export default function FindPlaceIdPage() {
               <div className="ml-3">
                 <p className="text-gray-600">
                   Le Place ID est un identifiant unique attribué par Google à chaque lieu. 
-                  <strong> C'est le moyen le plus fiable pour importer automatiquement vos avis Google</strong> et les gérer dans Kritiqo.
+                  <strong> C&apos;est le moyen le plus fiable pour importer automatiquement vos avis Google</strong> et les gérer dans Kritiqo.
                 </p>
                 <p className="text-gray-600 mt-2">
                   Exemples de Place ID valides :

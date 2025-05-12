@@ -17,7 +17,14 @@ interface GooglePlacesReview {
   };
 }
 
-export async function GET(request: Request, { params }: any) {
+// Replace 'any' with proper interface
+interface GoogleApiParams {
+  params: {
+    companyId: string;
+  };
+}
+
+export async function GET(request: Request, { params }: GoogleApiParams) {
   try {
     const companyId = params.companyId;
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;

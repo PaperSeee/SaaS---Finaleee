@@ -14,6 +14,7 @@ export default function ContactPage() {
     subject: "",
     message: "",
   });
+  const [_error, setError] = useState<string | null>(null);
   const [formStatus, setFormStatus] = useState<{
     status: "idle" | "submitting" | "success" | "error";
     message?: string;

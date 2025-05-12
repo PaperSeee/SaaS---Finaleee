@@ -1,4 +1,3 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
@@ -6,7 +5,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   const { email } = await request.json();
   const cookieStore = cookies();
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+  // Remove unused supabase client
 
   try {
     // Créer un client avec la clé service_role
@@ -17,9 +16,10 @@ export async function POST(request: Request) {
     );
 
     // Rechercher l'utilisateur avec listUsers au lieu de getUserByEmail
-    const { data: listData, error: listError } = await serviceRoleSupabase.auth.admin.listUsers(
-      { filter: `email.eq.${email}` } as any
-    );
+    const { data: listData, error: listError } = await serviceRoleSupabase.auth.admin.listUsers({
+      // Use proper object type instead of 'as any'
+      filter: { email }
+    });
     
     if (listError) {
       return NextResponse.json({ error: listError.message }, { status: 400 });
@@ -38,7 +38,8 @@ export async function POST(request: Request) {
     );
     
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

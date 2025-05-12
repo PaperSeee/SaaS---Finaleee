@@ -7,7 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import ReviewFilters from "@/components/businesses/ReviewFilters";
 import ReviewCard from "@/components/businesses/ReviewCard"; // Import ReviewCard
-import { Review, Platform, SortOption, FilterOptions, Business } from "@/lib/types"; // Add Business type
+import { Review, Platform, FilterOptions, Business } from "@/lib/types"; // Add Business type
 
 // Make FiltersState exactly match FilterOptions to avoid type issues
 type FiltersState = FilterOptions;
@@ -44,7 +44,7 @@ export default function BusinessReviews() {
     error?: string;
     success?: string;
   }>({ loading: false });
-  const [limitationsWarning, setLimitationsWarning] = useState<string | null>(null);
+  const [_limitationsWarning, setLimitationsWarning] = useState<string | null>(null);
 
   const supabase = createClientComponentClient();
 

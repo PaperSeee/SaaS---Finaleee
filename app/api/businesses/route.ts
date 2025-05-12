@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import type { Business } from "@/lib/types";
 
 // Mock database for demo
-let businesses: Business[] = [
+const businesses: Business[] = [
   { id: "1", name: "Coffee Shop", reviewCount: 12, averageRating: 4.2 },
   { id: "2", name: "Tech Store", reviewCount: 47, averageRating: 3.8 },
   { id: "3", name: "Restaurant", reviewCount: 86, averageRating: 4.5 },

@@ -65,7 +65,7 @@ export default function ReviewsPage() {
     return (
       <div className="bg-gray-50 border border-gray-200 text-gray-700 p-6 rounded-md text-center">
         <p className="text-lg font-medium">No reviews found</p>
-        <p className="text-sm">This company doesn't have any reviews yet.</p>
+        <p className="text-sm">This company doesn&apos;t have any reviews yet.</p>
       </div>
     );
   }

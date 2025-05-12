@@ -8,6 +8,13 @@ interface ReplyRequestBody {
   businessId?: string;
 }
 
+// Add Error interface to replace 'any'
+interface ApiError extends Error {
+  message: string;
+  code?: string;
+  status?: number;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body: ReplyRequestBody = await request.json();
@@ -65,7 +72,7 @@ export async function POST(request: NextRequest) {
           message: "Reply submitted successfully to Google review",
           data
         });
-      } catch (error: any) {
+      } catch (error: ApiError) {
         console.error("Error replying to Google review:", error);
         return NextResponse.json({
           success: false,
@@ -111,7 +118,7 @@ export async function POST(request: NextRequest) {
           message: "Reply submitted successfully to Facebook review",
           data
         });
-      } catch (error: any) {
+      } catch (error: ApiError) {
         console.error("Error replying to Facebook review:", error);
         return NextResponse.json({
           success: false,
@@ -130,7 +137,7 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
 
-  } catch (error: any) {
+  } catch (error: ApiError) {
     console.error("Error processing review reply:", error);
     return NextResponse.json(
       { 

@@ -16,13 +16,13 @@ export function debounce<T extends (...args: any[]) => any>(
 }
 
 // Memoization helper to avoid repeated calculations
-export function memoize<T extends (...args: any[]) => any>(fn: T): T {
-  const cache = new Map<string, any>();
+export function memoize<T extends (...args: unknown[]) => unknown>(fn: T): T {
+  const cache = new Map<string, unknown>();
 
   return ((...args: Parameters<T>): ReturnType<T> => {
     const key = JSON.stringify(args);
     if (cache.has(key)) {
-      return cache.get(key);
+      return cache.get(key) as ReturnType<T>;
     }
 
     const result = fn(...args);
@@ -46,13 +46,13 @@ export const formatDate = memoize((dateString: string, locale = 'fr-FR'): string
       month: 'long',
       day: 'numeric',
     }).format(date);
-  } catch (e) {
+  } catch (_e) {
     return dateString;
   }
 });
 
 // Throttle function to limit how often a function can be called
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {

@@ -13,7 +13,7 @@ interface DashboardLayoutProps {
 }
 
 // Memoize the DashboardLayout component to prevent unnecessary re-renders
-const DashboardLayout = memo(({ children }: DashboardLayoutProps) => {
+const DashboardLayout = memo(function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, isLoading, signOut } = useAuth();
   const pathname = usePathname();
@@ -68,7 +68,7 @@ const DashboardLayout = memo(({ children }: DashboardLayoutProps) => {
     );
   }
 
-  const navigation = [
+  const _navigation = [
     { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
     { name: "Entreprises", href: "/dashboard/businesses", icon: BuildingOfficeIcon },
     { name: "Statistiques", href: "/dashboard/stats", icon: ChartBarIcon },
@@ -152,5 +152,7 @@ const DashboardLayout = memo(({ children }: DashboardLayoutProps) => {
     </div>
   );
 });
+
+DashboardLayout.displayName = 'DashboardLayout';
 
 export default DashboardLayout;

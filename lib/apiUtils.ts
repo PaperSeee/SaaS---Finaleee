@@ -106,7 +106,7 @@ export function validatePlaceId(placeId: string): {
  * @param response - The fetch Response object
  * @returns Parsed JSON data
  */
-export async function safeJsonParse(response: Response): Promise<any> {
+export async function safeJsonParse(response: Response): Promise<Record<string, unknown>> {
   try {
     // Clone the response to avoid "body stream already read" errors
     const clonedResponse = response.clone();

@@ -13,7 +13,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { signUp, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const supabase = createClientComponentClient();
 
   // Redirection si déjà authentifié
@@ -186,7 +186,7 @@ export default function Register() {
         
         <div className="text-center text-sm">
           <p>
-            Vous avez déjà un compte?{" "}
+            Vous avez déjà un compte ?{" "}
             <Link href="/auth/login" className="font-medium text-blue-600 hover:text-blue-500">
               Connectez-vous
             </Link>
