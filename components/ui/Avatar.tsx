@@ -19,7 +19,7 @@ export default function Avatar({ src, alt, size = 40, className = '' }: AvatarPr
     .toUpperCase()
     .substring(0, 2);
   
-  const fallbackSrc = '/default-avatar.png';
+  // Remove unused fallbackSrc
   
   if (!src || error) {
     // Return text-based avatar if no image or error loading

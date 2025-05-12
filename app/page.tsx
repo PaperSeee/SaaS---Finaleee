@@ -7,16 +7,15 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Image from "next/image";
 
 // Lazy load non-critical components
 const FAQSection = lazy(() => import("@/components/FAQSection"));
 
 export default function Home() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated: _isAuthenticated, isLoading: _isLoading } = useAuth();
   const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
-  const [activeFaq, setActiveFaq] = useState(null);
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   // Handle header scroll effect with throttling for better performance
@@ -33,7 +32,7 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleFaq = (index) => {
+  const toggleFaq = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index);
   };
 
@@ -101,24 +100,8 @@ export default function Home() {
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
-                className="text-left flex flex-col items-start"
+                className="text-left"
               >
-                {/* Logo and title */}
-                <div className="flex items-center space-x-3 mb-6">
-                  <div className="relative h-12 w-12 sm:h-16 sm:w-16">
-                    <Image
-                      src="/logo.png"
-                      alt="Kritiqo Logo"
-                      fill
-                      className="object-contain"
-                      sizes="48px"
-                      priority
-                    />
-                  </div>
-                  <span className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                    Kritiqo
-                  </span>
-                </div>
                 <span className="inline-block px-4 py-1 rounded-full bg-blue-100 text-blue-600 font-medium text-sm mb-5">
                   {t('hero.subtitle.badge')}
                 </span>
@@ -174,18 +157,74 @@ export default function Home() {
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative flex justify-center"
+                className="relative"
               >
-                {/* Example hero image, responsive */}
-                <div className="w-full max-w-xs sm:max-w-md md:max-w-lg">
-                  <Image
-                    src="/dashboard-screenshot.png"
-                    alt="Dashboard Screenshot"
-                    width={600}
-                    height={400}
-                    className="rounded-2xl shadow-lg w-full h-auto"
-                    priority
-                  />
+                <div className="aspect-w-5 aspect-h-4 md:aspect-w-3 md:aspect-h-2 rounded-2xl overflow-hidden shadow-2xl">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 opacity-50"></div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="mockup-window w-full max-w-lg bg-white shadow-lg rounded-lg p-1">
+                      <div className="flex items-center space-x-2 px-3 pb-2 border-b">
+                        <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                        <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                        <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                      </div>
+                      <div className="p-5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-b-lg">
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-10 h-10 rounded-full bg-blue-100"></div>
+                              <div className="h-4 w-40 bg-gray-200 rounded"></div>
+                            </div>
+                            <div className="flex">
+                              {[1, 2, 3, 4, 5].map((i) => (
+                                <svg key={i} className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="h-4 w-full bg-gray-200 rounded"></div>
+                          <div className="h-4 w-3/4 bg-gray-200 rounded"></div>
+                          <div className="h-10 w-32 bg-blue-100 rounded-lg ml-auto"></div>
+                        </div>
+                        <div className="mt-6 pt-4 border-t border-gray-200">
+                          <div className="flex justify-between">
+                            <div className="h-4 w-1/4 bg-gray-200 rounded"></div>
+                            <div className="h-4 w-1/5 bg-gray-200 rounded"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Floating UI elements for visual appeal */}
+                <div className="absolute -top-5 -right-5 bg-white p-3 rounded-lg shadow-lg">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="h-2.5 w-12 bg-gray-200 rounded"></div>
+                      <div className="h-2 w-20 bg-gray-100 rounded mt-1"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="absolute -bottom-5 -left-5 bg-white p-3 rounded-lg shadow-lg">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="h-2.5 w-16 bg-gray-200 rounded"></div>
+                      <div className="h-2 w-16 bg-gray-100 rounded mt-1"></div>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </div>
@@ -196,17 +235,9 @@ export default function Home() {
             <p className="text-center text-sm font-medium text-gray-500 mb-6">
               {t('hero.trustedBy')}
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center opacity-70">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center opacity-70">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="flex justify-center">
-                  <Image
-                    src={`/trust-logo-${i}.png`}
-                    alt={`Trusted logo ${i}`}
-                    width={100}
-                    height={40}
-                    className="object-contain h-8 sm:h-10 w-auto"
-                  />
-                </div>
+                <div key={i} className="h-8 bg-gray-200 rounded"></div>
               ))}
             </div>
           </div>
@@ -269,17 +300,17 @@ export default function Home() {
                 <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 h-full border border-gray-100 group-hover:border-blue-100">
                   <div className="mb-6 h-14 w-14 rounded-full bg-blue-100 p-3 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2z" />
-                  </svg>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                    {t('features.response.title')}
+                  </h3>
+                  <p className="mt-4 text-gray-600 leading-relaxed">
+                    {t('features.response.description')}
+                  </p>
+                  <div className="mt-8 h-1 w-12 bg-blue-600 rounded group-hover:w-full transition-all duration-300"></div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                  {t('features.response.title')}
-                </h3>
-                <p className="mt-4 text-gray-600 leading-relaxed">
-                  {t('features.response.description')}
-                </p>
-                <div className="mt-8 h-1 w-12 bg-blue-600 rounded group-hover:w-full transition-all duration-300"></div>
-              </div>
               </motion.div>
 
               {/* Feature 3: Analytics */}
@@ -290,7 +321,7 @@ export default function Home() {
                 <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 h-full border border-gray-100 group-hover:border-blue-100">
                   <div className="mb-6 h-14 w-14 rounded-full bg-blue-100 p-3 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">

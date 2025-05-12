@@ -181,7 +181,7 @@ export default function ReviewsPage() {
     };
     
     fetchBusinessAndReviews();
-  }, [businessId, user]);
+  }, [businessId, user, supabase]);
 
   // Handle opening reply modal
   const handleReply = (id, platform) => {

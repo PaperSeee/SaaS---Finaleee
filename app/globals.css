@@ -101,18 +101,3 @@ body {
 .dark .dark\:border-gray-700 {
   border-color: var(--border);
 }
-
-/* Make images responsive by default */
-img, .next-image, .responsive-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* Responsive container for hero and trust logos */
-@media (max-width: 640px) {
-  .hero-logo {
-    height: 40px !important;
-    width: 40px !important;
-  }
-}

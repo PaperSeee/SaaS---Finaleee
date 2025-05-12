@@ -5,10 +5,9 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
-import LanguageSelector from "@/components/LanguageSelector";
 
 // Memoize the DashboardLayout component to prevent unnecessary re-renders
-const DashboardLayout = memo(function DashboardLayout({ children }: PropsWithChildren<{}>) {
+const DashboardLayout = memo(function DashboardLayout({ children }: PropsWithChildren<object>) {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const { user, isLoading, signOut } = useAuth();
   const pathname = usePathname();

@@ -1,3 +1,5 @@
+"use client";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -66,7 +68,7 @@ export default function FAQSection({ faqs, activeFaq, toggleFaq }: FAQSectionPro
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
                     <div className="px-6 pb-4 text-gray-600 bg-slate-50">

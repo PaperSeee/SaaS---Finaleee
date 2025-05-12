@@ -31,25 +31,12 @@ export default function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <a href="/" className="flex items-center space-x-2">
-            <div className="relative h-8 w-8 sm:h-10 sm:w-10">
-              <Image
-                src="/logo.png"
-                alt="Kritiqo Logo"
-                fill
-                className="object-contain"
-                sizes="32px"
-                onError={(e) => {
-                  // fallback to text if logo fails
-                  (e.target as HTMLImageElement).style.display = "none";
-                }}
-                priority
-              />
-            </div>
-            <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <Link href="/" className="flex items-center">
+            <Image src="/logo.png" alt="Kritiqo" width={40} height={40} className="mr-2" />
+            <span className={`font-bold text-2xl ${scrolled ? 'text-gray-800' : 'text-white'}`}>
               Kritiqo
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">

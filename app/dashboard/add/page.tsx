@@ -1,7 +1,6 @@
 "use client";
 
-import React, { Suspense } from 'react';
-import { useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useAuth } from "@/contexts/AuthContext";
@@ -93,34 +92,16 @@ function AddPageContent() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   
-  // Add debounce effect to verify Google Place ID when user types
-  useEffect(() => {
-    const placeId = form.platformData.google.placeId;
-    
-    if (form.platforms.google && placeId && 
-        form.platformData.google.verificationStatus !== "searching") {
-      const timer = setTimeout(() => {
-        verifyGooglePlaceId(placeId);
-      }, 800); // Debounce for 800ms
-      
-      return () => clearTimeout(timer);
-    }
-  }, [form.platformData.google.placeId, form.platforms.google]);
-  
-  // Verify Google Place ID
-  const verifyGooglePlaceId = async (placeId: string) => {
+  // on hoiste et on wrap en useCallback pour la cohérence des deps
+  const verifyGooglePlaceId = useCallback(async (placeId: string) => {
     if (!placeId.trim()) {
       updatePlatformData("google", "verificationStatus", "idle");
       return;
     }
-    
     updatePlatformData("google", "verificationStatus", "searching");
-    
     try {
-      // Call our API to verify the Place ID and get business info
       const response = await fetch(`/api/google-reviews?place_id=${encodeURIComponent(placeId)}&preview=true`);
       const data = await response.json();
-      
       if (response.ok && data.business) {
         updatePlatformData("google", "verificationStatus", "found");
         updatePlatformData("google", "verified", true);
@@ -129,23 +110,29 @@ function AddPageContent() {
           rating: data.business.averageRating,
           reviewCount: data.business.reviewCount
         });
-        
-        // Update the business name if it's empty
         if (!form.name) {
-          setForm(prev => ({...prev, name: data.business.name}));
+          setForm(prev => ({ ...prev, name: data.business.name }));
         }
       } else {
         updatePlatformData("google", "verificationStatus", "not-found");
         updatePlatformData("google", "verified", false);
       }
-    } catch (err) {
-      console.error("Error verifying Place ID:", err);
+    } catch {
       updatePlatformData("google", "verificationStatus", "not-found");
       updatePlatformData("google", "verified", false);
     }
-  };
+  }, [form.name]);
+
+  // Add debounce effect to verify Google Place ID when user types
+  useEffect(() => {
+    const placeId = form.platformData.google.placeId;
+    if (form.platforms.google && placeId) {
+      const timer = setTimeout(() => verifyGooglePlaceId(placeId), 800);
+      return () => clearTimeout(timer);
+    }
+  }, [form.platformData.google.placeId, form.platforms.google, verifyGooglePlaceId]);
   
-  // Update a specific value in the platformData
+  // Verify Google Place ID
   const updatePlatformData = (
     platform: Platform,
     field: string, 
