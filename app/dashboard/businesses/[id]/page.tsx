@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import ReviewCard from "@/components/businesses/ReviewCard";
 import { Review, Platform } from "@/lib/types";
@@ -10,9 +11,9 @@ import Image from "next/image";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useAuth } from "@/contexts/AuthContext";
 
-export default function BusinessDetails({ params }: { params: { id: string } }) {
-  // Access the ID directly from params instead of using React.use()
-  const businessId = params.id;
+export default function BusinessDetails() {
+  // Access the ID from route parameters using useParams()
+  const { id: businessId } = useParams() as { id: string };
   
   const { user } = useAuth();
   const supabase = createClientComponentClient();
