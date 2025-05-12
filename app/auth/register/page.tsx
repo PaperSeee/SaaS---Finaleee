@@ -29,14 +29,14 @@ export default function Register() {
     setError(null);
     
     try {
-      // Inscription avec Supabase avec l'option data.email_confirmed
+      // Inscription avec Supabase avec l'option data.email_confirm
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: {
-            email_confirmed: true,
+            email_confirm: true,  // Changed from email_confirmed for consistency
             company_name: companyName
           }
         }

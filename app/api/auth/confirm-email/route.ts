@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     // Confirmer l'email de l'utilisateur
     await serviceRoleSupabase.auth.admin.updateUserById(
       userData.id,
-      { email_confirmed: true }
+      { email_confirm: true }
     );
     
     return NextResponse.json({ success: true });

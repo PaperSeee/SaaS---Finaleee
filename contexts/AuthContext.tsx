@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           // Désactiver la confirmation par email pour le développement local
           emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: {
-            email_confirm: true  // Indication que l'email est déjà confirmé
+            email_confirm: true  // Changed from email_confirmed for consistency
           }
         }
       });
@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // Forcer la confirmation de l'utilisateur en mode dev
         await supabase.auth.admin.updateUserById(
           userData.user.id,
-          { email_confirmed: true }
+          { email_confirm: true }  // Changed from email_confirmed for consistency
         );
       }
       
