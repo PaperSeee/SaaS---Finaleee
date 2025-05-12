@@ -80,7 +80,7 @@ export function extractPlaceIdFromUrl(url: string): string | null {
     if (!url) return null;
     
     const urlStr = url.trim();
-    let placeId = null;
+    let placeId: string | null = null;
     
     // Format 1: !1s0x12345... ou !1sChIJ...
     const match1 = urlStr.match(/!1s([0-9a-zA-Z_-]+)/);
@@ -118,7 +118,7 @@ export function extractPlaceIdFromUrl(url: string): string | null {
       placeId = placeId.split('?')[0];
       
       // Vérifier et nettoyer le format
-      const { valid, cleanedPlaceId } = validatePlaceIdApi(placeId);
+      const { valid, cleanedPlaceId } = validatePlaceIdApi(placeId!);
       if (valid && cleanedPlaceId) {
         return cleanedPlaceId;
       }

@@ -50,7 +50,7 @@ export default function AddCompany() {
       
       // Vérifier si l'entrée ressemble à une URL Google Maps
       const searchInput = input.trim();
-      let placeId = null;
+      let placeId: string | null = null;
       
       // Si c'est une URL Google Maps, essayer d'extraire directement le place_id
       if (searchInput.includes('google.com/maps')) {
@@ -107,18 +107,18 @@ export default function AddCompany() {
         if (placeId) {
           setPlaceIdStatus({ 
             status: 'found', 
-            placeId 
+            placeId: placeId!
           });
           
           // Récupérer les informations de l'entreprise pour confirmation
           try {
-            const previewResponse = await fetch(`/api/google-reviews?place_id=${encodeURIComponent(placeId)}&preview=true`);
+            const previewResponse = await fetch(`/api/google-reviews?place_id=${encodeURIComponent(placeId!)}&preview=true`);
             if (previewResponse.ok) {
               const previewData = await previewResponse.json();
               if (previewData.business) {
                 setPlaceIdStatus({ 
                   status: 'found', 
-                  placeId,
+                  placeId: placeId!,
                   businessInfo: previewData.business
                 });
               }
@@ -183,18 +183,18 @@ export default function AddCompany() {
         
         setPlaceIdStatus({ 
           status: 'found', 
-          placeId 
+          placeId: placeId!
         });
         
         // Once found, fetch preview of reviews to confirm
         try {
-          const previewResponse = await fetch(`/api/google-reviews?place_id=${encodeURIComponent(placeId)}&preview=true`);
+          const previewResponse = await fetch(`/api/google-reviews?place_id=${encodeURIComponent(placeId!)}&preview=true`);
           if (previewResponse.ok) {
             const previewData = await previewResponse.json();
             if (previewData.business) {
               setPlaceIdStatus({ 
                 status: 'found', 
-                placeId,
+                placeId: placeId!,
                 businessInfo: {
                   name: previewData.business.name,
                   rating: previewData.business.rating,

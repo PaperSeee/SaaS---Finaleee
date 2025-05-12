@@ -14,9 +14,9 @@ export async function POST(request: Request) {
     );
 
     // Rechercher l'utilisateur avec listUsers au lieu de getUserByEmail
-    // @ts-expect-error: supabase-js v2 typing n’inclut pas `filter` sur listUsers
+    // on cast en any pour bypasser le typage incomplet
     const { data: listData, error: listError } = await serviceRoleSupabase.auth.admin.listUsers(
-      { filter: `email=eq.${email}` } as unknown
+      { filter: `email=eq.${email}` } as any
     );
     
     if (listError) {
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     );
     
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
