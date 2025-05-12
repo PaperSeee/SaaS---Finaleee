@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { FilterOptions } from "@/lib/types";
+import { FilterOptions, Platform, PLATFORM_CONFIGS } from "@/lib/types";
 
 interface ReviewFiltersProps {
   filters: FilterOptions;
   setFilters: React.Dispatch<React.SetStateAction<FilterOptions>>;
+  availablePlatforms?: Platform[];
   showGoogleLimitationWarning?: boolean;
 }
 
 export default function ReviewFilters({ 
   filters, 
   setFilters, 
+  availablePlatforms = ["google", "facebook", "trustpilot", "yelp"],
   showGoogleLimitationWarning = true 
 }: ReviewFiltersProps) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -41,7 +43,7 @@ export default function ReviewFilters({
 
   return (
     <div className="w-full">
-      {showGoogleLimitationWarning && (
+      {showGoogleLimitationWarning && filters.platform === "google" && (
         <div className="mb-4 rounded-md bg-amber-50 border border-amber-200 p-4 text-sm">
           <div className="flex">
             <div className="flex-shrink-0">
@@ -51,7 +53,7 @@ export default function ReviewFilters({
             </div>
             <div className="ml-3">
               <p className="text-amber-700">
-                <span className="font-medium">Limitation de l'API Google Places :</span> L'API de Google ne permet d'afficher qu'un nombre limité d'avis (5 maximum). Pour voir tous vos avis, visitez directement votre profil Google Business.
+                <span className="font-medium">Google Places API Limitation:</span> Google only allows displaying a limited number of reviews (max 5). To see all your reviews, visit your Google Business profile directly.
               </p>
             </div>
           </div>
@@ -73,10 +75,11 @@ export default function ReviewFilters({
               className="w-full sm:w-auto rounded-md border-gray-300 py-2 pl-3 pr-10 text-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
             >
               <option value="all">All Platforms</option>
-              <option value="google">Google</option>
-              <option value="facebook">Facebook</option>
-              <option value="trustpilot">Trustpilot</option>
-              <option value="yelp">Yelp</option>
+              {availablePlatforms.map(platform => (
+                <option key={platform} value={platform}>
+                  {PLATFORM_CONFIGS[platform].name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -214,8 +217,8 @@ export default function ReviewFilters({
         <div className="mt-3 flex flex-wrap gap-2">
           <span className="text-xs text-gray-500">Active filters:</span>
           {filters.platform !== "all" && (
-            <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
-              Platform: {filters.platform}
+            <span className={`inline-flex items-center rounded-full bg-${PLATFORM_CONFIGS[filters.platform as Platform].color}-100 px-2.5 py-0.5 text-xs font-medium text-${PLATFORM_CONFIGS[filters.platform as Platform].color}-800`}>
+              Platform: {PLATFORM_CONFIGS[filters.platform as Platform].name}
             </span>
           )}
           {filters.rating > 0 && (

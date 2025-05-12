@@ -34,57 +34,31 @@ export async function validateGoogleApiKey(apiKey: string) {
 /**
  * Validates and cleans a Google Place ID
  */
-export function validatePlaceId(placeId: string) {
-  // Handle null or undefined cases
+export function validatePlaceId(placeId: string | null | undefined): { 
+  valid: boolean; 
+  message?: string;
+  cleanedPlaceId?: string;
+} {
   if (!placeId) {
+    return { valid: false, message: "Place ID is required" };
+  }
+  
+  const trimmedPlaceId = placeId.trim();
+  
+  if (!trimmedPlaceId) {
+    return { valid: false, message: "Place ID cannot be empty" };
+  }
+  
+  // Google Place IDs typically start with ChI and are alphanumeric with some special chars
+  if (!/^[a-zA-Z0-9_-]+$/.test(trimmedPlaceId)) {
     return { 
       valid: false, 
-      message: 'Place ID cannot be empty', 
-      cleanedPlaceId: null 
+      message: "Place ID contains invalid characters",
+      cleanedPlaceId: trimmedPlaceId.replace(/[^a-zA-Z0-9_-]/g, '')
     };
   }
   
-  // Trim whitespace
-  const cleanedPlaceId = placeId.trim();
-  
-  // Check if empty after trimming
-  if (!cleanedPlaceId) {
-    return { 
-      valid: false, 
-      message: 'Place ID cannot be empty', 
-      cleanedPlaceId: null 
-    };
-  }
-  
-  // Basic format check (typically starts with "ChIJ" and is ~27 chars)
-  // This is a simplified check - Google doesn't publish exact format specs
-  if (cleanedPlaceId.length < 20) {
-    // Too short to be valid
-    return { 
-      valid: false, 
-      message: 'Place ID too short (should be approximately 27 characters)', 
-      cleanedPlaceId 
-    };
-  }
-  
-  // Most place IDs begin with "ChIJ" or "Eh" or are in hex format
-  const isStandardFormat = cleanedPlaceId.startsWith('ChIJ') || cleanedPlaceId.startsWith('Eh');
-  const isHexFormat = cleanedPlaceId.startsWith('0x') && cleanedPlaceId.includes(':');
-  
-  if (!isStandardFormat && !isHexFormat && cleanedPlaceId.length < 27) {
-    return { 
-      valid: false, 
-      message: 'Place ID has an unusual format', 
-      cleanedPlaceId 
-    };
-  }
-  
-  // Accept the ID if it meets our relaxed criteria
-  return { 
-    valid: true, 
-    message: 'Format appears valid', 
-    cleanedPlaceId 
-  };
+  return { valid: true, cleanedPlaceId: trimmedPlaceId };
 }
 
 /**
@@ -94,8 +68,8 @@ export async function safeJsonParse(response: Response) {
   try {
     return await response.json();
   } catch (error) {
-    console.error('Error parsing JSON from response:', error);
-    return { error: 'Failed to parse response body' };
+    console.error("Error parsing JSON response:", error);
+    return { error: "Invalid JSON response" };
   }
 }
 
@@ -146,5 +120,35 @@ export function extractPlaceIdFromUrl(url: string): string | null {
   } catch (error) {
     console.error('Error extracting Place ID from URL:', error);
     return null;
+  }
+}
+
+/**
+ * Extract useful error information from various error objects
+ */
+export function extractErrorMessage(error: any): string {
+  if (!error) {
+    return "An unknown error occurred";
+  }
+  
+  if (typeof error === 'string') {
+    return error;
+  }
+  
+  // Handle Supabase errors
+  if (error.message) {
+    return error.message;
+  } else if (error.error_description) {
+    return error.error_description;
+  } else if (error.details) {
+    return error.details;
+  } else if (error.code) {
+    return `Error code: ${error.code}`;
+  }
+  
+  try {
+    return JSON.stringify(error, Object.getOwnPropertyNames(error));
+  } catch (e) {
+    return "Error could not be serialized";
   }
 }

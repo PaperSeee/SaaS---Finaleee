@@ -4,15 +4,74 @@ export interface Business {
   name: string;
   reviewCount: number;
   averageRating: number;
+  
+  // Platform URLs
   googleUrl?: string;
   facebookUrl?: string;
-  placeId: string;  // Make this non-optional to ensure it's always defined (empty string if null)
-  placeIdVerified?: boolean; // Add a flag to indicate if the Place ID has been verified
-  rating?: number; // Allow rating field for compatibility
+  trustpilotUrl?: string;
+  
+  // Platform IDs - these will be used to fetch reviews
+  googlePlaceId?: string;
+  facebookPageId?: string;
+  trustpilotBusinessId?: string;
+  
+  // Verification flags
+  googlePlaceIdVerified?: boolean;
+  facebookPageIdVerified?: boolean;
+  trustpilotBusinessIdVerified?: boolean;
+  
+  // Platform configuration
+  enabledPlatforms?: Platform[];
+  
+  // For backwards compatibility
+  placeId?: string;
+  rating?: number;
 }
 
 // Review Types
 export type Platform = 'google' | 'facebook' | 'trustpilot' | 'yelp';
+
+// Platform-specific configuration and requirements
+export interface PlatformConfig {
+  name: string;
+  color: string; // For UI styling
+  icon: string;  // Icon identifier
+  idFieldName: string; // What the ID field is called (e.g., "Place ID" for Google)
+  idPattern?: RegExp; // Regex pattern for validation if available
+  idRequired: boolean;
+}
+
+export const PLATFORM_CONFIGS: Record<Platform, PlatformConfig> = {
+  google: {
+    name: "Google Business",
+    color: "blue",
+    icon: "google",
+    idFieldName: "Place ID",
+    idPattern: /^Ch[A-Za-z0-9_-]{10,}$/,
+    idRequired: true
+  },
+  facebook: {
+    name: "Facebook",
+    color: "indigo",
+    icon: "facebook",
+    idFieldName: "Page ID",
+    idRequired: false
+  },
+  trustpilot: {
+    name: "Trustpilot",
+    color: "green",
+    icon: "trustpilot",
+    idFieldName: "Business ID",
+    idRequired: false
+  },
+  yelp: {
+    name: "Yelp",
+    color: "red",
+    icon: "yelp",
+    idFieldName: "Business ID",
+    idRequired: false
+  }
+};
 
 export type SortOption = "date_desc" | "date_asc" | "rating_desc" | "rating_asc";
 
