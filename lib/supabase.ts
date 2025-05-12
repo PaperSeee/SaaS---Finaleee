@@ -1,3 +1,8 @@
+// Load .env in server/build environment so NEXT_PUBLIC_* vars are defined
+if (typeof window === 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('dotenv').config();
+}
 import { createClient } from '@supabase/supabase-js';
 
 // Create a single supabase client for the entire application
