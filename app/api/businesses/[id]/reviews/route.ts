@@ -134,28 +134,30 @@ async function getBusinessPlatformIds(businessId: string) {
 }
 
 // ✅ NO TYPE ON ARGUMENTS — TO FIX BUILD IN NEXT 15
-export async function GET(
-  request: Request,
-  { params: { id } }
-) {
-  const businessId = id;
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
+export async function GET(request: Request) {
+  // Récupère businessId depuis le path de l'URL
+  const { pathname } = new URL(request.url);
+  const segments = pathname.split("/");
+  const businessId = segments[segments.indexOf("businesses") + 1];
 
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: "Google Places API key not configured" }, { status: 500 });
   }
 
   try {
     const { googlePlaceId } = await getBusinessPlatformIds(businessId);
-    
     if (!googlePlaceId) {
-      return NextResponse.json({ 
-        business: { name: "", rating: 0, reviewCount: 0 },
-        reviews: [],
-        error: "No Google Place ID found for this business"
-      }, { status: 200 }); // Return empty data but with 200 status
+      return NextResponse.json(
+        {
+          business: { name: "", rating: 0, reviewCount: 0 },
+          reviews: [],
+          error: "No Google Place ID found for this business",
+        },
+        { status: 200 }
+      );
     }
-    
+
     // Fetch reviews from Google
     const { reviews: googleReviews, businessInfo } = await fetchGoogleReviews(googlePlaceId, apiKey);
     
