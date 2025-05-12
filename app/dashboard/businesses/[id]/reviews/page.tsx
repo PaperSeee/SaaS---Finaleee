@@ -83,9 +83,10 @@ export default function ReviewsPage() {
       // Sort logic
       switch (filters.sortBy) {
         case "date_desc":
-          return new Date(b.date) - new Date(a.date);
+          // use numeric timestamps instead of Date objects
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
         case "date_asc":
-          return new Date(a.date) - new Date(b.date);
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
         case "rating_desc":
           return b.rating - a.rating;
         case "rating_asc":
