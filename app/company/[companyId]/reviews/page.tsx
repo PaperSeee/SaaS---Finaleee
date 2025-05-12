@@ -1,13 +1,6 @@
 import { Review } from "@/lib/types";
 
-// ✅ Ne PAS inclure `searchParams` ici
-type PageProps = {
-  params: {
-    companyId: string;
-  };
-};
-
-export default async function CompanyReviewsPage({ params }: PageProps) {
+export default async function CompanyReviewsPage({ params }: { params: { companyId: string } }) {
   const { companyId } = params;
 
   try {
