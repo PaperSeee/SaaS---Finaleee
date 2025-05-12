@@ -18,11 +18,9 @@ export async function POST(request: Request) {
     );
 
     // Rechercher l'utilisateur avec listUsers au lieu de getUserByEmail
-    const opts = {
-      filter: `email.eq.${email}`,
-    } as PaginationParams & { filter: string };
-    
-    const { data: listData, error: listError } = await serviceRoleSupabase.auth.admin.listUsers(opts);
+    const { data: listData, error: listError } = await serviceRoleSupabase.auth.admin.listUsers(
+      { filter: `email.eq.${email}` } as any
+    );
     
     if (listError) {
       return NextResponse.json({ error: listError.message }, { status: 400 });
