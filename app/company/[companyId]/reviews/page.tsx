@@ -1,6 +1,6 @@
 import { Review } from "@/lib/types";
 
-export default async function CompanyReviewsPage({ params }: { params: { companyId: string } }) {
+export default async function Page({ params }: { params: { companyId: string } }) {
   const { companyId } = params;
 
   try {
