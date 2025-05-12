@@ -1,43 +1,43 @@
 import { Review } from "@/lib/types";
 
-// Define the correct PageProps type for Next.js App Router
+// ✅ Ne PAS inclure `searchParams` ici
 type PageProps = {
   params: {
     companyId: string;
   };
-  searchParams?: Record<string, string | string[] | undefined>;
 };
 
-// Export an async function with the correct props structure
 export default async function CompanyReviewsPage({ params }: PageProps) {
   const { companyId } = params;
-  
+
   try {
-    // Fetch reviews from our API endpoint
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/reviews/${companyId}`, {
-      cache: "no-store",
-    });
-    
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/reviews/${companyId}`,
+      {
+        cache: "no-store",
+      }
+    );
+
     if (!response.ok) {
       throw new Error(`Error fetching reviews: ${response.status}`);
     }
-    
+
     const data = await response.json();
     const { companyName, reviews } = data;
-    
+
     return (
       <div className="container mx-auto py-8">
         <h1 className="text-2xl font-bold mb-6">{companyName} Reviews</h1>
-        
+
         {reviews && reviews.length > 0 ? (
           <div className="space-y-4">
             {reviews.map((review: Review) => (
               <div key={review.id} className="border p-4 rounded-lg">
                 <div className="flex items-center mb-2">
                   {review.profilePhoto && (
-                    <img 
-                      src={review.profilePhoto} 
-                      alt={review.author} 
+                    <img
+                      src={review.profilePhoto}
+                      alt={review.author}
                       className="w-10 h-10 rounded-full mr-3"
                     />
                   )}
@@ -50,11 +50,13 @@ export default async function CompanyReviewsPage({ params }: PageProps) {
                 </div>
                 <div className="mb-2">Rating: {review.rating}/5</div>
                 <p className="text-gray-700">{review.content}</p>
-                
+
                 {review.response && (
                   <div className="mt-3 pl-4 border-l-2 border-gray-300">
                     <p className="text-sm font-medium">Response:</p>
-                    <p className="text-sm text-gray-600">{review.response.content}</p>
+                    <p className="text-sm text-gray-600">
+                      {review.response.content}
+                    </p>
                   </div>
                 )}
               </div>
