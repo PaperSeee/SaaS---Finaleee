@@ -16,24 +16,28 @@ export async function POST(request: Request) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    // Rechercher l'utilisateur
-    const { data: userData, error: userError } = await serviceRoleSupabase.auth.admin.getUserByEmail(email);
+    // Rechercher l'utilisateur avec listUsers au lieu de getUserByEmail
+    const { data: listData, error: listError } = await serviceRoleSupabase.auth.admin.listUsers({
+      filter: `email.eq.${email}`
+    });
     
-    if (userError) {
-      return NextResponse.json({ error: userError.message }, { status: 400 });
+    if (listError) {
+      return NextResponse.json({ error: listError.message }, { status: 400 });
     }
     
-    if (userData?.user) {
-      // Confirmer l'email de l'utilisateur
-      await serviceRoleSupabase.auth.admin.updateUserById(
-        userData.user.id,
-        { email_confirmed: true }
-      );
-      
-      return NextResponse.json({ success: true });
+    if (!listData.users || listData.users.length === 0) {
+      return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
     }
     
-    return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
+    const userData = listData.users[0];
+    
+    // Confirmer l'email de l'utilisateur
+    await serviceRoleSupabase.auth.admin.updateUserById(
+      userData.id,
+      { email_confirmed: true }
+    );
+    
+    return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
