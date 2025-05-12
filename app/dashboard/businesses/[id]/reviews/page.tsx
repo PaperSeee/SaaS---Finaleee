@@ -11,7 +11,7 @@ import { Review, Platform, FilterOptions, Business } from "@/lib/types";
 
 type FiltersState = FilterOptions;
 
-export default function BusinessReviews() {
+export default async function Page() {
   // Récupération safe de l'`id`
   const params = useParams();
   const businessId = Array.isArray(params.id) ? params.id[0] : params.id!;
