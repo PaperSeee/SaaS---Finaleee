@@ -2,10 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Review, Platform } from "@/lib/types";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { companyId: string } }
-) {
+export async function GET(request: Request, { params }: any) {
   try {
     const companyId = params.companyId;
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
