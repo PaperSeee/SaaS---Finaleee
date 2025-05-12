@@ -14,8 +14,7 @@ interface Review {
 }
 
 export default function ReviewsPage() {
-  const params = useParams();
-  const companyId = params.companyId as string;
+  const { companyId } = useParams() as { companyId: string };
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

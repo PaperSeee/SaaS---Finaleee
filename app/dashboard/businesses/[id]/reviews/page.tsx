@@ -7,7 +7,7 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import ReviewCard from "@/components/businesses/ReviewCard";
 import ReviewFilters from "@/components/businesses/ReviewFilters";
 import { Review, Platform } from "@/lib/types";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { throttle } from "@/lib/utils";
 
 interface Business {
@@ -26,10 +26,9 @@ interface FiltersState {
   hasResponse: boolean | null;
 }
 
-export default function BusinessReviews({ params }: { params: { id: string } }) {
-  // Unwrap params using React.use()
-  const unwrappedParams = use(params);
-  const businessId = unwrappedParams.id;
+export default function BusinessReviews() {
+  // Extract params using useParams hook
+  const { id: businessId } = useParams() as { id: string };
   
   const router = useRouter();
   const { user } = useAuth();
