@@ -4,10 +4,10 @@ import { Review, Platform } from "@/lib/types";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { companyId: string } }
+  context: { params: { companyId: string } }
 ) {
   try {
-    const companyId = params.companyId;
+    const companyId = context.params.companyId;
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
 
     if (!apiKey) {
