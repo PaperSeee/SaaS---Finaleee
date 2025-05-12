@@ -126,9 +126,8 @@ async function fetchGoogleReviews(placeId: string, apiKey: string): Promise<{
 }
 
 async function getBusinessPlatformIds(businessId: string) {
-  // Make sure we await cookies() to resolve the async issue
-  const cookieStore = await cookies();
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+  // Pass cookies function directly to createRouteHandlerClient
+  const supabase = createRouteHandlerClient({ cookies });
   
   console.log(`🔍 Looking up platform IDs for business: ${businessId}`);
   
