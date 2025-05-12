@@ -1,31 +1,13 @@
 // Business Types
 export interface Business {
-  id?: string;
+  id: string;
   name: string;
-  reviewCount: number;
-  averageRating: number;
-  
-  // Platform URLs
+  reviewCount?: number;
+  averageRating?: number;
+  placeId?: string;
   googleUrl?: string;
   facebookUrl?: string;
-  trustpilotUrl?: string;
-  
-  // Platform IDs - these will be used to fetch reviews
-  googlePlaceId?: string;
-  facebookPageId?: string;
-  trustpilotBusinessId?: string;
-  
-  // Verification flags
-  googlePlaceIdVerified?: boolean;
-  facebookPageIdVerified?: boolean;
-  trustpilotBusinessIdVerified?: boolean;
-  
-  // Platform configuration
-  enabledPlatforms?: Platform[];
-  
-  // For backwards compatibility
-  placeId?: string;
-  rating?: number;
+  user_id?: string;
 }
 
 // Review Types

@@ -194,51 +194,22 @@ export default function AddPage() {
     }
     
     try {
-      // Collect all enabled platform data
-      const platformIds: Record<string, string> = {};
-      const platformUrls: Record<string, string> = {};
-      
-      for (const platform of Object.keys(form.platforms) as Platform[]) {
-        if (form.platforms[platform]) {
-          // Add platform-specific IDs to the database fields
-          if (platform === "google") {
-            platformIds.google_place_id = form.platformData.google.placeId.trim();
-            platformUrls.google_url = form.platformData.google.url.trim();
-          } else if (platform === "facebook") {
-            platformIds.facebook_page_id = form.platformData.facebook.pageId.trim();
-            platformUrls.facebook_url = form.platformData.facebook.url.trim();
-          } else if (platform === "trustpilot") {
-            platformIds.trustpilot_business_id = form.platformData.trustpilot.businessId.trim();
-            platformUrls.trustpilot_url = form.platformData.trustpilot.url.trim();
-          } else if (platform === "yelp") {
-            platformIds.yelp_business_id = form.platformData.yelp.businessId.trim();
-            platformUrls.yelp_url = form.platformData.yelp.url.trim();
-          }
-        }
-      }
-      
-      // Construct the enabled platforms array
-      const enabledPlatforms = Object.keys(form.platforms)
-        .filter(platform => form.platforms[platform as Platform]) as Platform[];
-      
       // Prepare the business data for insertion
       const businessData = {
         name: form.name.trim(),
         user_id: user.id,
         
-        // For backward compatibility, map the Google Place ID to placeId field
+        // For backward compatibility, map the Google Place ID to place_id field
         place_id: form.platforms.google ? form.platformData.google.placeId.trim() : null,
-        place_id_verified: form.platforms.google ? form.platformData.google.verified : false,
         
-        // Add boolean flags to indicate which platforms are enabled
-        google_enabled: form.platforms.google,
-        facebook_enabled: form.platforms.facebook,
-        trustpilot_enabled: form.platforms.trustpilot,
-        yelp_enabled: form.platforms.yelp,
+        // Add URLs for each platform where available
+        google_url: form.platforms.google ? form.platformData.google.url.trim() : null,
+        facebook_url: form.platforms.facebook ? form.platformData.facebook.url.trim() : null,
         
-        // Add all platform IDs and URLs
-        ...platformIds,
-        ...platformUrls
+        // Only add IDs that are verified to exist in the database
+        // facebook_id: form.platforms.facebook ? form.platformData.facebook.pageId.trim() : null,
+        // trustpilot_id: form.platforms.trustpilot ? form.platformData.trustpilot.businessId.trim() : null,
+        // yelp_id: form.platforms.yelp ? form.platformData.yelp.businessId.trim() : null
       };
       
       console.log("Inserting business with data:", businessData);

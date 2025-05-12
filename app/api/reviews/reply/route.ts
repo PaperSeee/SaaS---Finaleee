@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
           message: "Reply submitted successfully to Google review",
           data
         });
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error replying to Google review:", error);
         const msg = (error as Error).message || "Failed to send reply to Google review";
         return NextResponse.json({

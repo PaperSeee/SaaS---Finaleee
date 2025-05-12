@@ -9,7 +9,7 @@ import LanguageSelector from "@/components/LanguageSelector";
 
 // Memoize the DashboardLayout component to prevent unnecessary re-renders
 const DashboardLayout = memo(function DashboardLayout({ children }: PropsWithChildren<{}>) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const { user, isLoading, signOut } = useAuth();
   const pathname = usePathname();
 
@@ -17,7 +17,7 @@ const DashboardLayout = memo(function DashboardLayout({ children }: PropsWithChi
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
-        setSidebarOpen(false);
+        setIsMobileSidebarOpen(false);
       }
     };
 
@@ -27,7 +27,7 @@ const DashboardLayout = memo(function DashboardLayout({ children }: PropsWithChi
 
   // Close mobile sidebar when navigating
   useEffect(() => {
-    setSidebarOpen(false);
+    setIsMobileSidebarOpen(false);
   }, [pathname]);
 
   if (isLoading) {
@@ -64,73 +64,46 @@ const DashboardLayout = memo(function DashboardLayout({ children }: PropsWithChi
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen overflow-hidden">
       {/* Desktop sidebar */}
-      <div className="hidden md:flex md:w-72 md:flex-shrink-0">
+      <div className="hidden md:flex md:flex-shrink-0">
         <Sidebar />
       </div>
-
+      
       {/* Mobile sidebar */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-40 flex md:hidden">
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)}></div>
-          <div className="relative flex w-full max-w-xs flex-1 flex-col bg-white">
-            <Sidebar isMobile={true} onClose={() => setSidebarOpen(false)} />
+      {isMobileSidebarOpen && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setIsMobileSidebarOpen(false)}></div>
+          <div className="relative flex h-full w-full max-w-xs flex-1 flex-col bg-white pt-5 pb-4">
+            <Sidebar isMobile={true} onClose={() => setIsMobileSidebarOpen(false)} />
           </div>
         </div>
       )}
-
+      
       {/* Content area */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Top navigation */}
-        <header className="bg-white shadow-sm lg:shadow-none border-b border-gray-200">
-          <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Mobile header */}
+        <div className="md:hidden">
+          <div className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-2">
+            <button
+              type="button"
+              className="text-gray-500 focus:outline-none md:hidden"
+              onClick={() => setIsMobileSidebarOpen(true)}
+            >
+              <span className="sr-only">Open sidebar</span>
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
             <div className="flex items-center">
-              <button
-                type="button"
-                className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
-                onClick={() => setSidebarOpen(true)}
-              >
-                <span className="sr-only">Open sidebar</span>
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-              <h1 className="ml-2 text-xl font-semibold text-gray-900 md:hidden">
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Kritiqo
-              </h1>
+              </span>
             </div>
-
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <button className="flex text-gray-400 hover:text-gray-500 focus:outline-none">
-                  <span className="sr-only">View notifications</span>
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                  </svg>
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">2</span>
-                </button>
-              </div>
-
-              <LanguageSelector />
-              
-              <div className="hidden md:block h-6 w-px bg-gray-200"></div>
-              
-              <div className="relative ml-3 md:hidden">
-                <button
-                  onClick={() => signOut()}
-                  className="flex items-center rounded-full bg-gray-100 p-1 text-gray-400 hover:text-gray-600"
-                >
-                  <span className="sr-only">Sign out</span>
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                </button>
-              </div>
-            </div>
+            <div className="w-6"></div> {/* Empty div for balanced spacing */}
           </div>
-        </header>
-
+        </div>
+        
         {/* Main content */}
         <main className="flex-1 overflow-y-auto">
           {children}

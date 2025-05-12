@@ -5,11 +5,15 @@ export const api = {
   // Business endpoints
   businesses: {
     list: async (): Promise<Business[]> => {
-      const res = await fetch('/api/businesses', {
-        next: { revalidate: 300 } // Cache results for 5 minutes
+      const res = await fetch('/api/businesses', { 
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
       });
+      
       if (!res.ok) throw new Error('Failed to fetch businesses');
-      return res.json();
+      
+      const data = await res.json();
+      return data.businesses || [];
     },
     
     get: async (id: string): Promise<Business> => {

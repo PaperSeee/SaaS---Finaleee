@@ -201,6 +201,45 @@ export function validatePlaceId(placeId: string): {
 }
 
 /**
+ * Vérifie et valide un Place ID Google ou recherche le Place ID correspondant à un nom d'entreprise
+ * 
+ * @param input - Le Place ID à valider ou le nom de l'entreprise à rechercher
+ * @returns Promise resolving to the place_id or null if not found
+ */
+export async function validatePlaceId(input: string): Promise<{ 
+  valid: boolean; 
+  message?: string; 
+  cleanedPlaceId?: string;
+}> {
+  // Nettoyer l'entrée
+  const cleanedInput = input.trim();
+  
+  if (!cleanedInput) {
+    return { valid: false, message: "Place ID cannot be empty" };
+  }
+  
+  // Vérifier si c'est un Place ID valide (généralement commence par "ChIJ")
+  if (cleanedInput.startsWith("ChIJ")) {
+    // Vérifier la longueur approximative d'un Place ID
+    if (cleanedInput.length < 20 || cleanedInput.length > 80) {
+      return { 
+        valid: false, 
+        message: "Invalid Place ID length", 
+        cleanedPlaceId: cleanedInput 
+      };
+    }
+    
+    return { valid: true, cleanedPlaceId: cleanedInput };
+  }
+  
+  // Si ce n'est pas un Place ID, essayer de rechercher le lieu
+  return { 
+    valid: false, 
+    message: "Input doesn't appear to be a valid Place ID",
+  };
+}
+
+/**
  * Extrait un nom d'entreprise d'une URL Google Maps si possible
  * 
  * @param url - The Google Maps URL

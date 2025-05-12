@@ -3,9 +3,9 @@ import type { Business } from "@/lib/types";
 
 // Mock database for demo
 const businesses: Business[] = [
-  { id: "1", name: "Coffee Shop", reviewCount: 12, averageRating: 4.2, placeId: "ChIJxxxxxxx1" },
-  { id: "2", name: "Tech Store", reviewCount: 47, averageRating: 3.8, placeId: "ChIJxxxxxxx2" },
-  { id: "3", name: "Restaurant", reviewCount: 86, averageRating: 4.5, placeId: "ChIJxxxxxxx3" },
+  { id: "1", name: "Coffee Shop", reviewCount: 12, averageRating: 4.2, placeId: "ChIJxxxxxxx1", user_id: "demo-user" },
+  { id: "2", name: "Tech Store", reviewCount: 47, averageRating: 3.8, placeId: "ChIJxxxxxxx2", user_id: "demo-user" },
+  { id: "3", name: "Restaurant", reviewCount: 86, averageRating: 4.5, placeId: "ChIJxxxxxxx3", user_id: "demo-user" },
 ];
 
 export async function GET() {

@@ -7,26 +7,32 @@
  */
 export async function validateGoogleApiKey(apiKey: string) {
   try {
-    // Make a simple test request with minimal fields
     const response = await fetch(
       `https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJN1t_tDeuEmsRUsoyG83frY4&fields=name&key=${apiKey}`
     );
-
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return {
+        valid: false,
+        error: errorData.error_message || response.statusText
+      };
+    }
+    
     const data = await response.json();
     
     if (data.status === 'OK') {
-      return { valid: true, message: 'API key is valid' };
+      return { valid: true };
     } else {
-      return { 
-        valid: false, 
-        message: `API key validation failed: ${data.status}`,
-        details: data.error_message || 'No error details provided'
+      return {
+        valid: false,
+        error: data.error_message || 'Invalid API key'
       };
     }
   } catch (error) {
-    return { 
-      valid: false, 
-      message: `API request failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    return {
+      valid: false,
+      error: error instanceof Error ? error.message : 'Network error'
     };
   }
 }
@@ -34,42 +40,54 @@ export async function validateGoogleApiKey(apiKey: string) {
 /**
  * Validates and cleans a Google Place ID
  */
-export function validatePlaceId(placeId: string | null | undefined): { 
-  valid: boolean; 
+export function validatePlaceId(placeId: string | null): {
+  valid: boolean;
   message?: string;
   cleanedPlaceId?: string;
 } {
   if (!placeId) {
-    return { valid: false, message: "Place ID is required" };
+    return { valid: false, message: "Place ID is null or empty" };
   }
   
-  const trimmedPlaceId = placeId.trim();
+  // Trim whitespace
+  const cleaned = placeId.trim();
   
-  if (!trimmedPlaceId) {
-    return { valid: false, message: "Place ID cannot be empty" };
+  if (cleaned.length === 0) {
+    return { valid: false, message: "Place ID is empty after trimming" };
   }
   
-  // Google Place IDs typically start with ChI and are alphanumeric with some special chars
-  if (!/^[a-zA-Z0-9_-]+$/.test(trimmedPlaceId)) {
-    return { 
-      valid: false, 
-      message: "Place ID contains invalid characters",
-      cleanedPlaceId: trimmedPlaceId.replace(/[^a-zA-Z0-9_-]/g, '')
+  // Check for common formatting issues
+  if (cleaned.includes(" ")) {
+    return {
+      valid: false,
+      message: "Place ID contains spaces",
+      cleanedPlaceId: cleaned.replace(/\s+/g, "")
     };
   }
   
-  return { valid: true, cleanedPlaceId: trimmedPlaceId };
+  // Most valid Place IDs are at least 20 characters
+  if (cleaned.length < 20) {
+    return {
+      valid: false,
+      message: "Place ID seems too short to be valid",
+      cleanedPlaceId: cleaned
+    };
+  }
+  
+  return { valid: true, cleanedPlaceId: cleaned };
 }
 
 /**
- * Safely parse JSON from a response, handling errors and already read bodies
+ * Safely parse JSON from a response, handling potential errors
  */
-export async function safeJsonParse(response: Response) {
+export async function safeJsonParse(response: Response): Promise<any> {
   try {
     return await response.json();
-  } catch (error) {
-    console.error("Error parsing JSON response:", error);
-    return { error: "Invalid JSON response" };
+  } catch (e) {
+    console.error("Error parsing JSON response:", e);
+    const text = await response.text();
+    console.error("Response text:", text);
+    return { error: "Invalid JSON response", text };
   }
 }
 

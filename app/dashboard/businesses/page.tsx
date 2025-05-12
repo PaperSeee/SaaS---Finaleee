@@ -7,6 +7,7 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import CompanyCard from "@/components/dashboard/CompanyCard";
 import { useAuth } from "@/contexts/AuthContext";
 
+// Use the same type from the dashboard page
 type Company = {
   id: string;
   name: string;
@@ -17,7 +18,7 @@ type Company = {
   user_id: string;
 };
 
-export default function Dashboard() {
+export default function BusinessesPage() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -29,11 +30,10 @@ export default function Dashboard() {
       try {
         if (!user) return;
         
-        console.log("Fetching companies for user:", user.id);
         setLoading(true);
         setError(null);
         
-        // Direct Supabase query to get the latest data
+        // Direct Supabase query with ordering
         const { data, error: supabaseError } = await supabase
           .from('companies')
           .select('*')
@@ -41,21 +41,13 @@ export default function Dashboard() {
           .order('created_at', { ascending: false });
           
         if (supabaseError) {
-          console.error("Supabase error:", supabaseError);
           throw supabaseError;
         }
         
-        console.log("Companies fetched:", data);
         setCompanies(data || []);
       } catch (err: any) {
         console.error("Erreur lors de la récupération des entreprises:", err);
         
-        // Enhanced debugging information
-        console.debug("Error type:", typeof err);
-        console.debug("Error is object:", err instanceof Object);
-        console.debug("Error keys:", err ? Object.keys(err) : "null/undefined");
-        
-        // Improved error handling for empty objects or missing message property
         let errorMessage = "Une erreur s'est produite lors de la récupération de vos entreprises";
         
         try {
@@ -66,20 +58,15 @@ export default function Dashboard() {
               if (err.message) {
                 errorMessage = (err as Error).message;
               } else if (Object.keys(err).length > 0) {
-                // If there's content in the error but no message property
                 errorMessage = `Erreur: ${JSON.stringify(err)}`;
               } else {
-                // Empty object case which is causing our current issue
                 errorMessage = "Erreur de connexion à la base de données (objet d'erreur vide)";
-                console.warn("Empty error object received from Supabase");
               }
             } else {
-              // Non-object, non-string error
               errorMessage = `Erreur inattendue: ${String(err)}`;
             }
           }
         } catch (parseErr) {
-          // Catch any errors during error handling itself
           console.error("Erreur lors de l'analyse de l'erreur:", parseErr);
           errorMessage = "Erreur système inattendue";
         }

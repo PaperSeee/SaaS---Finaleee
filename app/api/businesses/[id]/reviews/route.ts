@@ -126,14 +126,15 @@ async function fetchGoogleReviews(placeId: string, apiKey: string): Promise<{
 }
 
 async function getBusinessPlatformIds(businessId: string) {
-  const cookieStore = cookies();
+  // Make sure we await cookies() to resolve the async issue
+  const cookieStore = await cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   
   console.log(`🔍 Looking up platform IDs for business: ${businessId}`);
   
   const { data, error } = await supabase
     .from("companies")
-    .select("place_id, facebook_id")
+    .select("place_id, facebook_url") // Changed from facebook_id to facebook_url
     .eq("id", businessId)
     .single();
 
@@ -154,12 +155,12 @@ async function getBusinessPlatformIds(businessId: string) {
   
   console.log(`✅ Business platform IDs found:`, {
     googlePlaceId: placeId || 'none',
-    facebookPageId: data?.facebook_id || 'none'
+    facebookPageId: data?.facebook_url || 'none' // Changed from facebook_id to facebook_url
   });
   
   return {
     googlePlaceId: placeId,
-    facebookPageId: data?.facebook_id || null,
+    facebookPageId: data?.facebook_url || null, // Changed from facebook_id to facebook_url
   };
 }
 
