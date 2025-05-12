@@ -2,6 +2,7 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { PaginationParams } from '@supabase/gotrue-js';
 
 export async function POST(request: Request) {
   const { email } = await request.json();
@@ -17,9 +18,11 @@ export async function POST(request: Request) {
     );
 
     // Rechercher l'utilisateur avec listUsers au lieu de getUserByEmail
-    const { data: listData, error: listError } = await serviceRoleSupabase.auth.admin.listUsers({
-      filter: `email.eq.${email}`
-    });
+    const opts = {
+      filter: `email.eq.${email}`,
+    } as PaginationParams & { filter: string };
+    
+    const { data: listData, error: listError } = await serviceRoleSupabase.auth.admin.listUsers(opts);
     
     if (listError) {
       return NextResponse.json({ error: listError.message }, { status: 400 });
