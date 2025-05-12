@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/ssr";
+import { createClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { Review, Platform } from "@/lib/types";
 import { validatePlaceId, safeJsonParse } from '@/lib/apiUtils';
