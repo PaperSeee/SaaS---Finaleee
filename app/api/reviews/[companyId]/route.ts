@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Review, Platform } from "@/lib/types";
 
@@ -18,13 +18,11 @@ interface GooglePlacesReview {
 }
 
 // Replace 'any' with proper interface
-interface GoogleApiParams {
-  params: {
-    companyId: string;
-  };
-}
 
-export async function GET(request: Request, { params }: GoogleApiParams) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { companyId: string } }
+) {
   try {
     const companyId = params.companyId;
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
