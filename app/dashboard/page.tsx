@@ -56,7 +56,7 @@ export default function Dashboard() {
               errorMessage = err;
             } else if (err instanceof Object) {
               if (err.message) {
-                errorMessage = err.message;
+                errorMessage = (err as Error).message;
               } else if (Object.keys(err).length > 0) {
                 // If there's content in the error but no message property
                 errorMessage = `Erreur: ${JSON.stringify(err)}`;
@@ -122,7 +122,7 @@ export default function Dashboard() {
         ) : (
           <div className="mt-6 rounded-lg border bg-white p-6 text-center">
             <p className="text-gray-500">
-              Vous n'avez pas encore ajouté d'entreprise.
+              Vous n&apos;avez pas encore ajouté d&apos;entreprise.
             </p>
             <Link
               href="/dashboard/add"

@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { validateGoogleApiKey } from '@/lib/apiUtils';
 
-export async function GET(_request: NextRequest) {
+export async function GET(_request: Request) {
   try {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
     

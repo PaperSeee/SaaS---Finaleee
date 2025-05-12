@@ -10,11 +10,11 @@ type AuthContextType = {
   session: Session | null;
   isLoading: boolean;
   signUp: (email: string, password: string) => Promise<{
-    error: any;
+    error: unknown;
     data: any;
   }>;
   signIn: (email: string, password: string) => Promise<{
-    error: any;
+    error: unknown;
     data: any;
   }>;
   signOut: () => Promise<void>;
@@ -94,7 +94,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { data: { users } } = await supabase.auth.admin.listUsers({
         page: 1,
         perPage: 1,
-        search: email
+        // removed unknown "search" property
       });
       
       // If user exists but isn't confirmed

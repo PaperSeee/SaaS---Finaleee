@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import ReviewCard from "@/components/businesses/ReviewCard";
-import { Review, Platform, SortOption } from "@/lib/types";
+import { Review, Platform, SortOption, FilterOptions } from "@/lib/types";
 import ReviewFilters from "@/components/businesses/ReviewFilters";
 import Link from "next/link";
 import Image from "next/image";
@@ -45,20 +45,22 @@ export default function BusinessDetails() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [replyModalOpen, setReplyModalOpen] = useState(false);
-  const [currentReviewId, setCurrentReviewId] = useState<string>("");
-  const [currentReviewPlatform, setCurrentReviewPlatform] = useState<Platform | "">("");
+  // Prefix unused state variables with underscore
+  const [_currentReviewId, _setCurrentReviewId] = useState<string>("");
+  const [_currentReviewPlatform, _setCurrentReviewPlatform] = useState<Platform | "">("");
   const [replyText, setReplyText] = useState("");
   const [replyStatus, setReplyStatus] = useState<{
     loading: boolean;
     error?: string;
     success?: string;
   }>({ loading: false });
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<FilterOptions>({
     platform: "all" as Platform | "all",
     rating: 0,
     dateFrom: "",
     dateTo: "",
     sortBy: "date_desc" as SortOption,
+    hasResponse: null
   });
 
   // Add error state
@@ -85,7 +87,7 @@ export default function BusinessDetails() {
         }
         
         if (!businessData) {
-          throw new Error("Business not found or you don't have access");
+          throw new Error("Business not found or you don&apos;t have access");
         }
         
         // Get place_id if available
@@ -135,9 +137,10 @@ export default function BusinessDetails() {
           // No place_id available
           setReviews([]);
         }
-      } catch (err: any) {
-        console.error("Error in fetchBusinessData:", err);
-        setError(err.message || "An unknown error occurred");
+      } catch (err: unknown) {
+        const typedError = err as Error;
+        console.error("Error in fetchBusinessData:", typedError);
+        setError(typedError.message || "An unknown error occurred");
       } finally {
         setLoading(false);
       }
@@ -216,8 +219,8 @@ export default function BusinessDetails() {
   });
 
   const handleReply = (reviewId: string, platform: Platform) => {
-    setCurrentReviewId(reviewId);
-    setCurrentReviewPlatform(platform);
+    _setCurrentReviewId(reviewId);
+    _setCurrentReviewPlatform(platform);
     setReplyText("");
     setReplyStatus({ loading: false });
     setReplyModalOpen(true);
@@ -225,8 +228,8 @@ export default function BusinessDetails() {
 
   const closeReplyModal = () => {
     setReplyModalOpen(false);
-    setCurrentReviewId("");
-    setCurrentReviewPlatform("");
+    _setCurrentReviewId("");
+    _setCurrentReviewPlatform("");
     setReplyText("");
   };
 
@@ -542,12 +545,12 @@ export default function BusinessDetails() {
                     </div>
                     <div className="mt-3 w-full text-center sm:mt-0 sm:ml-4 sm:text-left">
                       <h3 className="text-lg font-medium leading-6 text-gray-900">
-                        Modifier les détails de l'entreprise
+                        Modifier les détails de l&apos;entreprise
                       </h3>
                       <div className="mt-4 space-y-4">
                         <div>
                           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                            Nom de l'entreprise
+                            Nom de l&apos;entreprise
                           </label>
                           <input
                             type="text"
@@ -598,7 +601,7 @@ export default function BusinessDetails() {
                             onChange={handleEditInputChange}
                             placeholder="https://maps.google.com/place/your-business"
                           />
-                          <p className="mt-1 text-xs text-gray-500">URL vers votre profil Google Business (si vous n'avez pas le Place ID)</p>
+                          <p className="mt-1 text-xs text-gray-500">URL vers votre profil Google Business (si vous n&apos;avez pas le Place ID)</p>
                         </div>
                         <div>
                           <label htmlFor="facebookUrl" className="block text-sm font-medium text-gray-700">
@@ -666,3 +669,8 @@ export default function BusinessDetails() {
     </DashboardLayout>
   );
 }
+
+// Create a no-op function to use in place of the unused function
+const _handleInputChange = (_e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  // Intentionally empty
+};

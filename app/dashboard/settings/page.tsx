@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function SettingsPage() {
   const { user } = useAuth();
-  const supabase = createClientComponentClient();
+  const _supabase = createClientComponentClient();
   const [activeTab, setActiveTab] = useState("general");
   
   // General settings state
@@ -54,7 +54,7 @@ export default function SettingsPage() {
       await new Promise(resolve => setTimeout(resolve, 800));
       
       // In a real application, you would update the settings in your database
-      // const { error } = await supabase
+      // const { error } = await _supabase
       //   .from('user_settings')
       //   .upsert({
       //     user_id: user?.id,
@@ -66,8 +66,9 @@ export default function SettingsPage() {
       // if (error) throw error;
       
       setGeneralSuccess("Settings updated successfully");
-    } catch (err: any) {
-      setGeneralError(err.message || "Failed to update settings");
+    } catch (err: unknown) {
+      const typedError = err as Error;
+      setGeneralError(typedError.message || "Failed to update settings");
     } finally {
       setGeneralLoading(false);
     }
@@ -85,8 +86,9 @@ export default function SettingsPage() {
       await new Promise(resolve => setTimeout(resolve, 800));
       
       setNotificationSuccess("Notification preferences updated successfully");
-    } catch (err: any) {
-      setNotificationError(err.message || "Failed to update notification settings");
+    } catch (err: unknown) {
+      const typedError = err as Error;
+      setNotificationError(typedError.message || "Failed to update notification settings");
     } finally {
       setNotificationLoading(false);
     }
@@ -104,8 +106,9 @@ export default function SettingsPage() {
       await new Promise(resolve => setTimeout(resolve, 800));
       
       setPrivacySuccess("Privacy settings updated successfully");
-    } catch (err: any) {
-      setPrivacyError(err.message || "Failed to update privacy settings");
+    } catch (err: unknown) {
+      const typedError = err as Error;
+      setPrivacyError(typedError.message || "Failed to update privacy settings");
     } finally {
       setPrivacyLoading(false);
     }
@@ -129,8 +132,9 @@ export default function SettingsPage() {
       }
       
       setIntegrationsSuccess(`Successfully ${connect ? 'connected to' : 'disconnected from'} ${integration}`);
-    } catch (err: any) {
-      setIntegrationsError(err.message || `Failed to ${connect ? 'connect to' : 'disconnect from'} ${integration}`);
+    } catch (err: unknown) {
+      const typedError = err as Error;
+      setIntegrationsError(typedError.message || `Failed to ${connect ? 'connect to' : 'disconnect from'} ${integration}`);
     }
   };
   
@@ -309,7 +313,7 @@ export default function SettingsPage() {
                       <input 
                         type="checkbox" 
                         checked={emailNotifications} 
-                        onChange={(e) => setEmailNotifications(e.target.checked)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmailNotifications(e.target.checked)}
                         className="peer sr-only" 
                       />
                       <div className="h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-2 peer-focus:ring-blue-300"></div>
@@ -326,7 +330,7 @@ export default function SettingsPage() {
                         <input 
                           type="checkbox" 
                           checked={reviewAlerts} 
-                          onChange={(e) => setReviewAlerts(e.target.checked)}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setReviewAlerts(e.target.checked)}
                           className="peer sr-only" 
                           disabled={!emailNotifications}
                         />
@@ -343,7 +347,7 @@ export default function SettingsPage() {
                         <input 
                           type="checkbox" 
                           checked={weeklyReports} 
-                          onChange={(e) => setWeeklyReports(e.target.checked)}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWeeklyReports(e.target.checked)}
                           className="peer sr-only" 
                           disabled={!emailNotifications}
                         />
@@ -360,7 +364,7 @@ export default function SettingsPage() {
                         <input 
                           type="checkbox" 
                           checked={marketingEmails} 
-                          onChange={(e) => setMarketingEmails(e.target.checked)}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMarketingEmails(e.target.checked)}
                           className="peer sr-only" 
                           disabled={!emailNotifications}
                         />
@@ -430,7 +434,7 @@ export default function SettingsPage() {
                       <input 
                         type="checkbox" 
                         checked={dataSharing} 
-                        onChange={(e) => setDataSharing(e.target.checked)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDataSharing(e.target.checked)}
                         className="peer sr-only" 
                       />
                       <div className="h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-2 peer-focus:ring-blue-300"></div>
@@ -446,7 +450,7 @@ export default function SettingsPage() {
                       <input 
                         type="checkbox" 
                         checked={activityTracking} 
-                        onChange={(e) => setActivityTracking(e.target.checked)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setActivityTracking(e.target.checked)}
                         className="peer sr-only" 
                       />
                       <div className="h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-2 peer-focus:ring-blue-300"></div>

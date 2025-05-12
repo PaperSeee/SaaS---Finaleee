@@ -2,7 +2,7 @@
  * Utility functions for interacting with Google Places API
  */
 
-import { validatePlaceId } from "./apiUtils";
+import { validatePlaceId as validatePlaceIdApi } from "./apiUtils";
 
 /**
  * Vérifie et valide un Place ID Google ou recherche le Place ID correspondant à un nom d'entreprise
@@ -118,7 +118,7 @@ export function extractPlaceIdFromUrl(url: string): string | null {
       placeId = placeId.split('?')[0];
       
       // Vérifier et nettoyer le format
-      const { valid, cleanedPlaceId } = validatePlaceId(placeId);
+      const { valid, cleanedPlaceId } = validatePlaceIdApi(placeId);
       if (valid && cleanedPlaceId) {
         return cleanedPlaceId;
       }

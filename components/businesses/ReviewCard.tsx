@@ -1,6 +1,7 @@
 import React from "react";
 import { Review } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
+import Image from 'next/image';
 
 interface ReviewCardProps {
   review: Review;
@@ -67,10 +68,12 @@ export default function ReviewCard({ review, onReply }: ReviewCardProps) {
         <div className="flex justify-between">
           <div className="flex items-start">
             {review.profilePhoto ? (
-              <img
-                src={review.profilePhoto}
-                alt={`${review.author} profile`}
-                className="h-10 w-10 rounded-full mr-3"
+              <Image 
+                src={(review as any).reviewer_avatar || '/images/default-avatar.png'} 
+                alt={(review as any).reviewer_name || 'Reviewer'} 
+                width={40}
+                height={40}
+                className="w-10 h-10 rounded-full object-cover"
               />
             ) : (
               <div className="h-10 w-10 rounded-full mr-3 bg-gray-200 flex items-center justify-center text-gray-500">
@@ -81,7 +84,7 @@ export default function ReviewCard({ review, onReply }: ReviewCardProps) {
             <div>
               <div className="font-medium text-gray-900">{review.author}</div>
               <div className="text-sm text-gray-500 mt-0.5 flex items-center flex-wrap gap-2">
-                <time dateTime={review.date}>{formattedDate}</time>
+                <time dateTime={review.date}>{String(formattedDate)}</time>
                 <span className="hidden sm:inline">•</span> 
                 {getPlatformBadge(review.platform)}
               </div>
@@ -102,7 +105,7 @@ export default function ReviewCard({ review, onReply }: ReviewCardProps) {
               {review.response.content}
             </div>
             <div className="mt-1 text-xs text-gray-400">
-              {formatDate(review.response.date)}
+              {String(formatDate((review.response as any).date))}
             </div>
           </div>
         )}

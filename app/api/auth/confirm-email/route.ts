@@ -1,11 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   const { email } = await request.json();
-  const cookieStore = cookies();
-  // Remove unused supabase client
+  // Remove unused cookieStore variable
 
   try {
     // Créer un client avec la clé service_role
@@ -16,10 +14,10 @@ export async function POST(request: Request) {
     );
 
     // Rechercher l'utilisateur avec listUsers au lieu de getUserByEmail
-    const { data: listData, error: listError } = await serviceRoleSupabase.auth.admin.listUsers({
-      // Use proper object type instead of 'as any'
-      filter: { email }
-    });
+    // @ts-expect-error: supabase-js v2 typing n’inclut pas `filter` sur listUsers
+    const { data: listData, error: listError } = await serviceRoleSupabase.auth.admin.listUsers(
+      { filter: `email=eq.${email}` } as unknown
+    );
     
     if (listError) {
       return NextResponse.json({ error: listError.message }, { status: 400 });

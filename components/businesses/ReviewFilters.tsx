@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Platform, FilterOptions, SortOption } from "@/lib/types";
+import { FilterOptions } from "@/lib/types";
 
 interface ReviewFiltersProps {
   filters: FilterOptions;

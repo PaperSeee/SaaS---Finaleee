@@ -14,7 +14,7 @@ export default function ContactPage() {
     subject: "",
     message: "",
   });
-  const [_error, setError] = useState<string | null>(null);
+  const [_error, _setError] = useState<string | null>(null);
   const [formStatus, setFormStatus] = useState<{
     status: "idle" | "submitting" | "success" | "error";
     message?: string;
@@ -47,7 +47,7 @@ export default function ContactPage() {
         subject: "",
         message: "",
       });
-    } catch (error) {
+    } catch (_error) {
       setFormStatus({
         status: "error",
         message: "Une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer."

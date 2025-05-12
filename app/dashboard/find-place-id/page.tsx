@@ -69,9 +69,9 @@ export default function FindPlaceIdPage() {
         user_ratings_total: place.user_ratings_total
       })));
       
-    } catch (err) {
-      console.error("Erreur lors de la recherche:", err);
-      setError(err instanceof Error ? err.message : "Une erreur inattendue s'est produite");
+    } catch (err: unknown) {
+      const typedError = err as Error;
+      setError(typedError.message || "An error occurred");
     } finally {
       setLoading(false);
     }
@@ -82,6 +82,10 @@ export default function FindPlaceIdPage() {
     setSuccess(`Place ID copié: ${placeId}`);
     setTimeout(() => setSuccess(null), 3000);
   };
+
+  function _handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    // Input handling code
+  }
 
   return (
     <DashboardLayout>

@@ -44,7 +44,8 @@ export default function BusinessReviews() {
     error?: string;
     success?: string;
   }>({ loading: false });
-  const [_limitationsWarning, setLimitationsWarning] = useState<string | null>(null);
+  const [limitationsWarning, setLimitationsWarning] = useState<string | null>(null);
+  const _limitationsWarning = useState<boolean>(false);
 
   const supabase = createClientComponentClient();
 
@@ -75,6 +76,69 @@ export default function BusinessReviews() {
       return true;
     });
   }, [reviews, filters]);
+
+  // Extraction du Place ID à partir d'une URL Google
+  const extractPlaceIdFromUrl = useCallback(async (googleUrl: string, companyId: string): Promise<string | null> => {
+    try {
+      if (!googleUrl) {
+        return null;
+      }
+
+      let placeId: string | null = null;
+      
+      // Essayer d'extraire le Place ID directement de l'URL
+      // Format 1: https://maps.app.goo.gl/abcdef123456
+      if (googleUrl.includes('maps.app.goo.gl')) {
+        // Pour ce format, on ne peut pas extraire le Place ID directement
+        // Il faut utiliser l'API Place Search pour le trouver
+        console.log("Format URL Google Maps App détecté");
+      } 
+      // Format 2: https://www.google.com/maps/place/...
+      else if (googleUrl.includes('google.com/maps/place')) {
+        // Essayer d'extraire le CID (identifiant client) qui peut être utilisé
+        const cidMatch = googleUrl.match(/[?&]cid=([0-9]+)/);
+        if (cidMatch && cidMatch[1]) {
+          console.log("CID extrait de l'URL:", cidMatch[1]);
+          
+          // Le CID peut être utilisé pour une recherche via l'API
+          // Mais ce n'est pas directement un Place ID
+        }
+      }
+      // Format 3: ...1s0x47c3c4c540b6a63f:0xe5a41277f4ce276!...
+      else if (googleUrl.includes('!1s')) {
+        const placeIdMatch = googleUrl.match(/!1s([^:!]+)/);
+        if (placeIdMatch && placeIdMatch[1]) {
+          placeId = placeIdMatch[1];
+          console.log("Place ID extrait de l'URL:", placeId);
+        }
+      }
+      
+      // Si on a trouvé un Place ID, mettre à jour la base de données
+      if (placeId) {
+        const { error } = await supabase
+          .from('companies')
+          .update({ place_id: placeId })
+          .eq('id', companyId);
+        
+        if (error) {
+          console.error("Erreur lors de la mise à jour du Place ID:", error);
+        } else {
+          console.log("Place ID mis à jour avec succès:", placeId);
+        }
+      } else {
+        console.log("Aucun Place ID n'a pu être extrait de l'URL");
+        
+        // À ce stade, on pourrait implémenter un appel à l'API de geocoding pour essayer
+        // de trouver le Place ID à partir du nom ou de l'adresse de l'entreprise
+        // Mais pour cet exemple, on ne l'implémente pas
+      }
+      
+      return placeId;
+    } catch (error) {
+      console.error("Erreur lors de l'extraction du Place ID:", error);
+      return null;
+    }
+  }, [supabase]);
 
   // Récupérer les informations de l'entreprise et ses avis
   useEffect(() => {
@@ -202,26 +266,26 @@ export default function BusinessReviews() {
             // Import the safe JSON parser
             const { safeJsonParse } = await import('@/lib/apiUtils');
             const errorData = await safeJsonParse(response);
-            
+            const err = errorData as any;
             console.error("Détails de l'erreur:", errorData);
             
             // Check for specific Google API errors
-            if (errorData.status === "REQUEST_DENIED" || 
-                errorData.status === "INVALID_REQUEST" ||
-                errorData.details?.status === "REQUEST_DENIED" ||
-                errorData.details?.status === "INVALID_REQUEST") {
+            if (err.status === "REQUEST_DENIED" || 
+                err.status === "INVALID_REQUEST" ||
+                err.details?.status === "REQUEST_DENIED" ||
+                err.details?.status === "INVALID_REQUEST") {
               
               console.error("Erreur d'authentification Google API ou requête invalide");
-              throw new Error(`Erreur d'API Google: ${errorData.message || errorData.details?.error_message || response.statusText}`);
+              throw new Error(`Erreur d'API Google: ${err.message || err.details?.error_message || response.statusText}`);
             }
             
             // Vérifier si c'est une erreur de Place ID invalide
             if ((response.status === 400) && 
-                (errorData.error?.includes("NOT_FOUND") || 
-                errorData.message?.includes("Invalid") ||
-                errorData.message?.includes("invalid") ||
-                errorData.message?.includes("place") ||
-                errorData.status === "NOT_FOUND")) {
+                ((err.error as string)?.includes("NOT_FOUND") || 
+                (err.message as string)?.includes("Invalid") ||
+                (err.message as string)?.includes("invalid") ||
+                (err.message as string)?.includes("place") ||
+                err.status === "NOT_FOUND")) {
               // Marquer le Place ID comme nécessitant une mise à jour
               placeIdRefreshNeeded = true;
               
@@ -237,7 +301,7 @@ export default function BusinessReviews() {
               );
             }
             
-            throw new Error(`Erreur lors de la récupération des avis: ${errorData.message || errorData.error || response.statusText}`);
+            throw new Error(`Erreur lors de la récupération des avis: ${err.message || err.error || response.statusText}`);
           }
           
           // Use the safe JSON parser for the response data
@@ -247,16 +311,16 @@ export default function BusinessReviews() {
           
           setBusiness({
             name: companyData.name,
-            rating: responseData.business?.rating || 0,
-            reviewCount: responseData.business?.reviewCount || 0,
-            averageRating: responseData.business?.averageRating || 0 // Adding required property from Business type
+            rating: (responseData.business as any)?.rating || 0,
+            reviewCount: (responseData.business as any)?.reviewCount || 0,
+            averageRating: (responseData.business as any)?.averageRating || 0 // Adding required property from Business type
           });
           
-          setReviews(responseData.reviews || []);
+          setReviews((responseData.reviews as Review[]) || []);
           
           // Store limitations warning if present
-          if (responseData.limitations?.message) {
-            setLimitationsWarning(responseData.limitations.message);
+          if ((responseData.limitations as any)?.message) {
+            setLimitationsWarning((responseData.limitations as any).message);
           }
           
         } catch (apiError) {
@@ -291,69 +355,6 @@ export default function BusinessReviews() {
     
     fetchBusinessData();
   }, [businessId, user, filters, supabase, extractPlaceIdFromUrl]);
-
-  // Extraction du Place ID à partir d'une URL Google
-  const extractPlaceIdFromUrl = useCallback(async (googleUrl: string, companyId: string): Promise<string | null> => {
-    try {
-      if (!googleUrl) {
-        return null;
-      }
-
-      let placeId: string | null = null;
-      
-      // Essayer d'extraire le Place ID directement de l'URL
-      // Format 1: https://maps.app.goo.gl/abcdef123456
-      if (googleUrl.includes('maps.app.goo.gl')) {
-        // Pour ce format, on ne peut pas extraire le Place ID directement
-        // Il faut utiliser l'API Place Search pour le trouver
-        console.log("Format URL Google Maps App détecté");
-      } 
-      // Format 2: https://www.google.com/maps/place/...
-      else if (googleUrl.includes('google.com/maps/place')) {
-        // Essayer d'extraire le CID (identifiant client) qui peut être utilisé
-        const cidMatch = googleUrl.match(/[?&]cid=([0-9]+)/);
-        if (cidMatch && cidMatch[1]) {
-          console.log("CID extrait de l'URL:", cidMatch[1]);
-          
-          // Le CID peut être utilisé pour une recherche via l'API
-          // Mais ce n'est pas directement un Place ID
-        }
-      }
-      // Format 3: ...1s0x47c3c4c540b6a63f:0xe5a41277f4ce276!...
-      else if (googleUrl.includes('!1s')) {
-        const placeIdMatch = googleUrl.match(/!1s([^:!]+)/);
-        if (placeIdMatch && placeIdMatch[1]) {
-          placeId = placeIdMatch[1];
-          console.log("Place ID extrait de l'URL:", placeId);
-        }
-      }
-      
-      // Si on a trouvé un Place ID, mettre à jour la base de données
-      if (placeId) {
-        const { error } = await supabase
-          .from('companies')
-          .update({ place_id: placeId })
-          .eq('id', companyId);
-        
-        if (error) {
-          console.error("Erreur lors de la mise à jour du Place ID:", error);
-        } else {
-          console.log("Place ID mis à jour avec succès:", placeId);
-        }
-      } else {
-        console.log("Aucun Place ID n'a pu être extrait de l'URL");
-        
-        // À ce stade, on pourrait implémenter un appel à l'API de geocoding pour essayer
-        // de trouver le Place ID à partir du nom ou de l'adresse de l'entreprise
-        // Mais pour cet exemple, on ne l'implémente pas
-      }
-      
-      return placeId;
-    } catch (error) {
-      console.error("Erreur lors de l'extraction du Place ID:", error);
-      return null;
-    }
-  }, [supabase]);
 
   // Throttled functions for better performance
   const handleReply = useCallback((reviewId: string, platform: Platform) => {
@@ -498,7 +499,7 @@ export default function BusinessReviews() {
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-800 flex items-center">
                   {business.name}
-                  {business.rating > 0 && (
+                  {(business.rating ?? 0) > 0 && (
                     <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       Validé
                     </span>
@@ -506,12 +507,12 @@ export default function BusinessReviews() {
                 </h1>
                 <div className="mt-2 flex items-center text-sm">
                   <div className="flex items-center text-yellow-500 bg-yellow-50 px-2.5 py-1 rounded-md">
-                    {business.rating.toFixed(1)}
+                    {(business.rating ?? 0).toFixed(1)}
                     <div className="ml-1 flex">
                       {[...Array(5)].map((_, i) => (
                         <svg
                           key={i}
-                          className={`h-4 w-4 ${i < Math.round(business.rating) ? 'text-yellow-500' : 'text-gray-300'}`}
+                          className={`h-4 w-4 ${i < Math.round(business.rating ?? 0) ? 'text-yellow-500' : 'text-gray-300'}`}
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -640,7 +641,7 @@ export default function BusinessReviews() {
                     {replyStatus.success && (
                       <div className="mt-3 rounded-md bg-green-50 p-3">
                         <div className="flex">
-                          <div class="flex-shrink-0">
+                          <div className="flex-shrink-0">
                             <svg className="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                             </svg>

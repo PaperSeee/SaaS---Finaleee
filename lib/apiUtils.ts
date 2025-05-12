@@ -108,11 +108,8 @@ export function validatePlaceId(placeId: string): {
  */
 export async function safeJsonParse(response: Response): Promise<Record<string, unknown>> {
   try {
-    // Clone the response to avoid "body stream already read" errors
-    const clonedResponse = response.clone();
-    return await clonedResponse.json();
+    return await response.json();
   } catch (error) {
-    console.error("Error parsing response JSON:", error);
     return { error: "Failed to parse response" };
   }
 }

@@ -8,8 +8,8 @@ interface ReplyRequestBody {
   businessId?: string;
 }
 
-// Add Error interface to replace 'any'
-interface ApiError extends Error {
+// Update the error type to be more specific instead of using ApiError
+interface GoogleApiError extends Error {
   message: string;
   code?: string;
   status?: number;
@@ -72,12 +72,13 @@ export async function POST(request: NextRequest) {
           message: "Reply submitted successfully to Google review",
           data
         });
-      } catch (error: ApiError) {
+      } catch (error) {
         console.error("Error replying to Google review:", error);
+        const msg = (error as Error).message || "Failed to send reply to Google review";
         return NextResponse.json({
           success: false,
           fallbackUrl: `https://business.google.com/reviews/l/${businessId || ''}`,
-          error: error.message || "Failed to send reply to Google review"
+          error: msg
         }, { status: 500 });
       }
     }
@@ -118,13 +119,16 @@ export async function POST(request: NextRequest) {
           message: "Reply submitted successfully to Facebook review",
           data
         });
-      } catch (error: ApiError) {
+      } catch (error: any) {
         console.error("Error replying to Facebook review:", error);
-        return NextResponse.json({
-          success: false,
-          fallbackUrl: `https://business.facebook.com/${businessId || ''}/reviews`,
-          error: error.message || "Failed to send reply to Facebook review"
-        }, { status: 500 });
+        return NextResponse.json(
+          {
+            success: false,
+            fallbackUrl: `https://business.facebook.com/${businessId || ''}/reviews`,
+            error: error.message || "Failed to send reply to Facebook review"
+          },
+          { status: 500 }
+        );
       }
     }
 
@@ -137,7 +141,7 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
 
-  } catch (error: ApiError) {
+  } catch (error: any) {
     console.error("Error processing review reply:", error);
     return NextResponse.json(
       { 

@@ -32,7 +32,7 @@ async function fetchGoogleReviews(placeId: string, apiKey: string): Promise<{
     return { 
       reviews: [], 
       businessInfo: { name: "", rating: 0, reviewCount: 0 },
-      error: `Invalid place_id: ${validation.message}`
+      error: `Invalid place_id format: ${validation.message}`
     };
   }
   
@@ -70,17 +70,16 @@ async function fetchGoogleReviews(placeId: string, apiKey: string): Promise<{
     }
 
     // Extract business info
-    const businessInfo = {
-      name: data.result.name || "",
-      rating: data.result.rating || 0,
-      reviewCount: data.result.user_ratings_total || 0,
-    };
+    const result = data.result as any;
+    const name = result.name || "";
+    const rating = result.rating || 0;
+    const reviewCount = result.user_ratings_total || 0;
 
     // Extract and format reviews
     let reviews: Review[] = [];
     
-    if (data.result.reviews && Array.isArray(data.result.reviews)) {
-      reviews = data.result.reviews.map((googleReview: GooglePlacesReview) => {
+    if (Array.isArray(result.reviews)) {
+      reviews = (result.reviews as GooglePlacesReview[]).map(googleReview => {
         const reviewDate = new Date(googleReview.time * 1000);
         
         return {
@@ -102,7 +101,7 @@ async function fetchGoogleReviews(placeId: string, apiKey: string): Promise<{
       });
     }
 
-    return { reviews, businessInfo };
+    return { reviews, businessInfo: { name, rating, reviewCount } };
   } catch (error) {
     console.error("Error fetching Google reviews:", error);
     return {

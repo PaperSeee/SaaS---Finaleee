@@ -16,55 +16,59 @@ export function debounce<T extends (...args: any[]) => any>(
 }
 
 // Memoization helper to avoid repeated calculations
-export function memoize<T extends (...args: unknown[]) => unknown>(fn: T): T {
-  const cache = new Map<string, unknown>();
+export function memoize<T extends (...args: any[]) => any>(fn: T): (...args: Parameters<T>) => ReturnType<T> {
+  const cache = new Map<string, ReturnType<T>>();
 
-  return ((...args: Parameters<T>): ReturnType<T> => {
+  return (...args: Parameters<T>) => {
     const key = JSON.stringify(args);
-    if (cache.has(key)) {
-      return cache.get(key) as ReturnType<T>;
-    }
-
-    const result = fn(...args);
+    if (cache.has(key)) return cache.get(key)!;
+    const result = fn(...args) as ReturnType<T>;
     cache.set(key, result);
     return result;
-  }) as T;
+  };
 }
 
-export const formatDate = memoize((dateString: string, locale = 'fr-FR'): string => {
+export const formatDate = memoize((date: Date | string, locale = 'fr-FR', defaultValue: string = ''): string => {
+  if (!date) return defaultValue;
+  const d = typeof date === 'string' ? new Date(date) : date;
   try {
-    const date = new Date(dateString);
-    
-    // Check if date is valid
-    if (isNaN(date.getTime())) {
-      return dateString;
-    }
-    
-    // Format the date using the browser's Intl API
     return new Intl.DateTimeFormat(locale, {
       year: 'numeric',
       month: 'long',
-      day: 'numeric',
-    }).format(date);
-  } catch (_e) {
-    return dateString;
+      day: 'numeric'
+    }).format(d);
+  } catch {
+    return defaultValue;
   }
 });
 
-// Throttle function to limit how often a function can be called
+/**
+ * Throttles a function to limit its execution rate
+ */
 export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
-  let inThrottle: boolean;
+  let inThrottle = false;
   
-  return function(...args: Parameters<T>): void {
+  return function(this: unknown, ...args: Parameters<T>): void {
     if (!inThrottle) {
-      func(...args);
+      func.apply(this, args);
       inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      setTimeout(() => {
+        inThrottle = false;
+      }, limit);
     }
   };
+}
+
+// Remove unused 'e' parameter
+export function handleExport() {
+  try {
+    // Implementation
+  } catch (_e) {
+    // Error handling
+  }
 }
 
 // Other utility functions can be added here

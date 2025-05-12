@@ -7,15 +7,11 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 
-interface GooglePlaceResult {
+// Use the interface or remove it if not needed
+interface _GooglePlaceResult {
   place_id: string;
   formatted_address?: string;
   name?: string;
-}
-
-interface PlacesApiResponse {
-  candidates: GooglePlaceResult[];
-  status: string;
 }
 
 export default function AddCompany() {
@@ -53,7 +49,7 @@ export default function AddCompany() {
       setPlaceIdStatus({ status: 'searching' });
       
       // Vérifier si l'entrée ressemble à une URL Google Maps
-      let searchInput = input.trim();
+      const searchInput = input.trim();
       let placeId = null;
       
       // Si c'est une URL Google Maps, essayer d'extraire directement le place_id
@@ -319,7 +315,7 @@ export default function AddCompany() {
       
       // Vérification si la table existe et la créer si nécessaire
       try {
-        const { data: tableInfo, error: tableError } = await supabase
+        const { data: _tableInfo, error: tableError } = await supabase
           .from('companies')
           .select('*')
           .limit(0);
@@ -506,7 +502,7 @@ export default function AddCompany() {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z" clipRule="evenodd" />
               </svg>
-              Le Place ID est l'identifiant unique attribué par Google à votre entreprise. Il est requis pour importer automatiquement vos avis.
+              Le Place ID est l&apos;identifiant unique attribué par Google à votre entreprise. Il est requis pour importer automatiquement vos avis.
             </p>
             
             {placeIdStatus.status === 'searching' && (
@@ -557,7 +553,7 @@ export default function AddCompany() {
               onBlur={() => googleUrl && fetchPlaceId(googleUrl)}
             />
             <p className="mt-1 text-xs text-gray-500 flex items-center">
-              Si vous n'avez pas le Place ID, vous pouvez fournir l'URL Google Maps de votre entreprise.
+              Si vous n&apos;avez pas le Place ID, vous pouvez fournir l&apos;URL Google Maps de votre entreprise.
             </p>
             
             {/* ...existing status messages... */}

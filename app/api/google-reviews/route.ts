@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
     }
     
     // Use the cleaned version
-    const placeId = validation.cleanedPlaceId;
+    const placeId = validation.cleanedPlaceId!;
     console.log(`Fetching reviews for place_id: ${placeId}`);
     
     // Get Google Places API key from environment
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
     
     // Get optional filter parameters
     const platform = searchParams.get('platform');
-    const rating = searchParams.get('rating');
+    const ratingParam = searchParams.get('rating');
     const dateFrom = searchParams.get('dateFrom');
     const dateTo = searchParams.get('dateTo');
     
@@ -112,39 +112,48 @@ export async function GET(request: NextRequest) {
     }
     
     // Format the business information
-    const business = {
-      name: data.result.name || "Unknown Business",
-      rating: data.result.rating || 0,
-      reviewCount: data.result.user_ratings_total || 0
+    const result = data.result as any;
+    const name = result.name || "Unknown Business";
+    const reviewRating = result.rating || 0;
+    const reviewCount = result.user_ratings_total || 0;
+
+    // Après avoir extrait name, reviewRating et reviewCount :
+    const businessData = {
+      id: placeId, 
+      name,
+      reviewCount,
+      averageRating: reviewRating,
+      placeId
     };
-    
-    // If in preview mode, just return the business info without reviews
+
+    // Si previewMode, renvoyer uniquement businessData
     if (previewMode) {
-      return NextResponse.json({ business });
+      return NextResponse.json({ business: businessData });
     }
     
     // Format the reviews from Google's response
     let reviews: Review[] = [];
     
-    if (data.result.reviews && Array.isArray(data.result.reviews)) {
-      reviews = data.result.reviews.map((googleReview: GooglePlacesReview) => {
+    if (Array.isArray(result.reviews)) {
+      reviews = (result.reviews as GooglePlacesReview[]).map(googleReview => {
         const reviewDate = new Date(googleReview.time * 1000);
-        
         return {
           id: `google_${googleReview.time}_${Math.random().toString(36).substring(2, 10)}`,
           author: googleReview.author_name,
           content: googleReview.text || "",
           rating: googleReview.rating,
           date: reviewDate.toISOString(),
-          platform: "google" as const,
-          businessId: placeId,
+          platform: "google",
+          businessId: placeId,      // on sait que c’est string
           profilePhoto: googleReview.profile_photo_url,
           language: googleReview.language || "en",
           relativeTimeDescription: googleReview.relative_time_description || "",
-          response: googleReview.author_reply ? {
-            content: googleReview.author_reply.text || "",
-            date: new Date(googleReview.author_reply.time * 1000).toISOString()
-          } : undefined
+          response: googleReview.author_reply
+            ? {
+                content: googleReview.author_reply.text || "",
+                date: new Date(googleReview.author_reply.time * 1000).toISOString()
+              }
+            : undefined
         };
       });
     }
@@ -158,8 +167,8 @@ export async function GET(request: NextRequest) {
     }
     
     // Rating filter
-    if (rating) {
-      const ratingValue = parseInt(rating);
+    if (ratingParam) {
+      const ratingValue = parseInt(ratingParam);
       filteredReviews = filteredReviews.filter(review => review.rating === ratingValue);
     }
     
@@ -202,7 +211,7 @@ export async function GET(request: NextRequest) {
     
     // Return the response with limitations warning
     return NextResponse.json({
-      business,
+      business: businessData,
       reviews: filteredReviews,
       limitations: {
         maxReviews: 5,

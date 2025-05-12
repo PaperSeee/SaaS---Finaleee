@@ -4,6 +4,7 @@ import { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import Image from 'next/image';
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -41,8 +42,8 @@ export default function ProfilePage() {
 
       if (error) throw error;
       setSuccess("Profile updated successfully");
-    } catch (err: any) {
-      setError(err.message || "Failed to update profile");
+    } catch (err) {
+      setError((err as Error).message || "Failed to update profile");
     } finally {
       setLoading(false);
     }
@@ -59,21 +60,20 @@ export default function ProfilePage() {
     setError("");
     
     try {
-      // Upload the file to supabase storage
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, file);
         
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        throw new Error(uploadError.message);
+      }
       
-      // Get public URL
       const { data } = supabase.storage
         .from('avatars')
         .getPublicUrl(filePath);
         
       if (!data.publicUrl) throw new Error("Could not get public URL");
       
-      // Update user metadata with avatar URL
       const { error: updateError } = await supabase.auth.updateUser({
         data: { avatar_url: data.publicUrl }
       });
@@ -82,8 +82,10 @@ export default function ProfilePage() {
       
       setFormData(prev => ({ ...prev, avatarUrl: data.publicUrl }));
       setSuccess("Profile picture updated");
-    } catch (err: any) {
-      setError(err.message || "Failed to update profile picture");
+    } catch (error: unknown) {
+      const typedError = error as { message: string };
+      console.error("Avatar upload error:", typedError.message);
+      setError(typedError.message || "Failed to update profile picture");
     } finally {
       setLoading(false);
     }
@@ -132,10 +134,12 @@ export default function ProfilePage() {
                   <div className="relative h-24 w-24">
                     <div className="h-24 w-24 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-100">
                       {formData.avatarUrl ? (
-                        <img 
+                        <Image 
                           src={formData.avatarUrl} 
                           alt="Profile" 
-                          className="h-full w-full object-cover"
+                          width={100} 
+                          height={100}
+                          className="w-24 h-24 rounded-full object-cover"
                         />
                       ) : (
                         <div className="h-full w-full flex items-center justify-center bg-blue-100 text-blue-500 text-2xl font-semibold">

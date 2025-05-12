@@ -61,7 +61,7 @@ export default function Register() {
             });
             
           if (profileError) {
-            console.error("Erreur lors de l'enregistrement du profil:", profileError);
+            console.error("Error saving profile:", profileError);
           }
         }
         
@@ -123,7 +123,7 @@ export default function Register() {
           <div className="space-y-4 rounded-md">
             <div>
               <label htmlFor="company" className="block text-sm font-medium">
-                Nom de l'entreprise
+                Nom de l&apos;entreprise
               </label>
               <input
                 id="company"

@@ -95,7 +95,7 @@ export default function PricingPage() {
                     href="/auth/register"
                     className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
                   >
-                    S'inscrire
+                    S&apos;inscrire
                   </Link>
                 </>
               ) : (
@@ -401,15 +401,15 @@ export default function PricingPage() {
               <h2 className="text-3xl font-bold text-center text-gray-900">Questions fréquentes</h2>
               <div className="mt-12 space-y-6">
                 <div className="bg-white shadow-sm rounded-lg p-6">
-                  <h3 className="text-lg font-medium text-gray-900">Comment fonctionne l'essai gratuit ?</h3>
+                  <h3 className="text-lg font-medium text-gray-900">Comment fonctionne l&apos;essai gratuit ?</h3>
                   <p className="mt-2 text-gray-700">
-                    Tous les forfaits payants incluent un essai gratuit de 7 jours. Vous ne serez débité qu'à la fin de la période d'essai, et vous pouvez annuler à tout moment avant la fin de l'essai.
+                    Tous les forfaits payants incluent un essai gratuit de 7 jours. Vous ne serez débité qu&apos;à la fin de la période d&apos;essai, et vous pouvez annuler à tout moment avant la fin de l&apos;essai.
                   </p>
                 </div>
                 <div className="bg-white shadow-sm rounded-lg p-6">
                   <h3 className="text-lg font-medium text-gray-900">Puis-je changer de forfait ultérieurement ?</h3>
                   <p className="mt-2 text-gray-700">
-                    Oui, vous pouvez passer à un forfait supérieur ou inférieur à tout moment. Lors d'une mise à niveau, les nouvelles fonctionnalités seront disponibles immédiatement. Lors d'un passage à un forfait inférieur, les modifications prendront effet au début de votre prochain cycle de facturation.
+                    Oui, vous pouvez passer à un forfait supérieur ou inférieur à tout moment. Lors d&apos;une mise à niveau, les nouvelles fonctionnalités seront disponibles immédiatement. Lors d&apos;un passage à un forfait inférieur, les modifications prendront effet au début de votre prochain cycle de facturation.
                   </p>
                 </div>
                 <div className="bg-white shadow-sm rounded-lg p-6">
@@ -438,7 +438,7 @@ export default function PricingPage() {
                   Prêt à commencer ?
                 </h2>
                 <p className="mt-3 text-xl text-blue-100">
-                  Rejoignez les milliers d'entreprises qui utilisent Kritiqo pour gérer leur réputation en ligne.
+                  Rejoignez les milliers d&apos;entreprises qui utilisent Kritiqo pour gérer leur réputation en ligne.
                 </p>
               </div>
               <div className="mt-8 lg:mt-0">
@@ -446,7 +446,7 @@ export default function PricingPage() {
                   href={isAuthenticated ? "/dashboard/subscription" : "/auth/register"}
                   className="rounded-full bg-white px-8 py-3 text-lg font-medium text-blue-600 shadow-lg hover:bg-gray-100 transition-all"
                 >
-                  Commencer l'essai gratuit
+                  Commencer l&apos;essai gratuit
                 </Link>
               </div>
             </div>
