@@ -1,128 +1,72 @@
-"use client";
+import { Review } from "@/lib/types";
 
-import { useState, useEffect } from "react";
-import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { Review, FilterOptions, SortOption, Platform } from "@/lib/types";
-import ReviewCard from "@/components/businesses/ReviewCard";
-import ReviewFilters from "@/components/businesses/ReviewFilters";
+// Define the correct PageProps type for Next.js App Router
+type PageProps = {
+  params: {
+    companyId: string;
+  };
+  searchParams?: Record<string, string | string[] | undefined>;
+};
 
-export default function CompanyReviews({ params }: { params: { companyId: string } }) {
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [companyName, setCompanyName] = useState<string>("");
-  const [filters, setFilters] = useState<FilterOptions>({
-    platform: "all",
-    rating: 0,
-    dateFrom: "",
-    dateTo: "",
-    sortBy: "date_desc",
-    hasResponse: null
-  });
-
-  // Charger les avis lors du chargement de la page
-  useEffect(() => {
-    async function fetchReviews() {
-      setLoading(true);
-      setError(null);
-      try {
-        const queryParams = new URLSearchParams();
-        
-        if (filters.platform !== "all") {
-          queryParams.append("platform", filters.platform);
-        }
-        
-        if (filters.rating > 0) {
-          queryParams.append("rating", filters.rating.toString());
-        }
-        
-        if (filters.dateFrom) {
-          queryParams.append("dateFrom", filters.dateFrom);
-        }
-        
-        if (filters.dateTo) {
-          queryParams.append("dateTo", filters.dateTo);
-        }
-        
-        if (filters.sortBy && filters.sortBy !== "date_desc") {
-          queryParams.append("sortBy", filters.sortBy);
-        }
-        
-        if (filters.hasResponse !== null) {
-          queryParams.append("hasResponse", filters.hasResponse.toString());
-        }
-        
-        const url = `/api/reviews/${params.companyId}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-        
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-          throw new Error("Impossible de récupérer les avis");
-        }
-        
-        const data = await response.json();
-        setReviews(data.reviews);
-        setCompanyName(data.companyName || "Entreprise");
-      } catch (err) {
-        console.error("Erreur lors de la récupération des avis:", err);
-        setError("Une erreur s'est produite lors de la récupération des avis");
-      } finally {
-        setLoading(false);
-      }
+// Export an async function with the correct props structure
+export default async function CompanyReviewsPage({ params }: PageProps) {
+  const { companyId } = params;
+  
+  try {
+    // Fetch reviews from our API endpoint
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/reviews/${companyId}`, {
+      cache: "no-store",
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Error fetching reviews: ${response.status}`);
     }
     
-    fetchReviews();
-  }, [params.companyId, filters]);
-
-  return (
-    <DashboardLayout>
-      <div className="px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold">{companyName}</h1>
-            <p className="text-sm text-gray-500">
-              {reviews.length} avis
-            </p>
-          </div>
-        </div>
-
-        {error && (
-          <div className="mb-6 rounded-md bg-red-50 p-4 text-sm text-red-700">
-            {error}
-          </div>
-        )}
-
-        {/* Improved filters using our enhanced ReviewFilters component */}
-        <div className="mb-8 rounded-lg border bg-white p-4 shadow-sm">
-          <h2 className="mb-4 font-medium">Filtrer les avis</h2>
-          <ReviewFilters filters={filters} setFilters={setFilters} />
-        </div>
-
-        {/* Liste des avis */}
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-blue-500"></div>
-            <span className="ml-2">Chargement des avis...</span>
-          </div>
-        ) : reviews.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6">
-            {reviews.map((review) => (
-              <ReviewCard 
-                key={review.id} 
-                review={review} 
-                onReply={() => handleReply(review.id)} 
-              />
+    const data = await response.json();
+    const { companyName, reviews } = data;
+    
+    return (
+      <div className="container mx-auto py-8">
+        <h1 className="text-2xl font-bold mb-6">{companyName} Reviews</h1>
+        
+        {reviews && reviews.length > 0 ? (
+          <div className="space-y-4">
+            {reviews.map((review: Review) => (
+              <div key={review.id} className="border p-4 rounded-lg">
+                <div className="flex items-center mb-2">
+                  {review.profilePhoto && (
+                    <img 
+                      src={review.profilePhoto} 
+                      alt={review.author} 
+                      className="w-10 h-10 rounded-full mr-3"
+                    />
+                  )}
+                  <div>
+                    <h3 className="font-medium">{review.author}</h3>
+                    <div className="text-sm text-gray-500">
+                      {new Date(review.date).toLocaleDateString()}
+                    </div>
+                  </div>
+                </div>
+                <div className="mb-2">Rating: {review.rating}/5</div>
+                <p className="text-gray-700">{review.content}</p>
+                
+                {review.response && (
+                  <div className="mt-3 pl-4 border-l-2 border-gray-300">
+                    <p className="text-sm font-medium">Response:</p>
+                    <p className="text-sm text-gray-600">{review.response.content}</p>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         ) : (
-          <div className="rounded-lg border bg-white p-12 text-center shadow-sm">
-            <h3 className="text-lg font-medium">Aucun avis trouvé</h3>
-            <p className="mt-2 text-gray-500">
-              Aucun avis ne correspond à vos critères de filtrage ou cette entreprise n'a pas encore reçu d'avis.
-            </p>
-          </div>
+          <p>No reviews found for this company.</p>
         )}
       </div>
-    </DashboardLayout>
-  );
+    );
+  } catch (error) {
+    console.error("Failed to load reviews:", error);
+    return <div>Error loading reviews. Please try again later.</div>;
+  }
 }
