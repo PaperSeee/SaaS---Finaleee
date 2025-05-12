@@ -1,18 +1,14 @@
 "use client";
 
-import { useState, useEffect, memo } from "react";
+import React, { useState, useEffect, memo, PropsWithChildren } from "react";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import LanguageSelector from "@/components/LanguageSelector";
 
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-}
-
 // Memoize the DashboardLayout component to prevent unnecessary re-renders
-const DashboardLayout = memo(function DashboardLayout({ children }: DashboardLayoutProps) {
+const DashboardLayout = memo(function DashboardLayout({ children }: PropsWithChildren<{}>) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, isLoading, signOut } = useAuth();
   const pathname = usePathname();
