@@ -135,10 +135,10 @@ async function getBusinessPlatformIds(businessId: string) {
 
 // ✅ NO TYPE ON ARGUMENTS — TO FIX BUILD IN NEXT 15
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request,
+  { params: { id } }: { params: { id: string } }
 ) {
-  const businessId = params.id;
+  const businessId = id;
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
 
   if (!apiKey) {
@@ -160,7 +160,7 @@ export async function GET(
     const { reviews: googleReviews, businessInfo } = await fetchGoogleReviews(googlePlaceId, apiKey);
     
     // Apply filters from request
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(request.url);
     let filteredReviews = [...googleReviews];
 
     // Platform filter
