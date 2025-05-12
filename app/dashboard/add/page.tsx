@@ -1,5 +1,6 @@
 "use client";
 
+import React, { Suspense } from 'react';
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -40,6 +41,14 @@ interface BusinessForm {
 }
 
 export default function AddPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AddPageContent />
+    </Suspense>
+  );
+}
+
+function AddPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const supabase = createClientComponentClient();
