@@ -1,12 +1,9 @@
 import React from "react";
 
-interface CompanyLayoutProps {
+export default function Layout({
+  children,
+}: {
   children: React.ReactNode;
-  params: {
-    companyId: string;
-  };
-}
-
-export default function CompanyLayout({ children, params }: CompanyLayoutProps) {
+}) {
   return <>{children}</>;
 }
