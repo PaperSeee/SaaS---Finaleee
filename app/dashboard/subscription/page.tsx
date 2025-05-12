@@ -5,6 +5,7 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
+import { formatDate } from "@/lib/utils";
 
 // Types for subscription plan data
 type BillingPeriod = "monthly" | "yearly";
@@ -77,7 +78,42 @@ export default function SubscriptionPage() {
   const { user } = useAuth();
   const supabase = createClientComponentClient();
 
-  // ...existing code...
+  // Add missing handler function stubs
+  const handleAddPaymentMethod = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Implementation to be added
+    console.log('Add payment method functionality to be implemented');
+  };
+
+  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Implementation to be added
+    console.log('Card number change handler to be implemented');
+  };
+
+  const handleCardExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Implementation to be added
+    console.log('Card expiry change handler to be implemented');
+  };
+
+  const getCardIcon = (brand: string) => {
+    // Return appropriate card icon based on brand
+    return <span>{brand}</span>; // Placeholder implementation
+  };
+
+  const handleSetDefaultPaymentMethod = (id: string) => {
+    // Implementation to be added
+    console.log(`Set default payment method ${id} to be implemented`);
+  };
+
+  const handleRemovePaymentMethod = (id: string) => {
+    // Implementation to be added
+    console.log(`Remove payment method ${id} to be implemented`);
+  };
+
+  const handleUpgrade = () => {
+    // Implementation to be added
+    console.log('Upgrade plan functionality to be implemented');
+  };
 
   // Calculate next billing date
   const getNextBillingDate = () => {

@@ -302,7 +302,7 @@ export default function AddCompany() {
       // Use the direct place_id if provided, otherwise try to extract from URL
       let finalPlaceId = placeId;
       if (!finalPlaceId && googleUrl.trim()) {
-        finalPlaceId = await fetchPlaceId(googleUrl.trim());
+        finalPlaceId = await fetchPlaceId(googleUrl.trim()) || '';
       }
       
       // Préparer les données à insérer

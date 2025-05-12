@@ -90,19 +90,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // Sign in a user with email and password
   const signIn = async (email: string, password: string) => {
     try {
-      // D'abord, vérifier si l'utilisateur existe mais n'est pas confirmé
-      const { data: userData } = await supabase.auth.admin.getUserByEmail(email);
+      // Using search parameter instead of filter
+      const { data: { users } } = await supabase.auth.admin.listUsers({
+        page: 1,
+        perPage: 1,
+        search: email
+      });
       
-      // Si l'utilisateur existe mais n'est pas confirmé, forcer la confirmation
-      if (userData?.user && !userData.user.email_confirmed_at) {
-        // Forcer la confirmation de l'utilisateur en mode dev
+      // If user exists but isn't confirmed
+      if (users && users.length > 0 && !users[0].email_confirmed_at) {
+        // Force confirm the user in dev mode
         await supabase.auth.admin.updateUserById(
-          userData.user.id,
-          { email_confirm: true }  // Changed from email_confirmed for consistency
+          users[0].id,
+          { email_confirm: true }
         );
       }
       
-      // Maintenant tenter de se connecter normalement
+      // Now attempt to sign in
       const response = await supabase.auth.signInWithPassword({
         email,
         password,

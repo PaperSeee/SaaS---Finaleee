@@ -1,6 +1,6 @@
 // Business Types
 export interface Business {
-  id: string;
+  id?: string;
   name: string;
   reviewCount: number;
   averageRating: number;
@@ -8,6 +8,7 @@ export interface Business {
   facebookUrl?: string;
   placeId?: string;  // Add explicit placeId field to store the extracted Google Place ID
   placeIdVerified?: boolean; // Add a flag to indicate if the Place ID has been verified
+  rating?: number; // Allow rating field for compatibility
 }
 
 // Review Types
@@ -21,7 +22,7 @@ export interface FilterOptions {
   dateFrom: string;
   dateTo: string;
   sortBy: SortOption;
-  hasResponse?: boolean | null;
+  hasResponse: boolean | null;
 }
 
 export interface Review {

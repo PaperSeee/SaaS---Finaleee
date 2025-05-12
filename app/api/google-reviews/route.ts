@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
       : 'name,rating,user_ratings_total,reviews'; // Include reviews in full mode
       
     // Add language=fr parameter to prioritize French reviews
-    const googleApiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${encodeURIComponent(placeId)}&fields=${fieldsParam}&language=fr&key=${apiKey}`;
+    const googleApiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${encodeURIComponent(placeId || '')}&fields=${fieldsParam}&language=fr&key=${apiKey}`;
     
     console.log(`Making API request to Google Places API with place_id: ${placeId}`);
     

@@ -132,6 +132,68 @@ export function extractPlaceIdFromUrl(url: string): string | null {
 }
 
 /**
+ * Validates a Google Place ID format
+ * 
+ * @param placeId - The Place ID to validate
+ * @returns An object with validation results
+ */
+export function validatePlaceId(placeId: string): { 
+  valid: boolean; 
+  cleanedPlaceId: string | null;
+  message?: string;
+} {
+  if (!placeId) {
+    return {
+      valid: false,
+      cleanedPlaceId: null,
+      message: "Place ID is empty"
+    };
+  }
+
+  // Trim the Place ID and remove any surrounding quotes
+  const trimmedId = placeId.trim().replace(/^["']|["']$/g, '');
+  
+  if (trimmedId.length < 4) {
+    return {
+      valid: false,
+      cleanedPlaceId: null,
+      message: "Place ID too short"
+    };
+  }
+
+  // Check for ChIJ prefixed IDs (typical format)
+  if (trimmedId.startsWith('ChIJ') && trimmedId.length >= 25) {
+    return {
+      valid: true,
+      cleanedPlaceId: trimmedId
+    };
+  }
+  
+  // Check for 0x hex format: e.g. 0x1234:0x5678
+  if (trimmedId.includes(':') && trimmedId.startsWith('0x')) {
+    return {
+      valid: true,
+      cleanedPlaceId: trimmedId
+    };
+  }
+
+  // If it's not in a recognized format but still seems reasonable length
+  if (trimmedId.length >= 25) {
+    return {
+      valid: true,
+      cleanedPlaceId: trimmedId,
+      message: "Format not recognized but length seems appropriate"
+    };
+  }
+
+  return {
+    valid: false,
+    cleanedPlaceId: trimmedId,
+    message: "Place ID format not recognized"
+  };
+}
+
+/**
  * Extrait un nom d'entreprise d'une URL Google Maps si possible
  * 
  * @param url - The Google Maps URL

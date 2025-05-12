@@ -1,30 +1,16 @@
 "use client";
 
-import { useState, useEffect, use, useMemo, useCallback } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import ReviewCard from "@/components/businesses/ReviewCard";
 import ReviewFilters from "@/components/businesses/ReviewFilters";
-import { Review, Platform } from "@/lib/types";
-import { useRouter, useParams } from "next/navigation";
-import { throttle } from "@/lib/utils";
+import ReviewCard from "@/components/businesses/ReviewCard"; // Import ReviewCard
+import { Review, Platform, SortOption, FilterOptions, Business } from "@/lib/types"; // Add Business type
 
-interface Business {
-  name: string;
-  rating: number;
-  reviewCount: number;
-}
-
-// Update FilterState to use our new FilterOptions type
-interface FiltersState {
-  platform: Platform | "all";
-  rating: number;
-  dateFrom: string;
-  dateTo: string;
-  sortBy: SortOption;
-  hasResponse: boolean | null;
-}
+// Make FiltersState exactly match FilterOptions to avoid type issues
+type FiltersState = FilterOptions;
 
 export default function BusinessReviews() {
   // Extract params using useParams hook
@@ -35,7 +21,8 @@ export default function BusinessReviews() {
   const [business, setBusiness] = useState<Business>({
     name: "Chargement...",
     rating: 0,
-    reviewCount: 0
+    reviewCount: 0,
+    averageRating: 0 // Adding required property from Business type
   });
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
@@ -159,7 +146,8 @@ export default function BusinessReviews() {
           setBusiness({
             name: companyData.name,
             rating: 0,
-            reviewCount: 0
+            reviewCount: 0,
+            averageRating: 0 // Adding required property from Business type
           });
           setReviews([]);
           setLoading(false);
@@ -260,7 +248,8 @@ export default function BusinessReviews() {
           setBusiness({
             name: companyData.name,
             rating: responseData.business?.rating || 0,
-            reviewCount: responseData.business?.reviewCount || 0
+            reviewCount: responseData.business?.reviewCount || 0,
+            averageRating: responseData.business?.averageRating || 0 // Adding required property from Business type
           });
           
           setReviews(responseData.reviews || []);
@@ -277,7 +266,8 @@ export default function BusinessReviews() {
           setBusiness({
             name: companyData.name,
             rating: 0,
-            reviewCount: 0
+            reviewCount: 0,
+            averageRating: 0 // Adding required property from Business type
           });
           setReviews([]);
           
@@ -300,10 +290,10 @@ export default function BusinessReviews() {
     };
     
     fetchBusinessData();
-  }, [businessId, user, filters, supabase]);
+  }, [businessId, user, filters, supabase, extractPlaceIdFromUrl]);
 
   // Extraction du Place ID à partir d'une URL Google
-  const extractPlaceIdFromUrl = async (googleUrl: string, companyId: string): Promise<string | null> => {
+  const extractPlaceIdFromUrl = useCallback(async (googleUrl: string, companyId: string): Promise<string | null> => {
     try {
       if (!googleUrl) {
         return null;
@@ -363,7 +353,7 @@ export default function BusinessReviews() {
       console.error("Erreur lors de l'extraction du Place ID:", error);
       return null;
     }
-  };
+  }, [supabase]);
 
   // Throttled functions for better performance
   const handleReply = useCallback((reviewId: string, platform: Platform) => {
@@ -650,7 +640,7 @@ export default function BusinessReviews() {
                     {replyStatus.success && (
                       <div className="mt-3 rounded-md bg-green-50 p-3">
                         <div className="flex">
-                          <div className="flex-shrink-0">
+                          <div class="flex-shrink-0">
                             <svg className="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                             </svg>

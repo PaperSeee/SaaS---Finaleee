@@ -15,7 +15,7 @@ interface DashboardLayoutProps {
 // Memoize the DashboardLayout component to prevent unnecessary re-renders
 const DashboardLayout = memo(({ children }: DashboardLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { user, loading, signOut } = useAuth();
+  const { user, isLoading, signOut } = useAuth();
   const pathname = usePathname();
 
   // Handle responsive sidebar
@@ -35,7 +35,7 @@ const DashboardLayout = memo(({ children }: DashboardLayoutProps) => {
     setSidebarOpen(false);
   }, [pathname]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center">

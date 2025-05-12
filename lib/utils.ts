@@ -15,23 +15,41 @@ export function debounce<T extends (...args: any[]) => any>(
   };
 }
 
-// Create a memoized version of expensive calculations
-export function memoize<T extends (...args: any[]) => any>(
-  fn: T
-): (...args: Parameters<T>) => ReturnType<T> {
-  const cache = new Map();
-  
-  return (...args: Parameters<T>): ReturnType<T> => {
+// Memoization helper to avoid repeated calculations
+export function memoize<T extends (...args: any[]) => any>(fn: T): T {
+  const cache = new Map<string, any>();
+
+  return ((...args: Parameters<T>): ReturnType<T> => {
     const key = JSON.stringify(args);
     if (cache.has(key)) {
       return cache.get(key);
     }
-    
+
     const result = fn(...args);
     cache.set(key, result);
     return result;
-  };
+  }) as T;
 }
+
+export const formatDate = memoize((dateString: string, locale = 'fr-FR'): string => {
+  try {
+    const date = new Date(dateString);
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return dateString;
+    }
+    
+    // Format the date using the browser's Intl API
+    return new Intl.DateTimeFormat(locale, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(date);
+  } catch (e) {
+    return dateString;
+  }
+});
 
 // Throttle function to limit how often a function can be called
 export function throttle<T extends (...args: any[]) => any>(
@@ -49,15 +67,4 @@ export function throttle<T extends (...args: any[]) => any>(
   };
 }
 
-// Format date strings efficiently
-export const formatDate = memoize((dateString: string, locale = 'fr-FR'): string => {
-  try {
-    return new Date(dateString).toLocaleDateString(locale, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  } catch (e) {
-    return dateString;
-  }
-});
+// Other utility functions can be added here

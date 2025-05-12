@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import ReviewCard from "@/components/businesses/ReviewCard";
-import { Review, Platform } from "@/lib/types";
+import { Review, Platform, SortOption } from "@/lib/types";
 import ReviewFilters from "@/components/businesses/ReviewFilters";
 import Link from "next/link";
 import Image from "next/image";
@@ -25,6 +25,7 @@ export default function BusinessDetails() {
     averageRating: 0,
     googleUrl: "",
     facebookUrl: "",
+    placeId: "",
   });
   
   // New state for edit form
@@ -57,6 +58,7 @@ export default function BusinessDetails() {
     rating: 0,
     dateFrom: "",
     dateTo: "",
+    sortBy: "date_desc" as SortOption,
   });
 
   // Add error state
@@ -97,6 +99,7 @@ export default function BusinessDetails() {
           averageRating: businessData.average_rating || 0,
           googleUrl: businessData.google_url || "",
           facebookUrl: businessData.facebook_url || "",
+          placeId: businessData.place_id || "",
         });
         
         // If we have a place_id, fetch reviews
@@ -153,6 +156,7 @@ export default function BusinessDetails() {
           averageRating: 4.2,
           googleUrl: "https://maps.google.com/place?id=example",
           facebookUrl: "https://facebook.com/example",
+          placeId: "",
         });
         
         setReviews([
