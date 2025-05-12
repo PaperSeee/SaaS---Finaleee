@@ -41,7 +41,7 @@ export default function ReviewsPage() {
   const [currentReviewId, setCurrentReviewId] = useState("");
   const [currentReviewPlatform, setCurrentReviewPlatform] = useState("");
   const [replyText, setReplyText] = useState("");
-  const [replyStatus, setReplyStatus] = useState({ loading: false });
+  const [replyStatus, setReplyStatus] = useState<{ loading: boolean; error?: string }>({ loading: false });
   const [limitationsWarning, setLimitationsWarning] = useState(null);
 
   // Filtered reviews based on selected filters
