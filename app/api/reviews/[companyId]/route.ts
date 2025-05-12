@@ -1,7 +1,5 @@
-// app/api/reviews/[companyId]/route.ts
-
 import { NextResponse } from "next/server";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@supabase/supabase-js";
 import { Review, Platform } from "@/lib/types";
 
 export async function GET(
@@ -11,25 +9,17 @@ export async function GET(
   try {
     const companyId = params.companyId;
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
-
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: "Google Places API key not configured" },
-        { status: 500 }
-      );
-    }
-
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!apiKey || !supabaseUrl || !supabaseServiceKey) {
       return NextResponse.json(
-        { error: "Supabase configuration missing" },
+        { error: "Missing configuration (API key or Supabase)" },
         { status: 500 }
       );
     }
 
-    const supabase = createClientComponentClient();
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const { data: company, error: companyError } = await supabase
       .from("companies")
@@ -37,8 +27,7 @@ export async function GET(
       .eq("id", companyId)
       .single();
 
-    if (companyError) {
-      console.error("Error fetching company data:", companyError);
+    if (companyError || !company) {
       return NextResponse.json(
         { error: "Company not found" },
         { status: 404 }
@@ -53,7 +42,9 @@ export async function GET(
       });
     }
 
-    const googleApiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${encodeURIComponent(company.place_id)}&fields=name,rating,reviews&key=${apiKey}`;
+    const googleApiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${encodeURIComponent(
+      company.place_id
+    )}&fields=name,rating,reviews&key=${apiKey}`;
 
     const response = await fetch(googleApiUrl);
 
@@ -76,10 +67,9 @@ export async function GET(
 
     let reviews: Review[] = [];
 
-    if (data.result.reviews && Array.isArray(data.result.reviews)) {
+    if (Array.isArray(data.result.reviews)) {
       reviews = data.result.reviews.map((googleReview) => {
         const reviewDate = new Date(googleReview.time * 1000);
-
         return {
           id: `google_${googleReview.time}_${Math.random()
             .toString(36)
@@ -116,9 +106,7 @@ export async function GET(
     const rating = searchParams.get("rating");
     if (rating) {
       const ratingValue = parseInt(rating);
-      reviews = reviews.filter(
-        (review) => review.rating === ratingValue
-      );
+      reviews = reviews.filter((review) => review.rating === ratingValue);
     }
 
     const dateFrom = searchParams.get("dateFrom");
@@ -138,13 +126,12 @@ export async function GET(
     }
 
     reviews.sort(
-      (a, b) =>
-        new Date(b.date).getTime() - new Date(a.date).getTime()
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
 
     return NextResponse.json({
       companyName: company.name,
-      reviews: reviews,
+      reviews,
     });
   } catch (error) {
     console.error("Error fetching reviews:", error);
