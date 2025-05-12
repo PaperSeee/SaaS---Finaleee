@@ -113,7 +113,7 @@ async function fetchGoogleReviews(placeId: string, apiKey: string): Promise<{
   }
 }
 
-async function getBusinessPlatformIds(businessId) {
+async function getBusinessPlatformIds(businessId: string) {
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   
