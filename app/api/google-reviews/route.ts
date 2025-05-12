@@ -3,6 +3,21 @@ import { Review } from '@/lib/types';
 import { createClient } from '@supabase/supabase-js';
 import { validatePlaceId, safeJsonParse } from '@/lib/apiUtils';
 
+// Define Google Places review structure
+interface GooglePlacesReview {
+  time: number;
+  author_name: string;
+  text?: string;
+  rating: number;
+  profile_photo_url?: string;
+  language?: string;
+  relative_time_description?: string;
+  author_reply?: {
+    text: string;
+    time: number;
+  };
+}
+
 // Initialize Supabase client (use environment variables in production)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -119,7 +134,7 @@ export async function GET(request: NextRequest) {
     let reviews: Review[] = [];
     
     if (data.result.reviews && Array.isArray(data.result.reviews)) {
-      reviews = data.result.reviews.map(googleReview => {
+      reviews = data.result.reviews.map((googleReview: GooglePlacesReview) => {
         const reviewDate = new Date(googleReview.time * 1000);
         
         return {

@@ -4,6 +4,21 @@ import { cookies } from "next/headers";
 import type { Review, Platform } from "@/lib/types";
 import { validatePlaceId, safeJsonParse } from '@/lib/apiUtils';
 
+// Define Google Places review structure
+interface GooglePlacesReview {
+  time: number;
+  author_name: string;
+  text?: string;
+  rating: number;
+  profile_photo_url?: string;
+  language?: string;
+  relative_time_description?: string;
+  author_reply?: {
+    text: string;
+    time: number;
+  };
+}
+
 // Helper function to fetch reviews from Google API directly
 async function fetchGoogleReviews(placeId: string, apiKey: string): Promise<{
   reviews: Review[];
@@ -65,7 +80,7 @@ async function fetchGoogleReviews(placeId: string, apiKey: string): Promise<{
     let reviews: Review[] = [];
     
     if (data.result.reviews && Array.isArray(data.result.reviews)) {
-      reviews = data.result.reviews.map(googleReview => {
+      reviews = data.result.reviews.map((googleReview: GooglePlacesReview) => {
         const reviewDate = new Date(googleReview.time * 1000);
         
         return {

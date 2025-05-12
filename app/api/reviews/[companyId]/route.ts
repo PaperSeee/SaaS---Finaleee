@@ -2,6 +2,21 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Review, Platform } from "@/lib/types";
 
+// Define Google Places review structure
+interface GooglePlacesReview {
+  time: number;
+  author_name: string;
+  text?: string;
+  rating: number;
+  profile_photo_url?: string;
+  language?: string;
+  relative_time_description?: string;
+  author_reply?: {
+    text: string;
+    time: number;
+  };
+}
+
 export async function GET(request: Request, { params }: any) {
   try {
     const companyId = params.companyId;
@@ -65,7 +80,7 @@ export async function GET(request: Request, { params }: any) {
     let reviews: Review[] = [];
 
     if (Array.isArray(data.result.reviews)) {
-      reviews = data.result.reviews.map((googleReview) => {
+      reviews = data.result.reviews.map((googleReview: GooglePlacesReview) => {
         const reviewDate = new Date(googleReview.time * 1000);
         return {
           id: `google_${googleReview.time}_${Math.random()
