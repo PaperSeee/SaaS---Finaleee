@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createServerClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { Review, Platform } from "@/lib/types";
 import { validatePlaceId, safeJsonParse } from '@/lib/apiUtils';
@@ -100,7 +100,7 @@ async function fetchGoogleReviews(placeId: string, apiKey: string): Promise<{
 
 async function getBusinessPlatformIds(businessId) {
   const cookieStore = cookies();
-  const supabase = createServerClient({
+  const supabase = createClient({
     cookies: () => cookieStore,
   });
   
