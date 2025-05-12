@@ -135,7 +135,10 @@ async function getBusinessPlatformIds(businessId: string) {
 }
 
 // ✅ NO TYPE ON ARGUMENTS — TO FIX BUILD IN NEXT 15
-export async function GET(req, { params }) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const businessId = params.id;
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
 
