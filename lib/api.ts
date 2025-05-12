@@ -53,7 +53,12 @@ export const api = {
       if (filters?.dateFrom) params.append('dateFrom', filters.dateFrom);
       if (filters?.dateTo) params.append('dateTo', filters.dateTo);
       if (filters?.sortBy) params.append('sortBy', filters.sortBy);
-      if (filters?.hasResponse !== null) params.append('hasResponse', filters.hasResponse.toString());
+      
+      // extract hasResponse safely
+      const hasResponse = filters?.hasResponse;
+      if (hasResponse != null) {
+        params.append('hasResponse', hasResponse.toString());
+      }
       
       const queryString = params.toString() ? `?${params.toString()}` : '';
       

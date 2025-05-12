@@ -206,7 +206,7 @@ export function validatePlaceId(placeId: string): {
  * @param input - Le Place ID à valider ou le nom de l'entreprise à rechercher
  * @returns Promise resolving to the place_id or null if not found
  */
-export async function validatePlaceId(input: string): Promise<{ 
+export async function validatePlaceIdAsync(input: string): Promise<{ 
   valid: boolean; 
   message?: string; 
   cleanedPlaceId?: string;
