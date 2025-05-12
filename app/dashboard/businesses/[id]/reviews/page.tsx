@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import ReviewFilters from '@/components/businesses/ReviewFilters';
 import ReviewCard from '@/components/businesses/ReviewCard';
+import { Review, FilterOptions } from '@/lib/types'; // Make sure to import Review type
 
 export default function ReviewsPage() {
   // Get the business ID from URL params
@@ -23,10 +24,10 @@ export default function ReviewsPage() {
     reviewCount: 0,
     averageRating: 0
   });
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState<Review[]>([]); // Add explicit type annotation
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({
+  const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState<FilterOptions>({
     platform: "all",
     rating: 0,
     dateFrom: "",
