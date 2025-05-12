@@ -33,6 +33,61 @@ export default function AddPage() {
     placeId: placeIdParam || undefined,
   });
 
+  // Add this function to verify Place ID before submission
+  const verifyPlaceId = async (placeId: string) => {
+    if (!placeId.trim()) {
+      setPlaceIdStatus({ status: "idle" });
+      return;
+    }
+    
+    setPlaceIdStatus({ status: "searching" });
+    
+    try {
+      // Call our API to verify the Place ID and get business info
+      const response = await fetch(`/api/google-reviews?place_id=${encodeURIComponent(placeId)}&preview=true`);
+      const data = await response.json();
+      
+      if (response.ok && data.business) {
+        setPlaceIdStatus({
+          status: "found",
+          placeId,
+          businessInfo: {
+            name: data.business.name,
+            rating: data.business.averageRating,
+            reviewCount: data.business.reviewCount
+          }
+        });
+        
+        // Update the business name if it's empty or from a previous Place ID
+        if (!name || (placeIdStatus.businessInfo?.name && name === placeIdStatus.businessInfo.name)) {
+          setName(data.business.name);
+        }
+      } else {
+        setPlaceIdStatus({
+          status: "not-found",
+          placeId
+        });
+      }
+    } catch (err) {
+      console.error("Error verifying Place ID:", err);
+      setPlaceIdStatus({
+        status: "not-found",
+        placeId
+      });
+    }
+  };
+  
+  // Add debounce effect to verify Place ID when user types
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (placeId && placeId !== placeIdStatus.placeId) {
+        verifyPlaceId(placeId);
+      }
+    }, 800); // Debounce for 800ms
+    
+    return () => clearTimeout(timer);
+  }, [placeId]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -51,19 +106,31 @@ export default function AddPage() {
     }
     
     try {
+      // Clean and validate the place ID before inserting
+      const cleanPlaceId = placeId.trim();
+      console.log("Submitting place_id:", cleanPlaceId || "null");
+      
+      // Log what we're inserting for easier debugging
+      const businessData = {
+        name: name.trim(),
+        google_url: googleUrl.trim(),
+        facebook_url: facebookUrl.trim(),
+        place_id: cleanPlaceId || null,  // Ensure this is never an empty string
+        user_id: user.id,
+        place_id_verified: cleanPlaceId ? true : false  // Add verification flag
+      };
+      
+      console.log("Inserting business with data:", businessData);
+      
       const { data, error: insertError } = await supabase
         .from('companies')
-        .insert({
-          name: name.trim(),
-          google_url: googleUrl.trim(),
-          facebook_url: facebookUrl.trim(),
-          place_id: placeId.trim() || null,
-          user_id: user.id
-        })
+        .insert(businessData)
         .select();
       
       if (insertError) throw insertError;
       
+      console.log("Business added successfully with ID:", data?.[0]?.id);
+      console.log("Response data:", data);
       setSuccess("Business added successfully!");
       
       // Redirect after a short delay
@@ -71,6 +138,7 @@ export default function AddPage() {
         router.push('/dashboard');
       }, 1500);
     } catch (err: any) {
+      console.error("Error adding business:", err);
       setError(err.message || "Failed to add business. Please try again.");
     } finally {
       setLoading(false);
@@ -155,6 +223,54 @@ export default function AddPage() {
               Place ID is required to automatically retrieve Google reviews
             </p>
           </div>
+          
+          {placeIdStatus.status === "searching" && (
+            <div className="mt-2 flex items-center text-blue-600">
+              <div className="animate-spin h-4 w-4 mr-2 border-2 border-blue-600 rounded-full border-t-transparent"></div>
+              <span className="text-sm">Vérification du Place ID...</span>
+            </div>
+          )}
+          
+          {placeIdStatus.status === "found" && placeIdStatus.businessInfo && (
+            <div className="mt-3 bg-green-50 border border-green-200 rounded-md p-3">
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-green-800">Entreprise trouvée !</h3>
+                  <div className="mt-2 text-sm text-green-700">
+                    <p>{placeIdStatus.businessInfo.name}</p>
+                    <p className="flex items-center mt-1">
+                      <span className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <svg 
+                            key={i} 
+                            className={`h-4 w-4 ${i < Math.round(placeIdStatus.businessInfo!.rating) ? 'text-yellow-400' : 'text-gray-300'}`} 
+                            fill="currentColor" 
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                        <span className="ml-1 text-sm">{placeIdStatus.businessInfo.rating}</span>
+                      </span>
+                      <span className="mx-2">•</span>
+                      <span>{placeIdStatus.businessInfo.reviewCount} avis</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {placeIdStatus.status === "not-found" && (
+            <div className="mt-2 text-sm text-red-600">
+              Ce Place ID ne semble pas être valide ou ne peut pas être trouvé.
+            </div>
+          )}
           
           <div>
             <label htmlFor="googleUrl" className="block text-sm font-medium">

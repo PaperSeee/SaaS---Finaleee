@@ -38,6 +38,8 @@ export const api = {
         rating?: number;
         dateFrom?: string;
         dateTo?: string;
+        sortBy?: string;
+        hasResponse?: boolean | null;
       }
     ): Promise<Review[]> => {
       // Construct query params
@@ -46,12 +48,26 @@ export const api = {
       if (filters?.rating) params.append('rating', filters.rating.toString());
       if (filters?.dateFrom) params.append('dateFrom', filters.dateFrom);
       if (filters?.dateTo) params.append('dateTo', filters.dateTo);
+      if (filters?.sortBy) params.append('sortBy', filters.sortBy);
+      if (filters?.hasResponse !== null) params.append('hasResponse', filters.hasResponse.toString());
       
       const queryString = params.toString() ? `?${params.toString()}` : '';
-      const res = await fetch(`/api/businesses/${businessId}/reviews${queryString}`);
       
-      if (!res.ok) throw new Error(`Failed to fetch reviews for business ${businessId}`);
-      return res.json();
+      try {
+        const res = await fetch(`/api/businesses/${businessId}/reviews${queryString}`);
+        
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error(`API error (${res.status}):`, errorText);
+          throw new Error(`Failed to fetch reviews: ${res.statusText}`);
+        }
+        
+        const data = await res.json();
+        return data.reviews || [];
+      } catch (error) {
+        console.error(`Error fetching reviews for business ${businessId}:`, error);
+        throw error;
+      }
     },
     
     respond: async (

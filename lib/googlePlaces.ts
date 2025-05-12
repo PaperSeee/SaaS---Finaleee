@@ -153,6 +153,9 @@ export function validatePlaceId(placeId: string): {
   // Trim the Place ID and remove any surrounding quotes
   const trimmedId = placeId.trim().replace(/^["']|["']$/g, '');
   
+  // Log for debugging
+  console.log("Validating Place ID:", trimmedId);
+  
   if (trimmedId.length < 4) {
     return {
       valid: false,
@@ -163,6 +166,7 @@ export function validatePlaceId(placeId: string): {
 
   // Check for ChIJ prefixed IDs (typical format)
   if (trimmedId.startsWith('ChIJ') && trimmedId.length >= 25) {
+    console.log("Valid Place ID (ChIJ format):", trimmedId);
     return {
       valid: true,
       cleanedPlaceId: trimmedId
@@ -171,6 +175,7 @@ export function validatePlaceId(placeId: string): {
   
   // Check for 0x hex format: e.g. 0x1234:0x5678
   if (trimmedId.includes(':') && trimmedId.startsWith('0x')) {
+    console.log("Valid Place ID (0x format):", trimmedId);
     return {
       valid: true,
       cleanedPlaceId: trimmedId
@@ -179,6 +184,7 @@ export function validatePlaceId(placeId: string): {
 
   // If it's not in a recognized format but still seems reasonable length
   if (trimmedId.length >= 25) {
+    console.log("Likely valid Place ID (unrecognized format):", trimmedId);
     return {
       valid: true,
       cleanedPlaceId: trimmedId,
@@ -186,6 +192,7 @@ export function validatePlaceId(placeId: string): {
     };
   }
 
+  console.log("Invalid Place ID:", trimmedId);
   return {
     valid: false,
     cleanedPlaceId: trimmedId,

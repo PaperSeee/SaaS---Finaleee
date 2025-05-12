@@ -50,11 +50,8 @@ export default function ReviewFilters({
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="font-medium text-amber-800">Attention :</h3>
-              <p className="mt-1 text-amber-700">
-                Pour des raisons techniques imposées par Google, seuls 5 avis peuvent être affichés.
-                Ils ne représentent pas l'ensemble des avis disponibles sur votre fiche Google.
-                Une version avancée de Kritiqo permettra prochainement de connecter votre compte Google Business pour débloquer l'accès complet.
+              <p className="text-amber-700">
+                <span className="font-medium">Limitation de l'API Google Places :</span> L'API de Google ne permet d'afficher qu'un nombre limité d'avis (5 maximum). Pour voir tous vos avis, visitez directement votre profil Google Business.
               </p>
             </div>
           </div>

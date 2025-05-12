@@ -104,9 +104,10 @@ export default function BusinessDetails() {
           placeId: businessData.place_id || "",
         });
         
-        // If we have a place_id, fetch reviews
+        // If we have a place_id, fetch reviews from Google
         if (placeId) {
           try {
+            // Use our Google Reviews API endpoint
             const queryParams = new URLSearchParams();
             
             if (filters.platform !== "all") {
@@ -117,7 +118,22 @@ export default function BusinessDetails() {
               queryParams.append("rating", filters.rating.toString());
             }
             
-            // Important: Send as place_id not placeId (parameter name matters)
+            if (filters.dateFrom) {
+              queryParams.append("dateFrom", filters.dateFrom);
+            }
+            
+            if (filters.dateTo) {
+              queryParams.append("dateTo", filters.dateTo);
+            }
+            
+            if (filters.sortBy) {
+              queryParams.append("sortBy", filters.sortBy);
+            }
+            
+            if (filters.hasResponse !== null) {
+              queryParams.append("hasResponse", filters.hasResponse.toString());
+            }
+            
             const reviewsUrl = `/api/businesses/${businessId}/reviews?${queryParams.toString()}`;
             const response = await fetch(reviewsUrl);
             
@@ -128,13 +144,26 @@ export default function BusinessDetails() {
             }
             
             const data = await response.json();
-            setReviews(data.reviews || []);
+            if (data.reviews && Array.isArray(data.reviews)) {
+              setReviews(data.reviews);
+              
+              // Update business info with data from Google if available
+              if (data.business) {
+                setBusiness(prev => ({
+                  ...prev,
+                  reviewCount: data.business.reviewCount || prev.reviewCount,
+                  averageRating: data.business.rating || prev.averageRating
+                }));
+              }
+            } else {
+              setReviews([]);
+            }
           } catch (reviewError: any) {
             console.error("Error fetching reviews:", reviewError);
             setError(`Failed to load reviews: ${reviewError.message}`);
           }
         } else {
-          // No place_id available
+          // No place_id available - show empty reviews
           setReviews([]);
         }
       } catch (err: unknown) {
@@ -276,16 +305,21 @@ export default function BusinessDetails() {
       return;
     }
     
+    // Ensure placeId is clean
+    const cleanPlaceId = editFormData.placeId.trim();
+    
     try {
       // Update in Supabase if user is logged in
       if (user) {
+        console.log("Updating business with place_id:", cleanPlaceId || "null");
+        
         const { error: updateError } = await supabase
           .from('companies')
           .update({
             name: editFormData.name.trim(),
             google_url: editFormData.googleUrl.trim(),
             facebook_url: editFormData.facebookUrl.trim(),
-            place_id: editFormData.placeId.trim() || null,  // Include Place ID
+            place_id: cleanPlaceId || null,  // Ensure empty string becomes null
           })
           .eq('id', businessId)
           .eq('user_id', user.id);
@@ -304,7 +338,7 @@ export default function BusinessDetails() {
         name: editFormData.name.trim(),
         googleUrl: editFormData.googleUrl.trim(),
         facebookUrl: editFormData.facebookUrl.trim(),
-        placeId: editFormData.placeId.trim(),  // Include Place ID
+        placeId: cleanPlaceId,
       }));
       
       setEditStatus({ 
@@ -419,23 +453,37 @@ export default function BusinessDetails() {
             </div>
 
             <div className="space-y-5">
-              {filteredReviews.length === 0 ? (
+              {filteredReviews.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-12 bg-white rounded-xl border border-gray-200 shadow-sm">
                   <svg className="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                   </svg>
-                  <p className="text-lg font-medium text-gray-500">No reviews match your filters</p>
-                  <p className="text-sm text-gray-400 mt-1">Try adjusting your filter criteria</p>
+                  {!business.placeId ? (
+                    <>
+                      <p className="text-lg font-medium text-gray-500">Aucun ID Google Place configuré</p>
+                      <p className="text-sm text-gray-400 mt-1 mb-3">Ajoutez un Google Place ID pour afficher automatiquement les avis</p>
+                      <button 
+                        onClick={openEditModal}
+                        className="mt-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700"
+                      >
+                        Configurer Google Place ID
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-lg font-medium text-gray-500">Aucun avis ne correspond à vos filtres</p>
+                      <p className="text-sm text-gray-400 mt-1">Essayez de modifier vos critères de filtrage</p>
+                    </>
+                  )}
                 </div>
-              ) : (
-                filteredReviews.map((review) => (
-                  <ReviewCard
-                    key={review.id}
-                    review={review}
-                    onReply={() => handleReply(review.id, review.platform)}
-                  />
-                ))
               )}
+              {filteredReviews.length > 0 && filteredReviews.map((review) => (
+                <ReviewCard
+                  key={review.id}
+                  review={review}
+                  onReply={() => handleReply(review.id, review.platform)}
+                />
+              ))}
             </div>
           </>
         )}

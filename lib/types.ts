@@ -6,13 +6,13 @@ export interface Business {
   averageRating: number;
   googleUrl?: string;
   facebookUrl?: string;
-  placeId?: string;  // Add explicit placeId field to store the extracted Google Place ID
+  placeId: string;  // Make this non-optional to ensure it's always defined (empty string if null)
   placeIdVerified?: boolean; // Add a flag to indicate if the Place ID has been verified
   rating?: number; // Allow rating field for compatibility
 }
 
 // Review Types
-export type Platform = "google" | "facebook" | "trustpilot" | "yelp";
+export type Platform = 'google' | 'facebook' | 'trustpilot' | 'yelp';
 
 export type SortOption = "date_desc" | "date_asc" | "rating_desc" | "rating_asc";
 
@@ -33,14 +33,13 @@ export interface Review {
   date: string;
   platform: Platform;
   businessId: string;
+  profilePhoto?: string;
+  language?: string;
+  relativeTimeDescription?: string;
   response?: {
     content: string;
     date: string;
   };
-  // Nouveaux champs pour Google Reviews
-  profilePhoto?: string;
-  language?: string;
-  relativeTimeDescription?: string;
 }
 
 // User Types
