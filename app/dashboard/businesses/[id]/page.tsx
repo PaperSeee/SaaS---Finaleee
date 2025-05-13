@@ -400,11 +400,10 @@ export default function BusinessDetails() {
                     <Image 
                       src="/logo.png" 
                       alt="Kritiqo Logo" 
-                      width={40} 
-                      height={40} 
-                      className="mr-2"
+                      width={90} 
+                      height={90} 
+                      className="ml-2"
                     />
-                    <span className="text-lg font-bold text-gray-800">Kritiqo</span>
                   </div>
                 </div>
                 

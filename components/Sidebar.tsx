@@ -72,14 +72,11 @@ export default function Sidebar({ isMobile = false, onClose }: SidebarProps) {
       {/* Header/Logo */}
       <div className="flex flex-shrink-0 items-center px-5 py-6">
         <Link href="/dashboard" className="flex items-center">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl p-2 mr-2 shadow-md">
-            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl p-3 shadow-md">
+            <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
             </svg>
           </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            Kritiqo
-          </span>
         </Link>
         
         {isMobile && (

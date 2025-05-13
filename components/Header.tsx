@@ -32,10 +32,7 @@ export default function Header() {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <Image src="/logo.png" alt="Kritiqo" width={40} height={40} className="mr-2" />
-            <span className={`font-bold text-2xl ${scrolled ? 'text-gray-800' : 'text-white'}`}>
-              Kritiqo
-            </span>
+            <Image src="/logo.png" alt="Kritiqo" width={150} height={200  } className="mr-3" />
           </Link>
 
           {/* Desktop Navigation */}

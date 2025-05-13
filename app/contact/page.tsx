@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import Footer from "@/components/Footer";
+import Image from "next/image";
 
 export default function ContactPage() {
   const { t } = useLanguage();
@@ -63,9 +64,13 @@ export default function ContactPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center">
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                Kritiqo
-              </span>
+              <Image
+                src="/logo.png"
+                alt="Kritiqo"
+                width={100} 
+                height={100}
+                className="py-1"
+              />
             </Link>
             <div className="flex items-center space-x-4">
               {!isAuthenticated ? (
