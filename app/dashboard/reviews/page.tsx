@@ -45,18 +45,49 @@ export default function ReviewsPage() {
       if (!user) return;
       
       try {
-        // Fetch businesses from Supabase
+        console.log("Fetching businesses for user:", user.id);
+        
+        // Fetch businesses from Supabase - modified to select only columns that exist
+        // and handle missing review_count and average_rating columns
         const { data, error } = await supabase
           .from('companies')
-          .select('id, name, review_count, average_rating')
+          .select('id, name, user_id')
           .eq('user_id', user.id);
           
-        if (error) throw error;
+        if (error) {
+          console.error('Supabase error details:', {
+            message: error.message,
+            code: error.code,
+            details: error.details,
+            hint: error.hint
+          });
+          throw new Error(`Database query failed: ${error.message || 'Unknown error'}`);
+        }
         
-        setBusinesses(data || []);
+        // Add default values for missing columns
+        const businessesWithDefaults = data?.map(business => ({
+          ...business,
+          review_count: 0, // Default value since column doesn't exist
+          average_rating: 0 // Default value since column might not exist
+        })) || [];
+        
+        console.log(`Successfully fetched ${businessesWithDefaults.length || 0} businesses`);
+        setBusinesses(businessesWithDefaults);
       } catch (err) {
         console.error('Error fetching businesses:', err);
-        // Error is handled in the main fetch function
+        
+        let errorMessage = "Failed to fetch businesses";
+        if (err instanceof Error) {
+          errorMessage += `: ${err.message}`;
+        } else if (err && typeof err === 'object' && Object.keys(err).length === 0) {
+          errorMessage += ": Received empty error object from Supabase";
+          // Add additional diagnostic information for empty error objects
+          console.error("Supabase connection might have issues. Check your API keys and network connection.");
+        }
+        
+        setError(errorMessage);
+        // Return empty array to avoid undefined errors
+        setBusinesses([]);
       }
     };
     

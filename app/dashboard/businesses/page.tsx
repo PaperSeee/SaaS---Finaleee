@@ -33,10 +33,10 @@ export default function BusinessesPage() {
         setLoading(true);
         setError(null);
         
-        // Direct Supabase query with ordering
+        // Direct Supabase query with ordering - modified to select only columns that exist
         const { data, error: supabaseError } = await supabase
           .from('companies')
-          .select('*')
+          .select('id, name, created_at, user_id')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false });
           
@@ -44,7 +44,14 @@ export default function BusinessesPage() {
           throw supabaseError;
         }
         
-        setCompanies(data || []);
+        // Add default values for missing columns
+        const companiesWithDefaults = data?.map(company => ({
+          ...company,
+          review_count: 0, // Default since column doesn't exist
+          average_rating: 0 // Default since column might not exist
+        })) || [];
+        
+        setCompanies(companiesWithDefaults);
       } catch (err: any) {
         console.error("Erreur lors de la récupération des entreprises:", err);
         
