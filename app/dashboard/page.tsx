@@ -30,6 +30,12 @@ type Review = {
   businessName?: string;
 };
 
+// Add this type definition for chart data
+interface ChartDataItem {
+  name: string;
+  reviews: number;
+}
+
 export default function Dashboard() {
   const [stats, setStats] = useState({
     totalReviews: 0,
@@ -40,14 +46,15 @@ export default function Dashboard() {
   const [recentReviews, setRecentReviews] = useState<Review[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
-  const [chartData, setChartData] = useState([]);
+  // Fix the chartData state by adding proper type
+  const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   
   const { user } = useAuth();
   const supabase = createClientComponentClient();
 
   // Placeholder data for chart
   useEffect(() => {
-    const data = [
+    const data: ChartDataItem[] = [
       { name: 'Jan', reviews: 4 },
       { name: 'Feb', reviews: 7 },
       { name: 'Mar', reviews: 5 },

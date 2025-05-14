@@ -2,8 +2,21 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { ReactNode } from 'react';
 
-export default function Header({ title, showNotifications = true, actionButton = null, onMenuToggle = null }) {
+interface HeaderProps {
+  title?: string;
+  showNotifications?: boolean;
+  actionButton?: ReactNode; // Changed from null | undefined to ReactNode
+  onMenuToggle?: () => void; // Changed from null | undefined to function
+}
+
+export default function Header({ 
+  title = "Dashboard",
+  showNotifications = true,
+  actionButton = null,
+  onMenuToggle,
+}: HeaderProps) {
   const { user } = useAuth();
   const { t } = useLanguage();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
