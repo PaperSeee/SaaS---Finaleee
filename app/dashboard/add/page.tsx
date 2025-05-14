@@ -346,55 +346,153 @@ function AddPageContent() {
             />
           </div>
           
-          {/* Platform Selection */}
+          {/* Platform Selection - Modified UI */}
           <div>
-            <h2 className="text-base font-medium text-gray-900 mb-3">Select Review Platforms</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {(Object.keys(form.platforms) as Platform[]).map(platform => (
-                <div 
-                  key={platform}
-                  className={`relative rounded-lg border p-4 cursor-pointer ${
-                    form.platforms[platform] 
-                      ? `bg-${PLATFORM_CONFIGS[platform].color}-50 border-${PLATFORM_CONFIGS[platform].color}-300` 
-                      : 'bg-white border-gray-200 hover:bg-gray-50'
-                  }`}
-                  onClick={() => handlePlatformToggle(platform)}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-${PLATFORM_CONFIGS[platform].color}-100`}>
-                        {/* You can replace this with actual platform icons */}
-                        <span className={`text-${PLATFORM_CONFIGS[platform].color}-600`}>
-                          {platform.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="ml-3">
-                        <h3 className="text-sm font-medium text-gray-900">
-                          {PLATFORM_CONFIGS[platform].name}
-                        </h3>
-                        <p className="text-xs text-gray-500">
-                          Import reviews from {PLATFORM_CONFIGS[platform].name}
-                        </p>
-                      </div>
+            <h2 className="text-base font-medium text-gray-900 mb-3">Review Platforms</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              {/* Google - Always available */}
+              <div 
+                className={`relative rounded-lg border p-4 cursor-pointer ${
+                  form.platforms.google 
+                    ? `bg-blue-50 border-blue-300` 
+                    : 'bg-white border-gray-200 hover:bg-gray-50'
+                }`}
+                onClick={() => handlePlatformToggle("google")}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-blue-100">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+                      </svg>
                     </div>
-                    <input
-                      type="checkbox"
-                      className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      checked={form.platforms[platform]}
-                      onChange={() => handlePlatformToggle(platform)}
-                    />
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-gray-900">
+                        Google
+                      </h3>
+                      <p className="text-xs text-gray-500">
+                        Import reviews from Google Places
+                      </p>
+                    </div>
                   </div>
+                  <input
+                    type="checkbox"
+                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    checked={form.platforms.google}
+                    onChange={() => handlePlatformToggle("google")}
+                  />
                 </div>
-              ))}
+              </div>
+              
+              {/* Facebook - Available */}
+              <div 
+                className={`relative rounded-lg border p-4 cursor-pointer ${
+                  form.platforms.facebook 
+                    ? `bg-indigo-50 border-indigo-300` 
+                    : 'bg-white border-gray-200 hover:bg-gray-50'
+                }`}
+                onClick={() => handlePlatformToggle("facebook")}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-indigo-100">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-600" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-gray-900">
+                        Facebook
+                      </h3>
+                      <p className="text-xs text-gray-500">
+                        Import reviews from Facebook
+                      </p>
+                    </div>
+                  </div>
+                  <input
+                    type="checkbox"
+                    className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    checked={form.platforms.facebook}
+                    onChange={() => handlePlatformToggle("facebook")}
+                  />
+                </div>
+              </div>
+              
+              {/* Trustpilot - Coming Soon */}
+              <div 
+                className="relative rounded-lg border p-4 bg-gray-50 border-gray-200 opacity-75 cursor-not-allowed"
+              >
+                <div className="absolute top-0 right-0 bg-yellow-400 text-xs font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg text-white">
+                  COMING SOON
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-green-100">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/>
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-gray-900">
+                        Trustpilot
+                      </h3>
+                      <p className="text-xs text-gray-500">
+                        Integration coming soon
+                      </p>
+                    </div>
+                  </div>
+                  <input
+                    type="checkbox"
+                    className="h-5 w-5 rounded border-gray-300 text-gray-400 focus:ring-gray-400"
+                    disabled
+                  />
+                </div>
+              </div>
+              
+              {/* Yelp - Coming Soon */}
+              <div 
+                className="relative rounded-lg border p-4 bg-gray-50 border-gray-200 opacity-75 cursor-not-allowed"
+              >
+                <div className="absolute top-0 right-0 bg-yellow-400 text-xs font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg text-white">
+                  COMING SOON
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-red-100">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-red-600" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M21.111 18.226c-.094.275-.329.5-.62.5H18.5a.5.5 0 01-.481-.362l-1.907-6.57H12.5a.5.5 0 010-1h3.826c.5 0 1.023.465.957.97l1.28 4.099 1.738-8.836a.5.5 0 01.497-.387 12.204 12.204 0 01-.636 11.323l-.051.263zM3.5 12.5h2.999a.5.5 0 010 1H3.5a.5.5 0 010-1zm3-4h2.999a.5.5 0 010 1H6.5a.5.5 0 010-1zm3 8h2.999a.5.5 0 010 1H9.5a.5.5 0 010-1zm0-4h2.999a.5.5 0 010 1H9.5a.5.5 0 010-1zm0-4h2.999a.5.5 0 010 1H9.5a.5.5 0 010-1z"/>
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-gray-900">
+                        Yelp
+                      </h3>
+                      <p className="text-xs text-gray-500">
+                        Integration coming soon
+                      </p>
+                    </div>
+                  </div>
+                  <input
+                    type="checkbox"
+                    className="h-5 w-5 rounded border-gray-300 text-gray-400 focus:ring-gray-400"
+                    disabled
+                  />
+                </div>
+              </div>
             </div>
           </div>
           
           {/* Google-specific fields */}
           {form.platforms.google && (
-            <div className="border rounded-lg p-4 bg-blue-50 space-y-4">
-              <h3 className="text-base font-medium text-blue-700">Google Business Settings</h3>
+            <div className="border rounded-lg p-5 bg-blue-50 space-y-4">
+              <h3 className="text-base font-medium text-blue-700 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+                </svg>
+                Google Business Settings
+              </h3>
               
-              <div>
+              <div className="bg-white rounded-md border border-blue-200 p-4">
                 <label htmlFor="googlePlaceId" className="block text-sm font-medium text-blue-700">
                   Google Place ID
                   <span className="ml-2 text-xs font-normal text-blue-600">
@@ -467,7 +565,7 @@ function AddPageContent() {
                 )}
               </div>
               
-              <div>
+              <div className="bg-white rounded-md border border-blue-200 p-4">
                 <label htmlFor="googleUrl" className="block text-sm font-medium text-blue-700">
                   Google Business URL (Optional)
                 </label>
@@ -488,28 +586,15 @@ function AddPageContent() {
           
           {/* Facebook-specific fields */}
           {form.platforms.facebook && (
-            <div className="border rounded-lg p-4 bg-indigo-50 space-y-4">
-              <h3 className="text-base font-medium text-indigo-700">Facebook Settings</h3>
+            <div className="border rounded-lg p-5 bg-indigo-50 space-y-4">
+              <h3 className="text-base font-medium text-indigo-700 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                Facebook Settings
+              </h3>
               
-              <div>
-                <label htmlFor="facebookPageId" className="block text-sm font-medium text-indigo-700">
-                  Facebook Page ID (Optional)
-                </label>
-                <input
-                  id="facebookPageId"
-                  type="text"
-                  className="mt-1 block w-full rounded-md border-indigo-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
-                  value={form.platformData.facebook.pageId}
-                  onChange={(e) => handlePlatformInputChange("facebook", "pageId", e.target.value)}
-                  placeholder="123456789012345"
-                  required={PLATFORM_CONFIGS.facebook.idRequired}
-                />
-                <p className="mt-1 text-xs text-indigo-600">
-                  Your Facebook page's unique identifier
-                </p>
-              </div>
-              
-              <div>
+              <div className="bg-white rounded-md border border-indigo-200 p-4">
                 <label htmlFor="facebookUrl" className="block text-sm font-medium text-indigo-700">
                   Facebook Page URL
                 </label>
@@ -528,85 +613,27 @@ function AddPageContent() {
             </div>
           )}
           
-          {/* Trustpilot-specific fields */}
+          {/* Trustpilot - Removed input fields, replaced with Coming Soon message */}
           {form.platforms.trustpilot && (
-            <div className="border rounded-lg p-4 bg-green-50 space-y-4">
-              <h3 className="text-base font-medium text-green-700">Trustpilot Settings</h3>
-              
-              <div>
-                <label htmlFor="trustpilotBusinessId" className="block text-sm font-medium text-green-700">
-                  Trustpilot Business ID (Optional)
-                </label>
-                <input
-                  id="trustpilotBusinessId"
-                  type="text"
-                  className="mt-1 block w-full rounded-md border-green-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm p-2 border"
-                  value={form.platformData.trustpilot.businessId}
-                  onChange={(e) => handlePlatformInputChange("trustpilot", "businessId", e.target.value)}
-                  placeholder="your-business-id"
-                  required={PLATFORM_CONFIGS.trustpilot.idRequired}
-                />
-                <p className="mt-1 text-xs text-green-600">
-                  Your Trustpilot business identifier
-                </p>
+            <div className="border rounded-lg p-5 bg-gray-100 space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-medium text-gray-700 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/>
+                  </svg>
+                  Trustpilot Integration
+                </h3>
+                <span className="bg-yellow-400 text-white text-xs font-bold px-2 py-1 rounded-full">COMING SOON</span>
               </div>
               
-              <div>
-                <label htmlFor="trustpilotUrl" className="block text-sm font-medium text-green-700">
-                  Trustpilot URL
-                </label>
-                <input
-                  id="trustpilotUrl"
-                  type="url"
-                  className="mt-1 block w-full rounded-md border-green-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm p-2 border"
-                  value={form.platformData.trustpilot.url}
-                  onChange={(e) => handlePlatformInputChange("trustpilot", "url", e.target.value)}
-                  placeholder="https://trustpilot.com/review/your-business"
-                />
-                <p className="mt-1 text-xs text-green-600">
-                  URL to your Trustpilot business page
-                </p>
-              </div>
-            </div>
-          )}
-          
-          {/* Yelp-specific fields */}
-          {form.platforms.yelp && (
-            <div className="border rounded-lg p-4 bg-red-50 space-y-4">
-              <h3 className="text-base font-medium text-red-700">Yelp Settings</h3>
-              
-              <div>
-                <label htmlFor="yelpBusinessId" className="block text-sm font-medium text-red-700">
-                  Yelp Business ID (Optional)
-                </label>
-                <input
-                  id="yelpBusinessId"
-                  type="text"
-                  className="mt-1 block w-full rounded-md border-red-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm p-2 border"
-                  value={form.platformData.yelp.businessId}
-                  onChange={(e) => handlePlatformInputChange("yelp", "businessId", e.target.value)}
-                  placeholder="your-business-id"
-                  required={PLATFORM_CONFIGS.yelp.idRequired}
-                />
-                <p className="mt-1 text-xs text-red-600">
-                  Your Yelp business identifier
-                </p>
-              </div>
-              
-              <div>
-                <label htmlFor="yelpUrl" className="block text-sm font-medium text-red-700">
-                  Yelp URL
-                </label>
-                <input
-                  id="yelpUrl"
-                  type="url"
-                  className="mt-1 block w-full rounded-md border-red-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm p-2 border"
-                  value={form.platformData.yelp.url}
-                  onChange={(e) => handlePlatformInputChange("yelp", "url", e.target.value)}
-                  placeholder="https://yelp.com/biz/your-business"
-                />
-                <p className="mt-1 text-xs text-red-600">
-                  URL to your Yelp business page
+              <div className="bg-white rounded-md border border-gray-200 p-6 text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                <h4 className="text-lg font-medium text-gray-700 mb-2">Trustpilot Integration Coming Soon</h4>
+                <p className="text-gray-500 text-sm">
+                  We're working on integrating Trustpilot reviews into our platform.
+                  This feature will be available soon!
                 </p>
               </div>
             </div>

@@ -1,152 +1,111 @@
 "use client";
 
-import React, { createContext, useState, useEffect, useContext } from "react";
-import { Session, User } from "@supabase/supabase-js";
-import supabase from "@/lib/supabase";
-import { useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useState } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { User, Session } from "@supabase/supabase-js";
 
-type AuthContextType = {
+interface AuthContextType {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
-  signUp: (email: string, password: string) => Promise<{
-    error: unknown;
-    data: any;
-  }>;
-  signIn: (email: string, password: string) => Promise<{
-    error: unknown;
-    data: any;
-  }>;
-  signOut: () => Promise<void>;
   isAuthenticated: boolean;
-};
+  signUp: (email: string, password: string, options?: any) => Promise<any>;
+  signIn: (email: string, password: string) => Promise<any>;
+  signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<any>;
+}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const supabase = createClientComponentClient();
 
   useEffect(() => {
-    // Check active session
-    const getSession = async () => {
+    const fetchSession = async () => {
       setIsLoading(true);
-      
       try {
-        const { data: { session: activeSession }, error } = await supabase.auth.getSession();
+        // Check active session
+        const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
           throw error;
         }
-
-        setSession(activeSession);
-        setUser(activeSession?.user ?? null);
+        
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        // Set up auth state change listener
+        const { data: { subscription } } = await supabase.auth.onAuthStateChange(
+          (_event, session) => {
+            setSession(session);
+            setUser(session?.user ?? null);
+            setIsLoading(false);
+          }
+        );
+        
+        return () => {
+          subscription.unsubscribe();
+        };
       } catch (error) {
-        console.error("Error getting session:", error);
+        console.error("Error fetching auth session:", error);
       } finally {
         setIsLoading(false);
       }
     };
+    
+    fetchSession();
+  }, [supabase]);
 
-    getSession();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, currentSession) => {
-        setSession(currentSession);
-        setUser(currentSession?.user ?? null);
-        setIsLoading(false);
-      }
-    );
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  // Sign up a user with email and password
-  const signUp = async (email: string, password: string) => {
-    try {
-      const response = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          // Désactiver la confirmation par email pour le développement local
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-          data: {
-            email_confirm: true  // Changed from email_confirmed for consistency
-          }
-        }
-      });
-      return { data: response.data, error: response.error };
-    } catch (error) {
-      console.error("Error signing up:", error);
-      return { data: null, error };
-    }
+  // Sign up with email and password
+  const signUp = async (email: string, password: string, options?: any) => {
+    return await supabase.auth.signUp({
+      email,
+      password,
+      options
+    });
   };
 
-  // Sign in a user with email and password
+  // Sign in with email and password
   const signIn = async (email: string, password: string) => {
-    try {
-      // Using search parameter instead of filter
-      const { data: { users } } = await supabase.auth.admin.listUsers({
-        page: 1,
-        perPage: 1,
-        // removed unknown "search" property
-      });
-      
-      // If user exists but isn't confirmed
-      if (users && users.length > 0 && !users[0].email_confirmed_at) {
-        // Force confirm the user in dev mode
-        await supabase.auth.admin.updateUserById(
-          users[0].id,
-          { email_confirm: true }
-        );
-      }
-      
-      // Now attempt to sign in
-      const response = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      
-      return { data: response.data, error: response.error };
-    } catch (error) {
-      console.error("Error signing in:", error);
-      return { data: null, error };
-    }
+    return await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
   };
 
   // Sign out
   const signOut = async () => {
-    try {
-      await supabase.auth.signOut();
-      router.push("/");
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
+    await supabase.auth.signOut();
+  };
+
+  // Reset password
+  const resetPassword = async (email: string) => {
+    return await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/reset-password`,
+    });
   };
 
   const value = {
     user,
     session,
     isLoading,
+    isAuthenticated: !!user,
     signUp,
     signIn,
     signOut,
-    isAuthenticated: !!user,
+    resetPassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+}
 
-// Custom hook to use auth context
-export const useAuth = () => {
+export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-};
+}
