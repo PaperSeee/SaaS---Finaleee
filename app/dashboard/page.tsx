@@ -55,7 +55,7 @@ export default function Dashboard() {
         console.debug("Error is object:", err instanceof Object);
         console.debug("Error keys:", err ? Object.keys(err) : "null/undefined");
         
-        // Improved error handling for empty objects or missing message property
+        // Improved errorrr handling for empty objects or missing message property
         let errorMessage = "Une erreur s'est produite lors de la récupération de vos entreprises";
         
         try {
