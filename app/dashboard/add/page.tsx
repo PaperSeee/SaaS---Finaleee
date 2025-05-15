@@ -8,6 +8,7 @@ import Link from "next/link";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Platform, PLATFORM_CONFIGS } from "@/lib/types";
 import { validatePlaceId } from "@/lib/googlePlaces";
+import FacebookConnector from '@/components/businesses/FacebookConnector';
 
 interface BusinessForm {
   name: string;
@@ -150,6 +151,13 @@ function AddPageContent() {
     }));
   };
   
+  // Add state for Facebook page
+  const [selectedFacebookPage, setSelectedFacebookPage] = useState<{
+    id: string;
+    name: string;
+    access_token: string;
+  } | null>(null);
+  
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -202,10 +210,10 @@ function AddPageContent() {
         google_url: form.platforms.google ? form.platformData.google.url.trim() : null,
         facebook_url: form.platforms.facebook ? form.platformData.facebook.url.trim() : null,
         
-        // Only add IDs that are verified to exist in the database
-        // facebook_id: form.platforms.facebook ? form.platformData.facebook.pageId.trim() : null,
-        // trustpilot_id: form.platforms.trustpilot ? form.platformData.trustpilot.businessId.trim() : null,
-        // yelp_id: form.platforms.yelp ? form.platformData.yelp.businessId.trim() : null
+        // Add Facebook page data if available
+        facebook_page_id: selectedFacebookPage ? selectedFacebookPage.id : null,
+        facebook_page_name: selectedFacebookPage ? selectedFacebookPage.name : null,
+        // Note: We store the access token in a separate table for security
       };
       
       console.log("Inserting business with data:", businessData);
@@ -225,6 +233,25 @@ function AddPageContent() {
       
       console.log("Business added successfully with ID:", data?.[0]?.id);
       setSuccess("Business added successfully!");
+      
+      // If we have a Facebook page with an access token, store it separately
+      if (selectedFacebookPage && data?.[0]?.id) {
+        const { error: fbError } = await supabase
+          .from('facebook_pages')
+          .insert({
+            company_id: data[0].id,
+            user_id: user.id,
+            fb_page_id: selectedFacebookPage.id,
+            fb_page_name: selectedFacebookPage.name,
+            fb_page_access_token: selectedFacebookPage.access_token,
+            created_at: new Date().toISOString()
+          });
+          
+        if (fbError) {
+          console.error("Error saving Facebook page details:", fbError);
+          // Continue anyway since the business was created
+        }
+      }
       
       // Redirect after a short delay
       setTimeout(() => {
@@ -287,6 +314,20 @@ function AddPageContent() {
         }
       }
     }));
+  };
+
+  // Handle Facebook page selection
+  const handleFacebookPageSelected = (page: { id: string; name: string; access_token: string }) => {
+    setSelectedFacebookPage(page);
+    
+    // Update the form state
+    handlePlatformInputChange("facebook", "pageId", page.id);
+    handlePlatformInputChange("facebook", "url", `https://facebook.com/${page.id}`);
+    
+    // Enable Facebook platform if it's not already enabled
+    if (!form.platforms.facebook) {
+      handlePlatformToggle("facebook");
+    }
   };
 
   return (
@@ -590,13 +631,48 @@ function AddPageContent() {
               <h3 className="text-base font-medium text-indigo-700 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-                Facebook Settings
-              </h3>
+              </svg>
+              Facebook Settings
+            </h3>
+            
+            <div className="bg-white rounded-md border border-indigo-200 p-4">
+              {selectedFacebookPage ? (
+                <div className="mb-4 p-3 bg-indigo-50 border border-indigo-100 rounded-md">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium text-indigo-800">{selectedFacebookPage.name}</h4>
+                      <p className="text-xs text-indigo-600 mt-1">Connected Facebook Page</p>
+                    </div>
+                    <button 
+                      type="button" 
+                      className="text-indigo-600 hover:text-indigo-800"
+                      onClick={() => setSelectedFacebookPage(null)}
+                    >
+                      <span className="sr-only">Remove</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <label htmlFor="facebookUrl" className="block text-sm font-medium text-indigo-700">
+                    Connect your Facebook Page
+                  </label>
+                  <p className="text-xs text-indigo-600 mt-1 mb-3">
+                    Connect your Facebook Page to import reviews and respond directly from Kritiqo.
+                  </p>
+                  <FacebookConnector 
+                    userId={user?.id || ''} 
+                    onPageSelected={handleFacebookPageSelected} 
+                  />
+                </div>
+              )}
               
-              <div className="bg-white rounded-md border border-indigo-200 p-4">
+              <div className="mt-4">
                 <label htmlFor="facebookUrl" className="block text-sm font-medium text-indigo-700">
-                  Facebook Page URL
+                  Facebook Page URL (Optional)
                 </label>
                 <input
                   id="facebookUrl"
@@ -611,7 +687,8 @@ function AddPageContent() {
                 </p>
               </div>
             </div>
-          )}
+          </div>
+        )}
           
           {/* Trustpilot - Removed input fields, replaced with Coming Soon message */}
           {form.platforms.trustpilot && (

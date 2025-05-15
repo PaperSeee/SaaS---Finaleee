@@ -8,6 +8,9 @@ export interface Business {
   googleUrl?: string;
   facebookUrl?: string;
   user_id?: string;
+  facebookPageId?: string;
+  facebookPageName?: string;
+  facebookPageAccessToken?: string;
 }
 
 // Review Types
