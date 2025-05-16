@@ -236,6 +236,7 @@ export default function Home() {
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-white" ref={ref}>
           <motion.div 
+            initial={{ opacity: 0.5 }}
             className="absolute inset-0 h-full w-full bg-gradient-to-br from-blue-50 to-indigo-50 opacity-50"
             style={{ y, opacity }}
           />
