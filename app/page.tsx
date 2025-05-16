@@ -100,7 +100,7 @@ export default function Home() {
         "API complète",
         "Intégrations personnalisées",
         "Gestionnaire de compte dédié",
-        "Support téléphonique"
+        "
       ],
       cta: "Contacter le commercial",
       popular: false
