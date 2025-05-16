@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { Language } from "@/lib/types";
+import { useLanguage, Language } from "@/contexts/LanguageContext";
 
 export default function LanguageSelector() {
   const { language, setLanguage, t } = useLanguage();
