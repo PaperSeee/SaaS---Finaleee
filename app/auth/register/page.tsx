@@ -192,7 +192,7 @@ export default function Register() {
         <div className="text-center text-sm">
           <p>
             Vous avez déjà un compte ?{" "}
-            <Link href="/auth/login" className="font-medium text-blue-600 hover:text-blue-500">
+            <Link href="/auth/login" className="font-medium text-blue-600 hover:text-blue-500" prefetch={false}>
               Connectez-vous
             </Link>
           </p>

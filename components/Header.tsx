@@ -75,7 +75,7 @@ export default function Header({
                   </div>
                   
                   <div className="max-h-60 overflow-y-auto">
-                    <Link href="/dashboard/notifications" className="block px-4 py-2 hover:bg-gray-50">
+                    <Link href="/dashboard/notifications" className="block px-4 py-2 hover:bg-gray-50" prefetch={false}>
                       <div className="flex items-start">
                         <div className="flex-shrink-0 rounded-full bg-blue-100 p-1">
                           <svg className="h-4 w-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">

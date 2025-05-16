@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/contexts/LanguageContext";
+import Link from "next/link";
 
 interface FAQSectionProps {
   faqs: Array<{
@@ -73,9 +74,10 @@ export default function FAQSection({ faqs, activeFaq, toggleFaq }: FAQSectionPro
 
         <div className="mt-12 text-center">
           <p className="text-gray-600">{t('faq.more.question')}</p>
-          <a
+          <Link
             href="/contact"
             className="mt-3 inline-flex items-center text-blue-600 font-medium hover:text-blue-800"
+            prefetch={false}
           >
             {t('faq.more.action')}
             <svg
@@ -91,7 +93,7 @@ export default function FAQSection({ faqs, activeFaq, toggleFaq }: FAQSectionPro
                 d="M14 5l7 7m0 0l-7 7m7-7H3"
               />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

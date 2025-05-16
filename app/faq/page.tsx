@@ -113,6 +113,7 @@ export default function FAQPage() {
               <Link
                 href="/contact"
                 className="mt-3 inline-flex items-center text-blue-600 font-medium hover:text-blue-800"
+                prefetch={false}
               >
                 Contactez notre équipe
                 <svg

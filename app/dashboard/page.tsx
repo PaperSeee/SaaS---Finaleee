@@ -284,7 +284,7 @@ export default function Dashboard() {
                 <div className="bg-white shadow sm:rounded-lg overflow-hidden">
                   <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
                     <h2 className="text-lg font-medium text-gray-900">Avis récents</h2>
-                    <Link href="/dashboard/reviews" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+                    <Link href="/dashboard/reviews" className="text-sm font-medium text-blue-600 hover:text-blue-500" prefetch={false}>
                       Voir tous les avis →
                     </Link>
                   </div>
@@ -347,7 +347,7 @@ export default function Dashboard() {
                 <div className="bg-white shadow sm:rounded-lg overflow-hidden">
                   <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
                     <h2 className="text-lg font-medium text-gray-900">Vos entreprises</h2>
-                    <Link href="/dashboard/businesses" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+                    <Link href="/dashboard/businesses" className="text-sm font-medium text-blue-600 hover:text-blue-500" prefetch={false}>
                       Gérer →
                     </Link>
                   </div>
@@ -360,6 +360,7 @@ export default function Dashboard() {
                             key={company.id}
                             href={`/dashboard/businesses/${company.id}`}
                             className="block px-4 py-4 sm:px-6 hover:bg-gray-50 transition-colors duration-150"
+                            prefetch={false}
                           >
                             <div className="flex items-center">
                               <div className="flex-shrink-0">
@@ -402,6 +403,7 @@ export default function Dashboard() {
                         <Link
                           href="/dashboard/businesses/new"
                           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                          prefetch={false}
                         >
                           Ajouter une entreprise
                         </Link>

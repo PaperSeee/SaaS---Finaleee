@@ -537,7 +537,7 @@ function AddPageContent() {
                 <label htmlFor="googlePlaceId" className="block text-sm font-medium text-blue-700">
                   Google Place ID
                   <span className="ml-2 text-xs font-normal text-blue-600">
-                    (<Link href="/dashboard/find-place-id" className="text-blue-700 hover:text-blue-600 hover:underline">Find my Place ID</Link>)
+                    (<Link href="/dashboard/find-place-id" className="text-blue-700 hover:text-blue-600 hover:underline" prefetch={false}>Find my Place ID</Link>)
                   </span>
                 </label>
                 <input
@@ -631,9 +631,9 @@ function AddPageContent() {
               <h3 className="text-base font-medium text-indigo-700 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
-              Facebook Settings
-            </h3>
+                </svg>
+                Facebook Settings
+              </h3>
             
             <div className="bg-white rounded-md border border-indigo-200 p-4">
               {selectedFacebookPage ? (
@@ -652,7 +652,7 @@ function AddPageContent() {
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                       </svg>
-                    </button>
+                    </div>
                   </div>
                 </div>
               ) : (

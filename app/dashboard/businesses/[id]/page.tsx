@@ -390,7 +390,7 @@ export default function BusinessDetails() {
             <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-4 sm:mb-0">
                 <div className="flex flex-wrap items-center mb-3 gap-2">
-                  <Link href="/dashboard/businesses" className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors">
+                  <Link href="/dashboard/businesses" className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors" prefetch={false}>
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
@@ -610,7 +610,7 @@ export default function BusinessDetails() {
                           <label htmlFor="placeId" className="block text-sm font-medium text-blue-700">
                             Google Place ID
                             <span className="ml-2 text-xs font-normal text-blue-600">
-                              (<Link href="/dashboard/find-place-id" className="text-blue-700 hover:text-blue-600 hover:underline">Trouver mon Place ID</Link>)
+                              (<Link href="/dashboard/find-place-id" className="text-blue-700 hover:text-blue-600 hover:underline" prefetch={false}>Trouver mon Place ID</Link>)
                             </span>
                           </label>
                           <input

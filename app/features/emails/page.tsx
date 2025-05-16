@@ -9,42 +9,42 @@ import PublicHeader from "@/components/PublicHeader";
 import { Tab } from "@headlessui/react";
 import { motion } from "framer-motion";
 
-export default function ReviewManagementPage() {
+export default function EmailManagementPage() {
   const { t } = useLanguage();
   const [selectedTab, setSelectedTab] = useState(0);
   
   // Benefits data
   const benefits = [
     {
-      title: "Tout centralisé en un seul endroit",
-      description: "Regroupez les avis de Google, Facebook, TripAdvisor, Trustpilot et autres sur un tableau de bord unique pour une gestion simplifiée.",
+      title: "Priorisation automatique",
+      description: "Notre IA analyse le contenu et le contexte de vos emails pour classer automatiquement les messages selon leur importance.",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
         </svg>
       ),
     },
     {
-      title: "Réponses rapides et efficaces",
-      description: "Répondez à tous vos avis directement depuis notre plateforme sans avoir à jongler entre différents sites et applications.",
+      title: "Identification des clients mécontents",
+      description: "Détection automatique des emails critiques exprimant une insatisfaction pour une prise en charge rapide.",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
       ),
     },
     {
-      title: "Analyses de sentiments avancées",
-      description: "Notre IA analyse automatiquement le ton et le contenu des avis pour vous aider à identifier les tendances et les problèmes récurrents.",
+      title: "Classification automatique",
+      description: "Catégorisation intelligente des emails selon leur nature (demande d'information, réclamation, support technique, etc.).",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
         </svg>
       ),
     },
     {
-      title: "Alertes en temps réel",
-      description: "Recevez des notifications instantanées pour les nouveaux avis, particulièrement pour ceux négatifs qui nécessitent une attention immédiate.",
+      title: "Notifications personnalisables",
+      description: "Paramétrez des alertes selon vos critères pour être informé immédiatement des messages nécessitant une attention particulière.",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -53,106 +53,100 @@ export default function ReviewManagementPage() {
     },
   ];
   
-  // Platform integration details
-  const platforms = [
+  // Email provider integrations
+  const emailProviders = [
     {
-      name: "Google My Business",
-      description: "Connectez votre profil Google My Business pour importer automatiquement les avis et y répondre directement.",
-      icon: "/logos/google.svg",
-      features: ["Import automatique des avis", "Réponses directes", "Statistiques détaillées", "Historique complet"]
+      name: "Gmail",
+      description: "Connectez vos comptes Gmail professionnels pour une gestion intelligente de vos emails.",
+      icon: "/logos/gmail.svg",
+      features: ["Synchronisation bidirectionnelle", "Labels intelligents", "Triage automatique", "Détection des priorités"]
     },
     {
-      name: "Facebook",
-      description: "Intégrez vos pages Facebook pour centraliser les avis et commentaires de vos clients sur le réseau social.",
-      icon: "/logos/facebook.svg",
-      features: ["Synchronisation des avis Pages", "Réponses aux recommandations", "Analyse des sentiments", "Alertes personnalisées"]
+      name: "Outlook",
+      description: "Intégrez vos comptes Outlook et Microsoft 365 pour centraliser votre communication professionnelle.",
+      icon: "/logos/outlook.svg",
+      features: ["Classement automatique", "Dossiers intelligents", "Aperçus contextuels", "Filtres personnalisés"]
     },
     {
-      name: "Trustpilot",
-      description: "Importez et gérez vos avis Trustpilot pour avoir une vision complète de votre réputation en ligne.",
-      icon: "/logos/trustpilot.svg",
-      features: ["Notifications en temps réel", "Modèles de réponses", "Filtres avancés", "Rapports hebdomadaires"]
+      name: "Exchange",
+      description: "Solution complète pour les entreprises utilisant Microsoft Exchange Server.",
+      icon: "/logos/exchange.svg",
+      features: ["Intégration serveur complète", "Paramètres d'administration", "Gestion des règles", "Support des dossiers partagés"]
     },
     {
-      name: "TripAdvisor",
-      description: "Surveillez et gérez votre présence sur TripAdvisor, essentiel pour les entreprises du tourisme et de la restauration.",
-      icon: "/logos/tripadvisor.svg",
-      features: ["Import des nouvelles évaluations", "Analyse des mots-clés", "Comparaison avec la concurrence", "Détection des tendances"]
-    },
-    {
-      name: "Yelp",
-      description: "Ne manquez aucun avis Yelp et interagissez efficacement avec les clients qui vous évaluent sur cette plateforme.",
-      icon: "/logos/yelp.svg",
-      features: ["Suivi des évaluations", "Alertes avis négatifs", "Statistiques d'engagement", "Exportation des données"]
+      name: "IMAP",
+      description: "Compatible avec tout fournisseur email supportant le protocole IMAP standard.",
+      icon: "/logos/imap.svg",
+      features: ["Support multi-comptes", "Synchronisation sécurisée", "Configuration personnalisée", "Compatibilité étendue"]
     }
   ];
   
-  // Case studies and use cases
+  // Use cases
   const useCases = [
     {
-      title: "Réagir rapidement aux avis négatifs",
-      description: "Un restaurant parisien a pu améliorer son score Google de 3,7 à 4,5 étoiles en 6 mois en répondant rapidement et efficacement aux avis négatifs grâce à nos alertes en temps réel.",
-      icon: "🔍"
+      title: "Réduire le temps de traitement",
+      description: "Un cabinet d'avocats traite désormais ses demandes prioritaires 3 fois plus rapidement grâce à notre système de priorisation intelligente.",
+      icon: "⏱️"
     },
     {
-      title: "Analyser les tendances et points d'amélioration",
-      description: "Une chaîne d'hôtels a identifié des problèmes récurrents avec le service en chambre grâce à notre analyse de sentiments, permettant des ajustements ciblés qui ont augmenté la satisfaction client de 23%.",
-      icon: "📈"
+      title: "Ne jamais manquer un client mécontent",
+      description: "Un e-commerce a amélioré son taux de rétention de 35% en identifiant et traitant rapidement les emails de clients insatisfaits.",
+      icon: "😊"
     },
     {
-      title: "Unifier la gestion multi-établissements",
-      description: "Une franchise de 15 magasins a centralisé la gestion de plus de 2000 avis mensuels, réduisant le temps consacré à cette tâche de 40 heures à seulement 10 heures par semaine.",
-      icon: "🏢"
+      title: "Optimiser le support client",
+      description: "Une entreprise SaaS a réduit de 40% le temps de réponse de son équipe support grâce à la classification automatique des demandes.",
+      icon: "🛠️"
     },
     {
-      title: "Transformer les clients mécontents en ambassadeurs",
-      description: "Un service client proactif grâce aux alertes a permis à un e-commerce de récupérer 68% des clients insatisfaits et de les convertir en acheteurs réguliers.",
-      icon: "🔄"
+      title: "Focus sur les communications stratégiques",
+      description: "Des commerciaux ont augmenté leur taux de conversion de 22% en se concentrant uniquement sur les emails à fort potentiel identifiés par l'IA.",
+      icon: "🎯"
     }
   ];
   
   // Features in detail tabs
   const detailedFeatures = [
     {
-      title: "Tableau de bord centralisé",
+      title: "Priorisation intelligente",
       content: (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h3 className="text-xl font-semibold mb-4">Vue unifiée de tous vos avis</h3>
+            <h3 className="text-xl font-semibold mb-4">Ne manquez plus aucun email important</h3>
             <p className="text-gray-600 mb-4">
-              Notre tableau de bord intuitif regroupe tous vos avis de différentes plateformes en un seul endroit, offrant une vue d'ensemble claire et organisée.
+              Notre algorithme d'IA analyse le contenu, l'expéditeur et le contexte de chaque email pour déterminer automatiquement son niveau d'urgence.
             </p>
             <ul className="space-y-2">
               <li className="flex items-start">
                 <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Filtrage par plateforme, note, date ou établissement</span>
+                <span>Identification des emails nécessitant une réponse urgente</span>
               </li>
               <li className="flex items-start">
                 <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Vue chronologique ou par importance</span>
+                <span>Reconnaissance des clients VIP et historique de communication</span>
               </li>
               <li className="flex items-start">
                 <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Identification visuelle rapide des avis nécessitant une action</span>
+                <span>Détection des délais mentionnés dans les messages</span>
               </li>
               <li className="flex items-start">
                 <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Statistiques en temps réel et évolution dans le temps</span>
+                <span>Apprentissage continu basé sur vos interactions</span>
               </li>
             </ul>
           </div>
           <div className="relative h-72 md:h-auto rounded-lg overflow-hidden shadow-lg border border-gray-200">
             <Image
-              src="/screenshots/dashboard-reviews.png"
-              alt="Tableau de bord des avis clients"
+              src="/screenshots/email-prioritization.png"
+              alt="Priorisation intelligente des emails"
               fill
               className="object-cover"
             />
@@ -161,21 +155,60 @@ export default function ReviewManagementPage() {
       )
     },
     {
-      title: "Gestion des réponses",
+      title: "Détection des sentiments",
       content: (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="relative h-72 md:h-auto rounded-lg overflow-hidden shadow-lg border border-gray-200">
             <Image
-              src="/screenshots/response-management.png"
-              alt="Interface de gestion des réponses"
+              src="/screenshots/sentiment-detection.png"
+              alt="Détection des sentiments dans les emails"
               fill
               className="object-cover"
             />
           </div>
           <div>
-            <h3 className="text-xl font-semibold mb-4">Répondez efficacement à tous vos avis</h3>
+            <h3 className="text-xl font-semibold mb-4">Identifiez l'état émotionnel de vos clients</h3>
             <p className="text-gray-600 mb-4">
-              Notre système de gestion des réponses vous permet de créer, valider et publier des réponses à vos avis clients directement depuis notre plateforme.
+              Notre technologie d'analyse de sentiments détecte les émotions exprimées dans les emails pour vous permettre d'adapter votre réponse.
+            </p>
+            <ul className="space-y-2">
+              <li className="flex items-start">
+                <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Détection des clients mécontents ou frustrés</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Identification des opportunités (clients enthousiastes)</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Analyse contextuelle des messages ambigus</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Suggestions de ton pour vos réponses</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "Réponses suggérées",
+      content: (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h3 className="text-xl font-semibold mb-4">Répondez plus rapidement avec l'aide de l'IA</h3>
+            <p className="text-gray-600 mb-4">
+              Bénéficiez de suggestions de réponses intelligentes adaptées au contexte de chaque conversation pour gagner un temps précieux.
             </p>
             <ul className="space-y-2">
               <li className="flex items-start">
@@ -188,65 +221,26 @@ export default function ReviewManagementPage() {
                 <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Workflow d'approbation pour les équipes</span>
+                <span>Suggestions contextuelles basées sur l'historique</span>
               </li>
               <li className="flex items-start">
                 <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Suggestions de réponses par IA selon le contexte</span>
+                <span>Adaptation automatique au ton et style de votre entreprise</span>
               </li>
               <li className="flex items-start">
                 <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Historique complet des interactions</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "Analyse des sentiments",
-      content: (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h3 className="text-xl font-semibold mb-4">Comprendre l'opinion de vos clients</h3>
-            <p className="text-gray-600 mb-4">
-              Notre technologie d'intelligence artificielle analyse automatiquement le contenu de vos avis pour en extraire les sentiments, tendances et sujets récurrents.
-            </p>
-            <ul className="space-y-2">
-              <li className="flex items-start">
-                <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Détection automatique des thématiques évoquées</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Évaluation du sentiment positif, neutre ou négatif</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Identification des points forts et axes d'amélioration</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Rapports d'analyse détaillés exportables</span>
+                <span>Optimisation continue par apprentissage</span>
               </li>
             </ul>
           </div>
           <div className="relative h-72 md:h-auto rounded-lg overflow-hidden shadow-lg border border-gray-200">
             <Image
-              src="/screenshots/sentiment-analysis.png"
-              alt="Analyse des sentiments"
+              src="/screenshots/suggested-replies.png"
+              alt="Réponses suggérées par IA"
               fill
               className="object-cover"
             />
@@ -255,46 +249,46 @@ export default function ReviewManagementPage() {
       )
     },
     {
-      title: "Système d'alertes",
+      title: "Automatisation des tâches",
       content: (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="relative h-72 md:h-auto rounded-lg overflow-hidden shadow-lg border border-gray-200">
             <Image
-              src="/screenshots/alert-system.png"
-              alt="Système d'alertes"
+              src="/screenshots/email-automation.png"
+              alt="Automatisation des tâches email"
               fill
               className="object-cover"
             />
           </div>
           <div>
-            <h3 className="text-xl font-semibold mb-4">Ne manquez jamais un avis important</h3>
+            <h3 className="text-xl font-semibold mb-4">Simplifiez votre gestion d'emails grâce à l'automatisation</h3>
             <p className="text-gray-600 mb-4">
-              Configurez des alertes personnalisées pour être immédiatement informé des avis qui nécessitent votre attention, selon vos propres critères.
+              Configurez des règles personnalisées pour automatiser les actions répétitives et vous concentrer sur les tâches à valeur ajoutée.
             </p>
             <ul className="space-y-2">
               <li className="flex items-start">
                 <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Alertes instantanées pour les avis négatifs (1-2 étoiles)</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Notifications par email, SMS ou push</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Filtres personnalisables par note, mot-clé ou plateforme</span>
+                <span>Classement automatique des emails par catégorie</span>
               </li>
               <li className="flex items-start">
                 <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span>Assignation automatique aux membres de l'équipe</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Règles conditionnelles personnalisables</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Intégration avec vos outils de travail</span>
               </li>
             </ul>
           </div>
@@ -306,28 +300,28 @@ export default function ReviewManagementPage() {
   // How it works steps
   const steps = [
     {
-      title: "Connectez vos plateformes",
-      description: "Intégrez en quelques clics vos profils Google My Business, Facebook, Trustpilot et autres sources d'avis clients.",
-      icon: "🔌"
+      title: "Connectez vos comptes email",
+      description: "Intégrez facilement vos boîtes mail professionnelles (Gmail, Outlook, Exchange ou autres) via notre interface sécurisée.",
+      icon: "📧"
     },
     {
-      title: "Importation automatique",
-      description: "Notre système récupère automatiquement tous vos avis existants et configure la synchronisation en temps réel pour les nouveaux avis.",
+      title: "Configuration initiale",
+      description: "Personnalisez vos critères de priorisation et catégories selon vos besoins spécifiques ou utilisez nos paramètres recommandés.",
       icon: "⚙️"
     },
     {
-      title: "Centralisez et analysez",
-      description: "Accédez à tous vos avis sur un tableau de bord unifié avec des statistiques et analyses de sentiments avancées.",
-      icon: "📊"
+      title: "Analyse automatique",
+      description: "Notre IA analyse en continu vos emails entrants pour les classer par priorité et catégorie en temps réel.",
+      icon: "🤖"
     },
     {
-      title: "Répondez efficacement",
-      description: "Utilisez nos modèles personnalisés et suggestions IA pour répondre rapidement et de manière pertinente à chaque avis.",
-      icon: "✍️"
+      title: "Gestion optimisée",
+      description: "Traitez vos emails selon leur importance réelle et non leur ordre d'arrivée pour une efficacité maximale.",
+      icon: "✅"
     },
     {
-      title: "Suivez vos progrès",
-      description: "Visualisez l'évolution de votre réputation en ligne et identifiez les points d'amélioration grâce à nos rapports détaillés.",
+      title: "Amélioration continue",
+      description: "Le système apprend de vos interactions pour affiner ses analyses et s'adapter parfaitement à vos habitudes de travail.",
       icon: "📈"
     }
   ];
@@ -335,28 +329,28 @@ export default function ReviewManagementPage() {
   // FAQ items
   const faqItems = [
     {
-      question: "Combien de temps faut-il pour configurer la centralisation des avis ?",
-      answer: "La mise en place initiale prend généralement entre 10 et 30 minutes selon le nombre de plateformes que vous souhaitez connecter. Notre assistant d'intégration vous guide pas à pas, et l'importation de vos avis historiques se fait automatiquement en arrière-plan."
+      question: "Est-ce que vos algorithmes lisent le contenu de mes emails ?",
+      answer: "Notre système utilise des algorithmes d'IA pour analyser le contenu de vos emails afin d'en déterminer la priorité et la catégorie. Cependant, nous respectons strictement votre confidentialité : toutes les analyses sont effectuées de manière sécurisée, aucun humain n'accède à vos données, et nous ne stockons pas le contenu de vos emails plus longtemps que nécessaire pour fournir le service."
     },
     {
-      question: "Est-ce que je peux connecter plusieurs établissements ou succursales ?",
-      answer: "Absolument ! Notre système est conçu pour gérer les entreprises multi-établissements. Vous pouvez connecter plusieurs profils Google My Business, pages Facebook, etc., et les organiser par localisation ou par marque selon vos besoins."
+      question: "Puis-je connecter plusieurs comptes email différents ?",
+      answer: "Absolument ! Notre solution permet de connecter plusieurs comptes email, qu'ils soient personnels ou partagés au sein d'une équipe. Vous pouvez par exemple intégrer votre Gmail professionnel, votre adresse Outlook d'entreprise et une boîte mail partagée pour le support client, le tout géré depuis notre interface unique."
     },
     {
-      question: "Comment fonctionne la réponse aux avis depuis votre plateforme ?",
-      answer: "Notre système utilise les API officielles des plateformes d'avis pour publier vos réponses directement sur les sites d'origine. Vos réponses apparaissent comme si vous les aviez publiées directement sur Google, Facebook ou autres, avec la même visibilité pour vos clients."
+      question: "Comment le système détermine-t-il la priorité d'un email ?",
+      answer: "Notre algorithme analyse plusieurs facteurs pour déterminer la priorité : l'expéditeur et son historique d'interactions avec vous, les mots-clés contenus dans l'objet et le corps du message, les mentions de délais, le ton et le sentiment exprimés, ainsi que votre propre comportement passé face à des emails similaires. Le système s'adapte en permanence à vos habitudes pour affiner ses prédictions."
     },
     {
-      question: "Puis-je permettre à plusieurs membres de mon équipe d'accéder au système ?",
-      answer: "Oui, notre plateforme offre une gestion des utilisateurs avec différents niveaux de permissions. Vous pouvez inviter des collègues, définir leurs droits d'accès (lecture seule, réponse aux avis, administration, etc.) et même créer des workflows d'approbation pour les réponses."
+      question: "Est-ce compatible avec mon client de messagerie actuel ?",
+      answer: "Notre solution s'intègre avec la plupart des clients de messagerie populaires. Vous pouvez continuer à utiliser Gmail, Outlook ou votre client préféré, tout en bénéficiant de notre couche d'intelligence ajoutée. Nous proposons également des extensions pour navigateurs et applications mobiles pour une expérience optimale, quel que soit votre environnement de travail."
     },
     {
-      question: "Quelles plateformes d'avis sont supportées ?",
-      answer: "Notre solution prend en charge les principales plateformes d'avis: Google My Business, Facebook, Trustpilot, TripAdvisor, Yelp, et bien d'autres. Nous ajoutons régulièrement de nouvelles intégrations selon les besoins de nos clients."
+      question: "Mon équipe peut-elle collaborer sur les emails importants ?",
+      answer: "Oui, notre plateforme intègre des fonctionnalités collaboratives permettant à votre équipe de gérer efficacement les communications. Vous pouvez assigner des emails à des collègues spécifiques, ajouter des commentaires internes invisibles pour les destinataires, suivre le statut de traitement des messages, et obtenir des statistiques sur les performances de l'équipe."
     },
     {
-      question: "Comment puis-je mesurer l'amélioration de ma réputation en ligne ?",
-      answer: "Notre tableau de bord inclut des indicateurs clés de performance (KPI) qui suivent l'évolution de votre note moyenne, le volume d'avis, les délais de réponse et l'engagement client. Vous pouvez également générer des rapports périodiques pour mesurer votre progression dans le temps."
+      question: "La priorisation fonctionne-t-elle avec des emails en langue étrangère ?",
+      answer: "Notre système prend en charge plus de 30 langues pour l'analyse de priorité et de sentiment. Les principales langues européennes, asiatiques et arabes sont parfaitement supportées, avec une précision comparable à celle obtenue en français ou en anglais. Si vous travaillez dans un environnement multilingue, notre solution s'adaptera parfaitement à vos besoins."
     }
   ];
   
@@ -369,13 +363,13 @@ export default function ReviewManagementPage() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
-              <span className="block">Centralisation des</span>
+              <span className="block">Gestion intelligente</span>
               <span className="block bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                avis clients
+                des emails
               </span>
             </h1>
             <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
-              Regroupez tous vos avis clients provenant de Google, Facebook, Trustpilot et d'autres plateformes en un seul endroit pour une gestion simplifiée et efficace.
+              Filtrez et priorisez automatiquement vos emails professionnels pour identifier rapidement les messages critiques et ne jamais manquer une communication importante.
             </p>
             <div className="mt-10 flex justify-center">
               <Link
@@ -404,7 +398,7 @@ export default function ReviewManagementPage() {
               Les avantages clés de notre solution
             </h2>
             <p className="mt-4 text-lg text-gray-500">
-              Notre plateforme de centralisation des avis clients vous offre tout ce dont vous avez besoin pour gérer efficacement votre réputation en ligne.
+              Notre technologie d'IA transforme votre boîte de réception en un outil de productivité puissant et intelligent.
             </p>
           </div>
           
@@ -422,21 +416,21 @@ export default function ReviewManagementPage() {
         </div>
       </div>
       
-      {/* Platform Integrations */}
+      {/* Email Provider Integrations */}
       <div className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              Plateformes prises en charge
+              Compatibilité avec vos services de messagerie
             </h2>
             <p className="mt-4 text-lg text-gray-500">
-              Connectez toutes vos sources d'avis clients à notre système pour une gestion complète de votre réputation en ligne.
+              Notre solution s'intègre parfaitement avec tous vos fournisseurs de messagerie professionnelle.
             </p>
           </div>
           
-          <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {platforms.map((platform) => (
-              <div key={platform.name} className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 transition-transform hover:shadow-md">
+          <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-2">
+            {emailProviders.map((provider) => (
+              <div key={provider.name} className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 transition-transform hover:shadow-md">
                 <div className="p-8">
                   <div className="flex items-center">
                     <div className="h-12 w-12 flex items-center justify-center rounded-full bg-gray-100">
@@ -445,11 +439,11 @@ export default function ReviewManagementPage() {
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
                       </svg>
                     </div>
-                    <h3 className="ml-4 text-xl font-semibold text-gray-900">{platform.name}</h3>
+                    <h3 className="ml-4 text-xl font-semibold text-gray-900">{provider.name}</h3>
                   </div>
-                  <p className="mt-4 text-gray-600">{platform.description}</p>
+                  <p className="mt-4 text-gray-600">{provider.description}</p>
                   <ul className="mt-6 space-y-3">
-                    {platform.features.map((feature) => (
+                    {provider.features.map((feature) => (
                       <li key={feature} className="flex items-start">
                         <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -464,7 +458,7 @@ export default function ReviewManagementPage() {
                     href="/auth/register" 
                     className="flex items-center justify-end text-blue-600 font-medium"
                   >
-                    <span>Connecter cette plateforme</span>
+                    <span>Connecter {provider.name}</span>
                     <svg className="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
@@ -484,7 +478,7 @@ export default function ReviewManagementPage() {
               Fonctionnalités en détail
             </h2>
             <p className="mt-4 text-lg text-gray-500">
-              Découvrez comment notre plateforme transforme votre gestion des avis clients au quotidien.
+              Découvrez comment notre plateforme transforme votre gestion des emails professionnels au quotidien.
             </p>
           </div>
           
@@ -537,7 +531,7 @@ export default function ReviewManagementPage() {
               Cas d'utilisation concrets
             </h2>
             <p className="mt-4 text-lg text-gray-600">
-              Découvrez comment nos clients utilisent notre solution de centralisation des avis pour améliorer leur réputation en ligne.
+              Comment nos clients utilisent notre gestion intelligente des emails pour améliorer leur productivité.
             </p>
           </div>
           
@@ -561,7 +555,7 @@ export default function ReviewManagementPage() {
               Comment ça marche
             </h2>
             <p className="mt-4 text-lg text-gray-500">
-              Un processus simple en 5 étapes pour centraliser et gérer efficacement tous vos avis clients.
+              Un processus simple pour transformer votre gestion des emails professionnels.
             </p>
           </div>
           
@@ -592,7 +586,7 @@ export default function ReviewManagementPage() {
               Questions fréquentes
             </h2>
             <p className="mt-4 text-lg text-gray-600">
-              Tout ce que vous devez savoir sur notre solution de centralisation des avis clients.
+              Tout ce que vous devez savoir sur notre solution de gestion intelligente des emails professionnels.
             </p>
           </div>
           
@@ -621,11 +615,11 @@ export default function ReviewManagementPage() {
             <div className="px-6 py-12 sm:px-12 sm:py-16 lg:flex lg:items-center lg:justify-between">
               <div>
                 <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                  <span className="block">Prêt à centraliser</span>
-                  <span className="block">tous vos avis clients ?</span>
+                  <span className="block">Prêt à optimiser</span>
+                  <span className="block">votre gestion des emails ?</span>
                 </h2>
                 <p className="mt-4 text-lg leading-6 text-blue-100">
-                  Créez votre compte gratuit dès aujourd'hui et connectez vos plateformes en quelques minutes.
+                  Créez votre compte gratuit dès aujourd'hui et connectez vos boîtes mail en quelques minutes.
                 </p>
               </div>
               <div className="mt-8 lg:mt-0 lg:ml-8 lg:flex-shrink-0">

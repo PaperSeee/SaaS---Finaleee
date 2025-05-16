@@ -375,6 +375,7 @@ export default function ReviewsPage() {
                     <Link
                       href={`/dashboard/businesses/${review.businessId}/reviews`}
                       className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500"
+                      prefetch={false}
                     >
                       {review.response ? "Modifier la réponse" : "Répondre"} →
                     </Link>

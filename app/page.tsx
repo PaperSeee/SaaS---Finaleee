@@ -187,7 +187,7 @@ export default function Home() {
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-100 shadow-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="flex items-center" prefetch={false}>
               <CustomLogo width={120} height={40} />
             </Link>
             

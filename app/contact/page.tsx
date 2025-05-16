@@ -260,7 +260,7 @@ export default function ContactPage() {
                       </div>
                       <div className="ml-4">
                         <h3 className="text-lg font-semibold text-gray-900">Email</h3>
-                        <a href="mailto:contact@kritiqo.com" className="mt-1 block text-blue-600 hover:text-blue-700">
+                        <a href="mailto:contact@kritiqo.com" className="mt-1 block text-blue-600 hover:text-blue-700" rel="noopener noreferrer">
                           contact@kritiqo.com
                         </a>
                       </div>
