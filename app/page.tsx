@@ -38,28 +38,25 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
-  // Testimonials data
-  const testimonials = [
+  // Expected outcomes data (replacing testimonials since we're in MVP phase)
+  const expectedOutcomes = [
     {
-      quote: "Kritiqo a révolutionné notre gestion des avis clients. Nous avons augmenté notre note Google de 3,8 à 4,6 en 3 mois !",
-      author: "Marie Leclerc",
-      role: "Directrice Marketing",
-      company: "Boutique Élégance",
-      avatar: "/avatars/avatar1.jpg"
+      title: "Centralisation des avis",
+      description: "Tous vos avis clients en un seul endroit pour une gestion simplifiée",
+      icon: "star",
+      benefit: "Gagnez jusqu'à 5 heures par semaine sur la gestion de votre réputation en ligne"
     },
     {
-      quote: "Le module de filtrage d'emails nous a permis d'être 60% plus réactifs face aux demandes urgentes de nos clients.",
-      author: "Thomas Durand",
-      role: "Customer Success Manager",
-      company: "Tech Solutions",
-      avatar: "/avatars/avatar2.jpg"
+      title: "Intelligence email",
+      description: "Priorisation automatique des emails critiques pour une réactivité optimale",
+      icon: "mail",
+      benefit: "Réduisez votre temps de réponse aux clients insatisfaits de 60%"
     },
     {
-      quote: "Un outil indispensable pour toute entreprise soucieuse de sa réputation en ligne. Simple et puissant !",
-      author: "Sophie Martin",
-      role: "CEO",
-      company: "Agence Digitale Créative",
-      avatar: "/avatars/avatar3.jpg"
+      title: "Analyse de sentiments",
+      description: "Comprenez l'opinion de vos clients grâce à l'analyse automatique des avis",
+      icon: "chart",
+      benefit: "Identifiez les axes d'amélioration prioritaires pour votre business"
     }
   ];
   
@@ -364,29 +361,53 @@ export default function Home() {
           </div>
         </div>
         
-        {/* Trusted By Section */}
+        {/* Early Adopters Section (replacing partners section) */}
         <div className="bg-gray-50 py-12">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <p className="text-center text-base font-medium text-gray-500">
-              Ils nous font confiance pour leur réputation en ligne
-            </p>
-            <div className="mt-6 grid grid-cols-2 gap-8 md:grid-cols-6">
-              {partners.map((partner) => (
-                <div
-                  key={partner.name}
-                  className="col-span-1 flex justify-center md:col-span-2 lg:col-span-1"
-                >
-                  <div className="h-12 w-full flex items-center justify-center grayscale opacity-70 hover:opacity-100 hover:grayscale-0 transition-all">
-                    <Image
-                      src={partner.logo}
-                      alt={partner.name}
-                      width={120}
-                      height={40}
-                      className="h-8 object-contain"
-                    />
+            <div className="text-center">
+              <h2 className="text-2xl font-semibold text-gray-900">Programme Early Adopter</h2>
+              <p className="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">
+                Rejoignez notre programme early adopter et bénéficiez d'avantages exclusifs
+              </p>
+              
+              <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
+                <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                  <div className="inline-flex items-center justify-center p-3 bg-blue-100 rounded-full mb-4">
+                    <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                   </div>
+                  <h3 className="text-lg font-medium text-gray-900">Tarif préférentiel</h3>
+                  <p className="mt-2 text-sm text-gray-600">Bénéficiez d'une remise de 30% sur votre abonnement pendant 12 mois</p>
                 </div>
-              ))}
+                
+                <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                  <div className="inline-flex items-center justify-center p-3 bg-blue-100 rounded-full mb-4">
+                    <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900">Accès prioritaire</h3>
+                  <p className="mt-2 text-sm text-gray-600">Accédez en avant-première aux nouvelles fonctionnalités et influencez nos priorités</p>
+                </div>
+                
+                <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                  <div className="inline-flex items-center justify-center p-3 bg-blue-100 rounded-full mb-4">
+                    <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900">Support dédié</h3>
+                  <p className="mt-2 text-sm text-gray-600">Bénéficiez d'un accompagnement personnalisé par notre équipe fondatrice</p>
+                </div>
+              </div>
+              
+              <Link
+                href="/auth/register"
+                className="mt-8 inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-5 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-700 sm:mt-10"
+              >
+                Rejoindre le programme
+              </Link>
             </div>
           </div>
         </div>
@@ -503,44 +524,40 @@ export default function Home() {
             <div className="text-center">
               <div className="animate-fadeIn">
                 <h2 className="text-base font-semibold uppercase tracking-wide text-blue-600">
-                  Témoignages
+                  Ce que vous allez aimer
                 </h2>
               </div>
               <div className="animate-fadeIn animation-delay-100">
                 <div className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                  Ce que nos clients disent
+                  Résultats attendus
                 </div>
               </div>
             </div>
 
             <div className="mt-16">
               <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                {testimonials.map((testimonial, index) => (
+                {expectedOutcomes.map((outcome, index) => (
                   <div
-                    key={testimonial.author}
+                    key={outcome.title}
                     className="animate-fadeInUp bg-gray-50 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:scale-105"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="flex items-center mb-6">
                       <div className="flex-shrink-0">
-                        <Image 
-                          className="h-12 w-12 rounded-full" 
-                          src={testimonial.avatar} 
-                          alt={testimonial.author}
-                          width={48}
-                          height={48}
-                        />
+                        <svg className="h-12 w-12 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h18v18H3V3z" />
+                        </svg>
                       </div>
                       <div className="ml-4">
-                        <h3 className="text-lg font-medium text-gray-900">{testimonial.author}</h3>
-                        <p className="text-sm text-gray-500">{testimonial.role}, {testimonial.company}</p>
+                        <h3 className="text-lg font-medium text-gray-900">{outcome.title}</h3>
+                        <p className="text-sm text-gray-500">{outcome.description}</p>
                       </div>
                     </div>
                     <div className="relative">
                       <svg className="absolute top-0 left-0 h-8 w-8 text-gray-200 transform -translate-x-3 -translate-y-4" fill="currentColor" viewBox="0 0 32 32">
                         <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
                       </svg>
-                      <p className="relative text-gray-600 italic">{testimonial.quote}</p>
+                      <p className="relative text-gray-600 italic">{outcome.benefit}</p>
                     </div>
                   </div>
                 ))}
