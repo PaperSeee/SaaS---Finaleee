@@ -39,14 +39,13 @@ const translations: Translations = {
     hero: {
       title: "Manage All Your Customer Reviews In One Place",
       subtitle: "Get insights, respond quickly, and improve your online reputation with our review management platform.",
-      cta: "Start for free",
       secondaryCta: "Learn more",
       customers: "Trusted by more than",
       businesses: "businesses worldwide",
-      subtitleBadge: {    // renamed from subtitle
+      subtitleBadge: {
         badge: "Customer Experience Platform"
       },
-      splitTitle: {       // renamed from title
+      splitTitle: {
         part1: "Manage your",
         highlight: "online reputation",
         part2: "effortlessly"
@@ -122,14 +121,13 @@ const translations: Translations = {
     hero: {
       title: "Gérez tous vos avis clients en un seul endroit",
       subtitle: "Obtenez des insights, répondez rapidement et améliorez votre réputation en ligne avec notre plateforme de gestion d'avis.",
-      cta: "Commencer gratuitement",
       secondaryCta: "En savoir plus",
       customers: "Utilisé par plus de",
       businesses: "entreprises dans le monde",
-      subtitleBadge: {    // renamed from subtitle
+      subtitleBadge: {
         badge: "Plateforme d'Expérience Client"
       },
-      splitTitle: {       // renamed from title
+      splitTitle: {
         part1: "Gérez votre",
         highlight: "réputation en ligne",
         part2: "sans effort"
@@ -205,14 +203,13 @@ const translations: Translations = {
     hero: {
       title: "Beheer al uw klantbeoordelingen op één plek",
       subtitle: "Krijg inzichten, reageer snel en verbeter uw online reputatie met ons beoordelingsbeheerplatform.",
-      cta: "Gratis beginnen",
       secondaryCta: "Meer informatie",
       customers: "Vertrouwd door meer dan",
       businesses: "bedrijven wereldwijd",
-      subtitleBadge: {    // renamed from subtitle
+      subtitleBadge: {
         badge: "Klantbeleving Platform"
       },
-      splitTitle: {       // renamed from title
+      splitTitle: {
         part1: "Beheer uw",
         highlight: "online reputatie",
         part2: "moeiteloos"
