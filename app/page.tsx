@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type RefObject } from "react";
 import { useRouter } from "next/navigation";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Footer from "@/components/Footer";
@@ -655,7 +655,7 @@ export default function Home() {
                           <span className="ml-3 text-gray-500">{feature}</span>
                         </li>
                       ))}
-                    </p>
+                    </ul>
                   </div>
                   
                   <div className="p-8 pt-0 mt-auto">
