@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Footer from "@/components/Footer";
 import { CustomLogo } from "@/components/CustomLogo";
+import PublicHeader from "@/components/PublicHeader";
 
 export default function FAQPage() {
   const { isAuthenticated } = useAuth();
@@ -45,63 +46,7 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <Link href="/" className="flex items-center">
-              <CustomLogo width={120} height={40} />
-            </Link>
-            <div className="hidden md:flex md:items-center md:space-x-6">
-              <Link href="/pricing" className="text-base font-medium text-gray-600 hover:text-gray-900">
-                Tarifs
-              </Link>
-              <Link href="/faq" className="text-base font-medium text-blue-600 hover:text-blue-700">
-                FAQ
-              </Link>
-              <Link href="/contact" className="text-base font-medium text-gray-600 hover:text-gray-900">
-                Contact
-              </Link>
-              
-              {isAuthenticated ? (
-                <Link 
-                  href="/dashboard" 
-                  className="ml-8 inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700"
-                >
-                  Dashboard
-                </Link>
-              ) : (
-                <>
-                  <Link href="/auth/login" className="text-base font-medium text-gray-600 hover:text-gray-900">
-                    Se connecter
-                  </Link>
-                  <Link 
-                    href="/auth/register" 
-                    className="ml-8 inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700"
-                  >
-                    Essayer gratuitement
-                  </Link>
-                </>
-              )}
-            </div>
-            
-            {/* Mobile menu button */}
-            <div className="flex md:hidden">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-                aria-expanded="false"
-              >
-                <span className="sr-only">Ouvrir le menu</span>
-                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
+      <PublicHeader />
       {/* Main content */}
       <main>
         {/* Hero section */}

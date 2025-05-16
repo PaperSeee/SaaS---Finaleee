@@ -7,6 +7,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import { CustomLogo } from "@/components/CustomLogo";
+import PublicHeader from "@/components/PublicHeader";
 
 export default function PricingPage() {
   const { isAuthenticated } = useAuth();
@@ -76,57 +77,7 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <Link href="/" className="flex items-center">
-              <CustomLogo width={100} height={100} className="py-1" />
-            </Link>
-            <div className="hidden md:flex md:items-center md:space-x-6">
-              <Link href="/pricing" className="text-base font-medium text-blue-600 hover:text-blue-700">
-                Tarifs
-              </Link>
-              <Link href="/faq" className="text-base font-medium text-gray-600 hover:text-gray-900">
-                FAQ
-              </Link>
-              <Link href="/contact" className="text-base font-medium text-gray-600 hover:text-gray-900">
-                Contact
-              </Link>
-              
-              {!isAuthenticated ? (
-                <>
-                  <Link 
-                    href="/auth/login" 
-                    className="text-gray-500 hover:text-gray-700 px-3 py-2 text-sm font-medium"
-                  >
-                    Se connecter
-                  </Link>
-                  <Link 
-                    href="/auth/register"
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
-                  >
-                    S&apos;inscrire
-                  </Link>
-                </>
-              ) : (
-                <Link 
-                  href="/dashboard"
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
-                >
-                  Tableau de bord
-                </Link>
-              )}
-            </div>
-            
-            {/* Mobile version (hidden for simplicity) */}
-            <div className="flex md:hidden">
-              {/* ...existing mobile menu code... */}
-            </div>
-          </div>
-        </div>
-      </header>
-
+      <PublicHeader />
       {/* Main content */}
       <main>
         {/* Hero section */}
