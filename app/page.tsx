@@ -347,24 +347,21 @@ export default function Home() {
               Ils nous font confiance pour leur réputation en ligne
             </p>
             <div className="mt-6 grid grid-cols-2 gap-8 md:grid-cols-6">
-              {partners.map((partner, index) => (
-                <motion.div
+              {partners.map((partner) => (
+                <div
                   key={partner.name}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
                   className="col-span-1 flex justify-center md:col-span-2 lg:col-span-1"
                 >
                   <div className="h-12 w-full flex items-center justify-center grayscale opacity-70 hover:opacity-100 hover:grayscale-0 transition-all">
-                    <Image 
-                      src={partner.logo} 
-                      alt={partner.name} 
-                      width={120} 
-                      height={40} 
-                      className="h-8 object-contain" 
+                    <Image
+                      src={partner.logo}
+                      alt={partner.name}
+                      width={120}
+                      height={40}
+                      className="h-8 object-contain"
                     />
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
