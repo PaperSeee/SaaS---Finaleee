@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Footer from "@/components/Footer";
-import { motion, AnimatePresence } from "framer-motion";
 import { CustomLogo } from "@/components/CustomLogo";
 
 export default function FAQPage() {
@@ -125,22 +124,15 @@ export default function FAQPage() {
             <div className="space-y-6">
               {faqs.map((faq, index) => (
                 <div className="bg-white rounded-lg border border-gray-200 overflow-hidden" key={index}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
+                  <div className="animate-fadeInUp" style={{ animationDelay: `${index * 100}ms` }}>
                     <button
                       onClick={() => toggleFaq(index)}
                       className="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
                       <span className="text-lg font-medium text-gray-900">{faq.question}</span>
-                      <motion.svg
-                        animate={{ rotate: activeFaq === index ? 180 : 0 }}
-                        transition={{ duration: 0.3 }}
-                        className={`w-5 h-5 transform transition-transform ${
-                          activeFaq === index ? "text-blue-600" : "text-gray-500"
+                      <svg
+                        className={`w-5 h-5 transform transition-transform duration-300 ${
+                          activeFaq === index ? "rotate-180 text-blue-600" : "text-gray-500"
                         }`}
                         fill="none"
                         viewBox="0 0 24 24"
@@ -152,28 +144,21 @@ export default function FAQPage() {
                           strokeWidth={2}
                           d="M19 9l-7 7-7-7"
                         />
-                      </motion.svg>
+                      </svg>
                     </button>
 
-                    <AnimatePresence>
-                      {activeFaq === index && (
-                        <div className="overflow-hidden">
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <div className="px-6 pb-4 text-gray-600 bg-slate-50">
-                              <div className="pt-3 border-t border-gray-200">
-                                {faq.answer}
-                              </div>
-                            </div>
-                          </motion.div>
+                    <div 
+                      className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                        activeFaq === index ? 'max-h-96' : 'max-h-0'
+                      }`}
+                    >
+                      <div className="px-6 pb-4 text-gray-600 bg-slate-50">
+                        <div className="pt-3 border-t border-gray-200">
+                          {faq.answer}
                         </div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>

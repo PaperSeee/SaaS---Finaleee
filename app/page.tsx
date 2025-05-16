@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, type RefObject } from "react";
 import { useRouter } from "next/navigation";
-import { motion, useScroll, useTransform } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Footer from "@/components/Footer";
@@ -17,13 +16,26 @@ export default function Home() {
 
   // For parallax scrolling effect
   const ref = useRef<HTMLDivElement | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref as RefObject<HTMLElement>,
-    offset: ["start start", "end start"]
-  });
   
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.5]);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!ref.current) return;
+      
+      const scrollY = window.scrollY;
+      const scrollMax = window.innerHeight;
+      const ratio = Math.min(scrollY / scrollMax, 1);
+      
+      // Apply transform and opacity directly
+      const overlay = ref.current.querySelector('.parallax-overlay');
+      if (overlay instanceof HTMLElement) {
+        overlay.style.transform = `translateY(${scrollY * 0.2}px)`;
+        overlay.style.opacity = `${1 - (ratio * 0.5)}`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   // Testimonials data
   const testimonials = [
@@ -236,63 +248,37 @@ export default function Home() {
         <div className="relative overflow-hidden bg-white" ref={ref}>
           <div className="absolute inset-0 h-full w-full bg-gradient-to-br from-blue-50 to-indigo-50 opacity-50">
             {/* Parallax overlay */}
-            <motion.div
-              initial={{ opacity: 0.5 }}
-              style={{
-                position: 'absolute',
-                inset: 0,
-                height: '100%',
-                width: '100%',
-                y,
-                opacity
-              }}
-            />
+            <div className="parallax-overlay absolute inset-0 h-full w-full transition-transform duration-300 ease-out" />
           </div>
           
           <div className="relative pt-10 pb-16 sm:pt-16 sm:pb-24 lg:pt-24 lg:pb-32">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 lg:grid lg:grid-cols-12 lg:gap-8">
               <div className="sm:text-center md:mx-auto lg:col-span-6 lg:text-left lg:flex lg:items-center">
                 <div>
-                  {/* Hero “Nouveau” badge */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
+                  {/* Hero "Nouveau" badge */}
+                  <div className="animate-fadeIn">
                     <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-0.5 text-sm font-medium text-blue-800">
                       Nouveau
                     </span>
-                  </motion.div>
+                  </div>
                   
                   {/* Hero title */}
                   <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-gray-900 sm:mt-5 sm:text-5xl lg:mt-6 xl:text-6xl">
-                    <motion.span
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.1 }}
-                    >
+                    <div className="animate-fadeIn animation-delay-100">
                       <span className="block">Maîtrisez votre réputation</span>
                       <span className="block text-blue-600">en ligne sans effort</span>
-                    </motion.span>
+                    </div>
                   </h1>
                   
                   {/* Hero subtitle */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                  >
+                  <div className="animate-fadeIn animation-delay-200">
                     <div className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
                       Centralisez vos avis et vos e-mails critiques sur un seul dashboard intelligent pour améliorer votre satisfaction client et votre réputation digitale.
                     </div>
-                  </motion.div>
+                  </div>
                   
                   {/* Hero CTAs */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                  >
+                  <div className="animate-fadeIn animation-delay-300">
                     <div className="mt-8 sm:mt-10 sm:flex sm:justify-center lg:justify-start">
                       <div className="rounded-md shadow">
                         <Link
@@ -311,7 +297,7 @@ export default function Home() {
                         </Link>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 </div>
               </div>
               
@@ -376,48 +362,28 @@ export default function Home() {
         <div className="py-16 sm:py-24 lg:py-32 bg-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
+              <div className="animate-fadeIn">
                 <h2 className="text-base font-semibold uppercase tracking-wide text-blue-600">
                   Fonctionnalités principales
                 </h2>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
+              </div>
+              <div className="animate-fadeIn animation-delay-100">
                 <div className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
                   Tout ce dont vous avez besoin
                 </div>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
+              </div>
+              <div className="animate-fadeIn animation-delay-200">
                 <div className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
                   Une solution complète pour gérer votre réputation digitale et rester au top de vos communications clients
                 </div>
-              </motion.div>
+              </div>
             </div>
 
             <div className="mt-16">
               <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
                 {features.map((feature, index) => (
                   <div key={feature.title} className="bg-gray-50 rounded-xl overflow-hidden shadow-lg">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                    >
+                    <div className="animate-fadeInUp" style={{ animationDelay: `${index * 100}ms` }}>
                       <div className="p-8">
                         <div className="flex items-center">
                           <div className="h-12 w-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
@@ -447,7 +413,7 @@ export default function Home() {
                           </svg>
                         </a>
                       </div>
-                    </motion.div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -459,47 +425,30 @@ export default function Home() {
         <div className="bg-blue-700 py-16 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
+              <div className="animate-fadeIn">
                 <h2 className="text-base font-semibold uppercase tracking-wide text-blue-200">
                   Processus simplifié
                 </h2>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
+              </div>
+              <div className="animate-fadeIn animation-delay-100">
                 <div className="mt-2 text-3xl font-extrabold text-white sm:text-4xl">
                   Comment ça marche
                 </div>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
+              </div>
+              <div className="animate-fadeIn animation-delay-200">
                 <div className="mt-4 max-w-2xl text-xl text-blue-100 mx-auto">
                   Trois étapes simples pour transformer votre gestion de la réputation
                 </div>
-              </motion.div>
+              </div>
             </div>
 
             <div className="mt-16">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {steps.map((step, index) => (
-                  <motion.div
+                  <div
                     key={step.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
+                    className="animate-fadeInUp"
+                    style={{ animationDelay: `${index * 100 + 200}ms` }}
                   >
                     <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center">
                       <div className="h-16 w-16 mx-auto bg-blue-600 text-white rounded-full flex items-center justify-center">
@@ -508,7 +457,7 @@ export default function Home() {
                       <h3 className="mt-6 text-xl font-bold text-white">{step.title}</h3>
                       <p className="mt-4 text-blue-100">{step.description}</p>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -519,38 +468,25 @@ export default function Home() {
         <div className="bg-white py-16 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
+              <div className="animate-fadeIn">
                 <h2 className="text-base font-semibold uppercase tracking-wide text-blue-600">
                   Témoignages
                 </h2>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
+              </div>
+              <div className="animate-fadeIn animation-delay-100">
                 <div className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
                   Ce que nos clients disent
                 </div>
-              </motion.div>
+              </div>
             </div>
 
             <div className="mt-16">
               <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                 {testimonials.map((testimonial, index) => (
-                  <motion.div
+                  <div
                     key={testimonial.author}
-                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="bg-gray-50 rounded-xl p-8 shadow-md"
+                    className="animate-fadeInUp bg-gray-50 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:scale-105"
+                    style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="flex items-center mb-6">
                       <div className="flex-shrink-0">
@@ -573,7 +509,7 @@ export default function Home() {
                       </svg>
                       <p className="relative text-gray-600 italic">{testimonial.quote}</p>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -584,51 +520,33 @@ export default function Home() {
         <div className="bg-gray-50 py-16 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
+              <div className="animate-fadeIn">
                 <h2 className="text-base font-semibold uppercase tracking-wide text-blue-600">
                   Tarifs
                 </h2>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
+              </div>
+              <div className="animate-fadeIn animation-delay-100">
                 <div className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
                   Des plans adaptés à vos besoins
                 </div>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
+              </div>
+              <div className="animate-fadeIn animation-delay-200">
                 <div className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
                   Démarrez gratuitement et évoluez au fur et à mesure de votre croissance
                 </div>
-              </motion.div>
+              </div>
             </div>
 
             <div className="mt-16 grid gap-8 lg:grid-cols-3">
               {plans.map((plan, index) => (
-                <motion.div
+                <div
                   key={plan.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className={`relative flex flex-col rounded-2xl ${
+                  className={`animate-fadeInUp relative flex flex-col rounded-2xl ${
                     plan.popular 
                       ? 'bg-white border-2 border-blue-500 shadow-xl z-10' 
                       : 'bg-white border border-gray-200 shadow-md'
                   }`}
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   {plan.popular && (
                     <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4">
@@ -670,7 +588,7 @@ export default function Home() {
                       {plan.cta}
                     </a>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
