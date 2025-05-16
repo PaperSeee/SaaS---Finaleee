@@ -16,7 +16,7 @@ export default function Home() {
   const router = useRouter();
 
   // For parallax scrolling effect
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"]
