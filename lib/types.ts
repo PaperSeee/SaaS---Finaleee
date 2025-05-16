@@ -86,6 +86,9 @@ export interface Review {
   };
 }
 
+// Add the Language type that LanguageSelector.tsx is trying to import
+export type Language = "en" | "fr" | "nl";
+
 // User Types
 export interface User {
   id: string;
