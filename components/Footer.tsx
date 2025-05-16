@@ -153,56 +153,8 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Newsletter subscription */}
-        <div className="mt-12 border-t border-gray-200 pt-8">
-          <div className="md:flex md:items-center md:justify-between">
-            <div>
-              <h3 className="text-base font-medium text-gray-900">Abonnez-vous à notre newsletter</h3>
-              <p className="mt-2 text-sm text-gray-500">
-                Les dernières actualités, articles et ressources, envoyés dans votre boîte mail chaque mois.
-              </p>
-            </div>
-            <div className="mt-4 md:mt-0 md:ml-4">
-              <form className="flex sm:max-w-md">
-                <label htmlFor="email-address" className="sr-only">
-                  Adresse email
-                </label>
-                <input
-                  type="email"
-                  name="email-address"
-                  id="email-address"
-                  autoComplete="email"
-                  required
-                  className="w-full min-w-0 appearance-none rounded-md border border-gray-300 bg-white px-4 py-2 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                  placeholder="Entrez votre email"
-                />
-                <div className="ml-3 flex-shrink-0">
-                  <button
-                    type="submit"
-                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700"
-                  >
-                    S'abonner
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom footer (copyright, language, etc.) */}
+        {/* Bottom footer (copyright) */}
         <div className="mt-8 pt-8 border-t border-gray-200 md:flex md:items-center md:justify-between">
-          <div className="flex space-x-6 md:order-2">
-            <div className="flex items-center text-sm text-gray-500">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c-1.657 0-3-4.03-3-9s1.343-9 3-9m0 18c1.657 0 3-4.03 3-9s-1.343-9-3-9m-9 9a9 9 0 019-9" />
-              </svg>
-              <select className="bg-transparent text-sm text-gray-500 font-medium focus:outline-none focus:ring-0">
-                <option value="en">{t('language.english')}</option>
-                <option value="fr">{t('language.french')}</option>
-                <option value="nl">{t('language.dutch')}</option>
-              </select>
-            </div>
-          </div>
           <p className="mt-8 text-base text-gray-500 md:order-1 md:mt-0">
             {t('footer.copyright').replace('{year}', currentYear)}
           </p>
