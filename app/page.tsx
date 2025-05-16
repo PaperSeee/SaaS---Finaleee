@@ -288,23 +288,24 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.3 }}
-                    className="mt-8 sm:mt-10 sm:flex sm:justify-center lg:justify-start"
                   >
-                    <div className="rounded-md shadow">
-                      <Link
-                        href="/auth/register"
-                        className="flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-8 py-3 text-base font-medium text-white hover:bg-blue-700 md:py-4 md:px-10 md:text-lg"
-                      >
-                        Essayer gratuitement
-                      </Link>
-                    </div>
-                    <div className="mt-3 sm:mt-0 sm:ml-3">
-                      <Link
-                        href="/pricing"
-                        className="flex w-full items-center justify-center rounded-md border border-transparent bg-blue-100 px-8 py-3 text-base font-medium text-blue-700 hover:bg-blue-200 md:py-4 md:px-10 md:text-lg"
-                      >
-                        Voir les tarifs
-                      </Link>
+                    <div className="mt-8 sm:mt-10 sm:flex sm:justify-center lg:justify-start">
+                      <div className="rounded-md shadow">
+                        <Link
+                          href="/auth/register"
+                          className="flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-8 py-3 text-base font-medium text-white hover:bg-blue-700 md:py-4 md:px-10 md:text-lg"
+                        >
+                          Essayer gratuitement
+                        </Link>
+                      </div>
+                      <div className="mt-3 sm:mt-0 sm:ml-3">
+                        <Link
+                          href="/pricing"
+                          className="flex w-full items-center justify-center rounded-md border border-transparent bg-blue-100 px-8 py-3 text-base font-medium text-blue-700 hover:bg-blue-200 md:py-4 md:px-10 md:text-lg"
+                        >
+                          Voir les tarifs
+                        </Link>
+                      </div>
                     </div>
                   </motion.div>
                 </div>
