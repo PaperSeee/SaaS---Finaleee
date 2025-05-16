@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import { useRouter } from "next/navigation";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,9 +16,9 @@ export default function Home() {
   const router = useRouter();
 
   // For parallax scrolling effect
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLElement | null>(null);
   const { scrollYProgress } = useScroll({
-    target: ref,
+    target: ref as RefObject<HTMLElement>,
     offset: ["start start", "end start"]
   });
   
