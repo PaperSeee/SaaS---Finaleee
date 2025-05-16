@@ -4,24 +4,15 @@ import { createContext, useContext, useState, ReactNode, useEffect } from "react
 
 export type Language = "en" | "fr" | "nl";
 
-// Define the structure for titles that can be split into parts
+// Define recursive translation values: strings, SplitTitle, or nested objects
 interface SplitTitle {
   part1: string;
   highlight: string;
   part2: string;
 }
 
-// Define our translations type, making title accept either string or SplitTitle
-interface TranslationKey {
-  title: string | SplitTitle;
-  [key: string]: any;
-}
-
-interface Translations {
-  [key: string]: {
-    [key: string]: string | TranslationKey;
-  };
-}
+type TranslationValue = string | SplitTitle | { [key: string]: TranslationValue };
+type Translations = Record<Language, { [key: string]: TranslationValue }>;
 
 // Create the context
 interface LanguageContextProps {
