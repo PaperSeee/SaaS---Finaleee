@@ -495,13 +495,14 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
-                    className="bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center"
                   >
-                    <div className="h-16 w-16 mx-auto bg-blue-600 text-white rounded-full flex items-center justify-center">
-                      {step.icon}
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center">
+                      <div className="h-16 w-16 mx-auto bg-blue-600 text-white rounded-full flex items-center justify-center">
+                        {step.icon}
+                      </div>
+                      <h3 className="mt-6 text-xl font-bold text-white">{step.title}</h3>
+                      <p className="mt-4 text-blue-100">{step.description}</p>
                     </div>
-                    <h3 className="mt-6 text-xl font-bold text-white">{step.title}</h3>
-                    <p className="mt-4 text-blue-100">{step.description}</p>
                   </motion.div>
                 ))}
               </div>
