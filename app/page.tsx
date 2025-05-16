@@ -263,15 +263,16 @@ export default function Home() {
                     </span>
                   </motion.div>
                   
-                  <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
-                    className="mt-4 text-4xl font-extrabold tracking-tight text-gray-900 sm:mt-5 sm:text-5xl lg:mt-6 xl:text-6xl"
-                  >
-                    <span className="block">Maîtrisez votre réputation</span>
-                    <span className="block text-blue-600">en ligne sans effort</span>
-                  </motion.h1>
+                  <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-gray-900 sm:mt-5 sm:text-5xl lg:mt-6 xl:text-6xl">
+                    <motion.span
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.1 }}
+                    >
+                      <span className="block">Maîtrisez votre réputation</span>
+                      <span className="block text-blue-600">en ligne sans effort</span>
+                    </motion.span>
+                  </h1>
                   
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
