@@ -10,6 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useAuth } from "@/contexts/AuthContext";
+import { CustomLogo } from "@/components/CustomLogo";
 
 export default function BusinessDetails() {
   // Access the ID from route parameters using useParams()
@@ -397,13 +398,7 @@ export default function BusinessDetails() {
                   </Link>
                   
                   <div className="flex items-center ml-0 sm:ml-4">
-                    <Image 
-                      src="/logo.png" 
-                      alt="Kritiqo Logo" 
-                      width={90} 
-                      height={90} 
-                      className="ml-2"
-                    />
+                    <CustomLogo width={90} height={90} className="ml-2" />
                   </div>
                 </div>
                 

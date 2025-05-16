@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Footer from "@/components/Footer";
 import Image from "next/image";
+import { CustomLogo } from "@/components/CustomLogo";
 
 export default function PricingPage() {
   const { isAuthenticated } = useAuth();
@@ -80,15 +81,19 @@ export default function PricingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center">
-              <Image
-                src="/logo.png"
-                alt="Kritiqo"
-                width={100}
-                height={100}
-                className="py-1"
-              />
+              <CustomLogo width={100} height={100} className="py-1" />
             </Link>
-            <div className="flex items-center space-x-4">
+            <div className="hidden md:flex md:items-center md:space-x-6">
+              <Link href="/pricing" className="text-base font-medium text-blue-600 hover:text-blue-700">
+                Tarifs
+              </Link>
+              <Link href="/faq" className="text-base font-medium text-gray-600 hover:text-gray-900">
+                FAQ
+              </Link>
+              <Link href="/contact" className="text-base font-medium text-gray-600 hover:text-gray-900">
+                Contact
+              </Link>
+              
               {!isAuthenticated ? (
                 <>
                   <Link 
@@ -112,6 +117,11 @@ export default function PricingPage() {
                   Tableau de bord
                 </Link>
               )}
+            </div>
+            
+            {/* Mobile version (hidden for simplicity) */}
+            <div className="flex md:hidden">
+              {/* ...existing mobile menu code... */}
             </div>
           </div>
         </div>

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import Image from "next/image";
+import { CustomLogo } from "@/components/CustomLogo";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -110,9 +110,7 @@ export default function Register() {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-8 rounded-lg border p-8 shadow-md">
         <div className="text-center">
-          <Image
-            src="/logo.png"
-            alt="Kritiqo"
+          <CustomLogo
             width={120}
             height={120}
             className="mx-auto"

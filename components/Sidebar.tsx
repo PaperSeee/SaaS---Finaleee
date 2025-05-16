@@ -7,6 +7,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { useState } from 'react';
 import { useLanguage } from "@/contexts/LanguageContext";
 import Image from 'next/image';
+import { CustomLogo } from "@/components/CustomLogo";
 
 interface SidebarProps {
   isMobileMenuOpen: boolean;
@@ -75,13 +76,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Sideb
           {/* Logo */}
           <div className="flex h-16 shrink-0 items-center">
             <Link href="/" className="flex items-center">
-              <Image 
-                src="/logo.png" 
-                alt="Kritiqo" 
-                width={100} 
-                height={100} 
-                className="py-1"
-              />
+              <CustomLogo width={100} height={100} className="py-1" />
             </Link>
           </div>
           

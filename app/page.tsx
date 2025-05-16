@@ -1,597 +1,696 @@
 // @ts-nocheck
 "use client";
-import Link from "next/link";
-import { useState, useEffect, lazy, Suspense } from "react";
-import { motion } from "framer-motion";
-import { throttle } from "@/lib/utils"; // Replace lodash with your custom throttle
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
-// Lazy load non-critical components
-const FAQSection = lazy(() => import("@/components/FAQSection"));
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import Footer from "@/components/Footer";
+import Image from "next/image";
+import Link from "next/link";
+import { CustomLogo } from "@/components/CustomLogo";
 
 export default function Home() {
-  const { isAuthenticated: _isAuthenticated, isLoading: _isLoading } = useAuth();
   const { t } = useLanguage();
-  const [scrolled, setScrolled] = useState(false);
-  const [activeFaq, setActiveFaq] = useState<number | null>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  // For parallax scrolling effect
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"]
+  });
   
-  // Handle header scroll effect with throttling for better performance
-  useEffect(() => {
-    const handleScroll = throttle(() => {
-      if (window.scrollY > 10) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    }, 100); // Throttle to once every 100ms
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.5]);
+  
+  // Testimonials data
+  const testimonials = [
+    {
+      quote: "Kritiqo a révolutionné notre gestion des avis clients. Nous avons augmenté notre note Google de 3,8 à 4,6 en 3 mois !",
+      author: "Marie Leclerc",
+      role: "Directrice Marketing",
+      company: "Boutique Élégance",
+      avatar: "/avatars/avatar1.jpg"
+    },
+    {
+      quote: "Le module de filtrage d'emails nous a permis d'être 60% plus réactifs face aux demandes urgentes de nos clients.",
+      author: "Thomas Durand",
+      role: "Customer Success Manager",
+      company: "Tech Solutions",
+      avatar: "/avatars/avatar2.jpg"
+    },
+    {
+      quote: "Un outil indispensable pour toute entreprise soucieuse de sa réputation en ligne. Simple et puissant !",
+      author: "Sophie Martin",
+      role: "CEO",
+      company: "Agence Digitale Créative",
+      avatar: "/avatars/avatar3.jpg"
+    }
+  ];
+  
+  // Partner logos
+  const partners = [
+    { name: "Company A", logo: "/logos/company-a.svg" },
+    { name: "Company B", logo: "/logos/company-b.svg" },
+    { name: "Company C", logo: "/logos/company-c.svg" },
+    { name: "Company D", logo: "/logos/company-d.svg" },
+    { name: "Company E", logo: "/logos/company-e.svg" }
+  ];
 
-  const toggleFaq = (index: number) => {
-    setActiveFaq(activeFaq === index ? null : index);
-  };
-
-  // FAQ items remain the same
-  const faqs = [
+  // Pricing plans data
+  const plans = [
     {
-      question: "Qu'est-ce que Kritiqo ?",
-      answer: "Kritiqo est une plateforme de gestion d'avis clients qui vous permet de collecter, analyser et répondre à tous vos avis en un seul endroit. Notre solution centralise les avis de Google, Facebook, et d'autres plateformes pour vous aider à améliorer votre réputation en ligne."
+      name: "Gratuit",
+      description: "Pour essayer nos fonctionnalités de base",
+      price: 0,
+      features: [
+        "3 sources d'avis maximum",
+        "1 boîte email connectée",
+        "Tableaux de bord basiques",
+        "100 avis par mois",
+        "Support communautaire"
+      ],
+      cta: "Commencer gratuitement",
+      popular: false
     },
     {
-      question: "Comment fonctionne l'essai gratuit ?",
-      answer: "Tous nos forfaits payants incluent un essai gratuit de 7 jours. Vous ne serez débité qu'à la fin de la période d'essai, et vous pouvez annuler à tout moment sans frais."
+      name: "Pro",
+      description: "Pour les petites et moyennes entreprises",
+      price: 29,
+      features: [
+        "10 sources d'avis",
+        "3 boîtes email connectées",
+        "Rapports personnalisés",
+        "Avis illimités",
+        "Alertes en temps réel",
+        "Support prioritaire"
+      ],
+      cta: "Essai gratuit de 14 jours",
+      popular: true
     },
     {
-      question: "Quelles plateformes d'avis sont prises en charge ?",
-      answer: "Nous prenons en charge les principales plateformes d'avis, notamment Google Business, Facebook, TripAdvisor et bien d'autres. Nos forfaits Pro et Business vous permettent d'accéder à davantage de plateformes."
+      name: "Business",
+      description: "Pour les entreprises avec plusieurs établissements",
+      price: 99,
+      features: [
+        "Sources d'avis illimitées",
+        "Boîtes email illimitées",
+        "API complète",
+        "Intégrations personnalisées",
+        "Gestionnaire de compte dédié",
+        "Support téléphonique"
+      ],
+      cta: "Contacter le commercial",
+      popular: false
+    }
+  ];
+  
+  // Features data
+  const features = [
+    {
+      title: "Centralisation des avis clients",
+      description: "Regroupez tous vos avis clients provenant de Google, Facebook, Trustpilot et d'autres plateformes en un seul endroit.",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+        </svg>
+      ),
+      subFeatures: [
+        "Agrégation en temps réel des avis",
+        "Réponse directe depuis la plateforme",
+        "Alertes pour les nouveaux avis",
+        "Analyses et tendances des sentiments"
+      ]
     },
     {
-      question: "Puis-je répondre aux avis directement depuis Kritiqo ?",
-      answer: "Oui, notre plateforme vous permet de répondre directement aux avis de clients depuis notre interface, sans avoir à vous connecter à chaque plateforme individuellement."
+      title: "Gestion intelligente des emails",
+      description: "Filtrez et priorisez automatiquement vos emails professionnels pour identifier rapidement les messages critiques.",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      ),
+      subFeatures: [
+        "Détection des emails urgents",
+        "Identification des clients mécontents",
+        "Classification automatique par IA",
+        "Notifications personnalisables"
+      ]
+    }
+  ];
+  
+  // How it works steps
+  const steps = [
+    {
+      title: "Connectez vos comptes",
+      description: "Liez vos profils d'entreprise et vos boîtes mail en quelques clics",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      )
     },
     {
-      question: "Comment Kritiqo m'aide-t-il à améliorer ma réputation en ligne ?",
-      answer: "En centralisant vos avis, en vous alertant des nouveaux commentaires, en vous permettant d'y répondre rapidement et en vous fournissant des analyses détaillées, Kritiqo vous aide à mieux comprendre vos clients et à améliorer votre service."
+      title: "Surveillez en temps réel",
+      description: "Visualisez et analysez tous vos avis et emails critiques sur un tableau de bord unifié",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+      )
     },
     {
-      question: "Puis-je changer de forfait ultérieurement ?",
-      answer: "Oui, vous pouvez passer à un forfait supérieur ou inférieur à tout moment. Lors d'une mise à niveau, les nouvelles fonctionnalités seront disponibles immédiatement. Lors d'un passage à un forfait inférieur, les modifications prendront effet au début de votre prochain cycle de facturation."
+      title: "Réagissez efficacement",
+      description: "Répondez rapidement aux avis et emails prioritaires pour améliorer votre satisfaction client",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+        </svg>
+      )
     }
   ];
 
-  // Animation variants for staggered animations
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5
-      }
-    }
-  };
-
   return (
-    <div className="min-h-screen overflow-x-hidden">
-      <Header />
-      
-      {/* Main content */}
-      <main>
-        {/* Hero section */}
-        <section className="relative pt-28 pb-16 md:pt-36 md:pb-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                className="text-left"
+    <div className="min-h-screen bg-white">
+      {/* Sticky Navbar */}
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            <Link href="/" className="flex items-center">
+              <CustomLogo width={120} height={40} />
+            </Link>
+            
+            <div className="hidden md:flex md:items-center md:space-x-6">
+              <Link href="/pricing" className="text-base font-medium text-gray-600 hover:text-gray-900">
+                Tarifs
+              </Link>
+              <Link href="/faq" className="text-base font-medium text-gray-600 hover:text-gray-900">
+                FAQ
+              </Link>
+              <Link href="/contact" className="text-base font-medium text-gray-600 hover:text-gray-900">
+                Contact
+              </Link>
+              
+              {isAuthenticated ? (
+                <Link 
+                  href="/dashboard" 
+                  className="ml-8 inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700"
+                >
+                  Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link href="/auth/login" className="text-base font-medium text-gray-600 hover:text-gray-900">
+                    Se connecter
+                  </Link>
+                  <Link 
+                    href="/auth/register" 
+                    className="ml-8 inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700"
+                  >
+                    Essayer gratuitement
+                  </Link>
+                </>
+              )}
+            </div>
+            
+            {/* Mobile menu button */}
+            <div className="flex md:hidden">
+              <button
+                type="button"
+                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+                aria-expanded="false"
               >
-                <span className="inline-block px-4 py-1 rounded-full bg-blue-100 text-blue-600 font-medium text-sm mb-5">
-                  {t('hero.subtitle.badge')}
-                </span>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight">
-                  {t('hero.title.part1')}{' '}
-                  <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                    {t('hero.title.highlight')}
-                  </span>{' '}
-                  {t('hero.title.part2')}
-                </h1>
-                
-                <p className="mt-6 text-lg text-gray-600 max-w-md">
-                  {t('hero.subtitle')}
-                </p>
-                
-                <div className="mt-8 flex flex-wrap gap-4">
-                  <Link
-                    href="/auth/register"
-                    className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-3.5 text-base font-medium text-white shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300 flex items-center group"
+                <span className="sr-only">Ouvrir le menu</span>
+                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <main>
+        {/* Hero Section */}
+        <div className="relative overflow-hidden bg-white" ref={ref}>
+          <motion.div 
+            className="absolute inset-0 h-full w-full bg-gradient-to-br from-blue-50 to-indigo-50 opacity-50"
+            style={{ y, opacity }}
+          />
+          
+          <div className="relative pt-10 pb-16 sm:pt-16 sm:pb-24 lg:pt-24 lg:pb-32">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 lg:grid lg:grid-cols-12 lg:gap-8">
+              <div className="sm:text-center md:mx-auto lg:col-span-6 lg:text-left lg:flex lg:items-center">
+                <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
                   >
-                    {t('hero.cta.getStarted')}
-                    <svg 
-                      className="ml-2 h-5 w-5 transform transition-transform duration-300 group-hover:translate-x-1" 
-                      fill="none" 
-                      viewBox="0 0 24 24" 
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </Link>
+                    <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-0.5 text-sm font-medium text-blue-800">
+                      Nouveau
+                    </span>
+                  </motion.div>
                   
-                  <Link
-                    href="/pricing"
-                    className="rounded-full border border-gray-300 bg-white px-8 py-3.5 text-base font-medium text-gray-700 hover:bg-gray-50 transition-all flex items-center"
+                  <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="mt-4 text-4xl font-extrabold tracking-tight text-gray-900 sm:mt-5 sm:text-5xl lg:mt-6 xl:text-6xl"
                   >
-                    {t('hero.cta.pricing')}
-                  </Link>
+                    <span className="block">Maîtrisez votre réputation</span>
+                    <span className="block text-blue-600">en ligne sans effort</span>
+                  </motion.h1>
+                  
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl"
+                  >
+                    Centralisez vos avis et vos e-mails critiques sur un seul dashboard intelligent pour améliorer votre satisfaction client et votre réputation digitale.
+                  </motion.p>
+                  
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="mt-8 sm:mt-10 sm:flex sm:justify-center lg:justify-start"
+                  >
+                    <div className="rounded-md shadow">
+                      <Link
+                        href="/auth/register"
+                        className="flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-8 py-3 text-base font-medium text-white hover:bg-blue-700 md:py-4 md:px-10 md:text-lg"
+                      >
+                        Essayer gratuitement
+                      </Link>
+                    </div>
+                    <div className="mt-3 sm:mt-0 sm:ml-3">
+                      <Link
+                        href="/pricing"
+                        className="flex w-full items-center justify-center rounded-md border border-transparent bg-blue-100 px-8 py-3 text-base font-medium text-blue-700 hover:bg-blue-200 md:py-4 md:px-10 md:text-lg"
+                      >
+                        Voir les tarifs
+                      </Link>
+                    </div>
+                  </motion.div>
                 </div>
-                
-                <div className="mt-10 flex items-center">
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="inline-block h-8 w-8 rounded-full bg-gray-200 ring-2 ring-white"></div>
-                    ))}
-                  </div>
-                  <span className="ml-3 text-sm text-gray-500">
-                    {t('hero.customers')} <span className="font-medium text-gray-900">2,000+</span> {t('hero.businesses')}
-                  </span>
-                </div>
-              </motion.div>
+              </div>
               
               <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="relative mt-12 sm:mx-auto sm:max-w-lg lg:mt-0 lg:max-w-none lg:col-span-6"
               >
-                <div className="aspect-w-5 aspect-h-4 md:aspect-w-3 md:aspect-h-2 rounded-2xl overflow-hidden shadow-2xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 opacity-50"></div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="mockup-window w-full max-w-lg bg-white shadow-lg rounded-lg p-1">
-                      <div className="flex items-center space-x-2 px-3 pb-2 border-b">
-                        <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                        <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                      </div>
-                      <div className="p-5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-b-lg">
-                        <div className="space-y-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-10 h-10 rounded-full bg-blue-100"></div>
-                              <div className="h-4 w-40 bg-gray-200 rounded"></div>
-                            </div>
-                            <div className="flex">
-                              {[1, 2, 3, 4, 5].map((i) => (
-                                <svg key={i} className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="h-4 w-full bg-gray-200 rounded"></div>
-                          <div className="h-4 w-3/4 bg-gray-200 rounded"></div>
-                          <div className="h-10 w-32 bg-blue-100 rounded-lg ml-auto"></div>
-                        </div>
-                        <div className="mt-6 pt-4 border-t border-gray-200">
-                          <div className="flex justify-between">
-                            <div className="h-4 w-1/4 bg-gray-200 rounded"></div>
-                            <div className="h-4 w-1/5 bg-gray-200 rounded"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Floating UI elements for visual appeal */}
-                <div className="absolute -top-5 -right-5 bg-white p-3 rounded-lg shadow-lg">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="h-2.5 w-12 bg-gray-200 rounded"></div>
-                      <div className="h-2 w-20 bg-gray-100 rounded mt-1"></div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="absolute -bottom-5 -left-5 bg-white p-3 rounded-lg shadow-lg">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="h-2.5 w-16 bg-gray-200 rounded"></div>
-                      <div className="h-2 w-16 bg-gray-100 rounded mt-1"></div>
+                <div className="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-md">
+                  <div className="relative block w-full overflow-hidden rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <Image
+                      src="/dashboard-preview.png"
+                      alt="Dashboard de Kritiqo"
+                      width={800}
+                      height={500}
+                      className="w-full"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-indigo-600 mix-blend-multiply opacity-10"></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <button
+                        type="button"
+                        className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-sm px-4 py-2 text-sm font-medium text-gray-900 shadow-sm hover:bg-white"
+                      >
+                        <svg className="h-5 w-5 text-blue-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Voir la démo
+                      </button>
                     </div>
                   </div>
                 </div>
               </motion.div>
             </div>
           </div>
-
-          {/* Trust indicators */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24">
-            <p className="text-center text-sm font-medium text-gray-500 mb-6">
-              {t('hero.trustedBy')}
+        </div>
+        
+        {/* Trusted By Section */}
+        <div className="bg-gray-50 py-12">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <p className="text-center text-base font-medium text-gray-500">
+              Ils nous font confiance pour leur réputation en ligne
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center opacity-70">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="h-8 bg-gray-200 rounded"></div>
+            <div className="mt-6 grid grid-cols-2 gap-8 md:grid-cols-6">
+              {partners.map((partner, index) => (
+                <motion.div
+                  key={partner.name}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  className="col-span-1 flex justify-center md:col-span-2 lg:col-span-1"
+                >
+                  <div className="h-12 w-full flex items-center justify-center grayscale opacity-70 hover:opacity-100 hover:grayscale-0 transition-all">
+                    <Image 
+                      src={partner.logo} 
+                      alt={partner.name} 
+                      width={120} 
+                      height={40} 
+                      className="h-8 object-contain" 
+                    />
+                  </div>
+                </motion.div>
               ))}
             </div>
           </div>
-        </section>
+        </div>
         
-        {/* Features section */}
-        <section id="features" className="py-24 bg-gradient-to-b from-white to-slate-50">
+        {/* Features Section */}
+        <div className="py-16 sm:py-24 lg:py-32 bg-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="text-center max-w-3xl mx-auto"
-            >
-              <span className="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-600 font-medium text-sm mb-5">
-                {t('features.badge')}
-              </span>
-              <h2 className="text-3xl font-bold sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                {t('features.title')}
-              </h2>
-              <p className="mt-4 text-lg text-gray-600">
-                {t('features.subtitle')}
-              </p>
-            </motion.div>
-
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="mt-16 grid gap-y-10 gap-x-8 lg:grid-cols-3"
-            >
-              {/* Feature 1: Aggregation */}
-              <motion.div 
-                variants={itemVariants}
-                className="relative group"
+            <div className="text-center mb-12">
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="text-base font-semibold uppercase tracking-wide text-blue-600"
               >
-                <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 h-full border border-gray-100 group-hover:border-blue-100">
-                  <div className="mb-6 h-14 w-14 rounded-full bg-blue-100 p-3 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                    {t('features.aggregation.title')}
-                  </h3>
-                  <p className="mt-4 text-gray-600 leading-relaxed">
-                    {t('features.aggregation.description')}
-                  </p>
-                  <div className="mt-8 h-1 w-12 bg-blue-600 rounded group-hover:w-full transition-all duration-300"></div>
-                </div>
-              </motion.div>
-
-              {/* Feature 2: Response */}
-              <motion.div 
-                variants={itemVariants}
-                className="relative group"
+                Fonctionnalités principales
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl"
               >
-                <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 h-full border border-gray-100 group-hover:border-blue-100">
-                  <div className="mb-6 h-14 w-14 rounded-full bg-blue-100 p-3 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                    {t('features.response.title')}
-                  </h3>
-                  <p className="mt-4 text-gray-600 leading-relaxed">
-                    {t('features.response.description')}
-                  </p>
-                  <div className="mt-8 h-1 w-12 bg-blue-600 rounded group-hover:w-full transition-all duration-300"></div>
-                </div>
-              </motion.div>
-
-              {/* Feature 3: Analytics */}
-              <motion.div 
-                variants={itemVariants}
-                className="relative group"
+                Tout ce dont vous avez besoin
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto"
               >
-                <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 h-full border border-gray-100 group-hover:border-blue-100">
-                  <div className="mb-6 h-14 w-14 rounded-full bg-blue-100 p-3 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                    {t('features.analytics.title')}
-                  </h3>
-                  <p className="mt-4 text-gray-600 leading-relaxed">
-                    {t('features.analytics.description')}
-                  </p>
-                  <div className="mt-8 h-1 w-12 bg-blue-600 rounded group-hover:w-full transition-all duration-300"></div>
-                </div>
-              </motion.div>
-            </motion.div>
-            
-            {/* Feature showcase with screenshot */}
-            <div className="mt-24 bg-white rounded-3xl shadow-xl overflow-hidden">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-                <div className="p-8 md:p-12 flex flex-col justify-center">
-                  <span className="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-600 font-medium text-sm mb-5">
-                    {t('showcase.badge')}
-                  </span>
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900">
-                    {t('showcase.title')}
-                  </h3>
-                  <p className="mt-4 text-gray-600 leading-relaxed">
-                    {t('showcase.description')}
-                  </p>
-                  
-                  <ul className="mt-8 space-y-4">
-                    {[1, 2, 3].map((i) => (
-                      <li key={i} className="flex items-start">
-                        <div className="flex-shrink-0 h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
+                Une solution complète pour gérer votre réputation digitale et rester au top de vos communications clients
+              </motion.p>
+            </div>
+
+            <div className="mt-16">
+              <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+                {features.map((feature, index) => (
+                  <motion.div
+                    key={feature.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="bg-gray-50 rounded-xl overflow-hidden shadow-lg"
+                  >
+                    <div className="p-8">
+                      <div className="flex items-center">
+                        <div className="h-12 w-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
+                          {feature.icon}
                         </div>
-                        <p className="ml-3 text-base text-gray-700">
-                          {t(`showcase.feature${i}`)}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <div className="mt-8">
-                    <Link
-                      href="/pricing"
-                      className="inline-flex items-center rounded-lg bg-blue-600 px-6 py-3 text-base font-medium text-white shadow-lg hover:bg-blue-700 transition-all"
-                    >
-                      {t('showcase.cta')}
-                      <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </Link>
-                  </div>
-                </div>
-                
-                <div className="bg-slate-50 flex items-center justify-center p-8">
-                  <div className="mockup-phone border-primary">
-                    <div className="camera"></div> 
-                    <div className="display">
-                      <div className="phone-1 artboard artboard-demo bg-white">
-                        <div className="px-4 py-5 bg-blue-50">
-                          <div className="flex justify-between items-center mb-4">
-                            <div className="h-3 w-24 bg-gray-300 rounded"></div>
-                            <div className="h-3 w-12 bg-gray-300 rounded"></div>
-                          </div>
-                          <div className="flex items-center">
-                            <div className="w-10 h-10 rounded-full bg-blue-200"></div>
-                            <div className="ml-3">
-                              <div className="h-2.5 w-24 bg-gray-300 rounded"></div>
-                              <div className="h-2 w-16 bg-gray-200 rounded mt-1"></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="p-4">
-                          <div className="space-y-3">
-                            {[1, 2, 3].map((i) => (
-                              <div key={i} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                <div>
-                                  <div className="h-2.5 w-28 bg-gray-300 rounded"></div>
-                                  <div className="h-2 w-20 bg-gray-200 rounded mt-1"></div>
-                                </div>
-                                <div className="flex">
-                                  {Array(i+2).fill(0).map((_, j) => (
-                                    <div key={j} className="w-3 h-3 rounded-full bg-yellow-300 ml-0.5"></div>
-                                  ))}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
+                        <h3 className="ml-4 text-xl font-bold text-gray-900">{feature.title}</h3>
+                      </div>
+                      <p className="mt-5 text-gray-600">{feature.description}</p>
+                      
+                      <ul className="mt-8 space-y-3">
+                        {feature.subFeatures.map((subFeature) => (
+                          <li key={subFeature} className="flex items-start">
+                            <svg className="flex-shrink-0 h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span className="ml-2 text-gray-600">{subFeature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    <div className="bg-blue-600 px-8 py-4">
+                      <a href="/auth/register" className="flex items-center justify-end text-white font-medium">
+                        <span>Découvrir cette fonctionnalité</span>
+                        <svg className="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </a>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* How It Works Section */}
+        <div className="bg-blue-700 py-16 sm:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="text-base font-semibold uppercase tracking-wide text-blue-200"
+              >
+                Processus simplifié
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="mt-2 text-3xl font-extrabold text-white sm:text-4xl"
+              >
+                Comment ça marche
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="mt-4 max-w-2xl text-xl text-blue-100 mx-auto"
+              >
+                Trois étapes simples pour transformer votre gestion de la réputation
+              </motion.p>
+            </div>
+
+            <div className="mt-16">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {steps.map((step, index) => (
+                  <motion.div
+                    key={step.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
+                    className="bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center"
+                  >
+                    <div className="h-16 w-16 mx-auto bg-blue-600 text-white rounded-full flex items-center justify-center">
+                      {step.icon}
+                    </div>
+                    <h3 className="mt-6 text-xl font-bold text-white">{step.title}</h3>
+                    <p className="mt-4 text-blue-100">{step.description}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Testimonials Section */}
+        <div className="bg-white py-16 sm:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="text-base font-semibold uppercase tracking-wide text-blue-600"
+              >
+                Témoignages
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl"
+              >
+                Ce que nos clients disent
+              </motion.p>
+            </div>
+
+            <div className="mt-16">
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+                {testimonials.map((testimonial, index) => (
+                  <motion.div
+                    key={testimonial.author}
+                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="bg-gray-50 rounded-xl p-8 shadow-md"
+                  >
+                    <div className="flex items-center mb-6">
+                      <div className="flex-shrink-0">
+                        <Image 
+                          className="h-12 w-12 rounded-full" 
+                          src={testimonial.avatar} 
+                          alt={testimonial.author}
+                          width={48}
+                          height={48}
+                        />
+                      </div>
+                      <div className="ml-4">
+                        <h3 className="text-lg font-medium text-gray-900">{testimonial.author}</h3>
+                        <p className="text-sm text-gray-500">{testimonial.role}, {testimonial.company}</p>
                       </div>
                     </div>
-                  </div>
-                </div>
+                    <div className="relative">
+                      <svg className="absolute top-0 left-0 h-8 w-8 text-gray-200 transform -translate-x-3 -translate-y-4" fill="currentColor" viewBox="0 0 32 32">
+                        <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+                      </svg>
+                      <p className="relative text-gray-600 italic">{testimonial.quote}</p>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </div>
-        </section>
+        </div>
         
-        {/* How it works section */}
-        <section className="py-24 bg-white">
+        {/* Pricing Section */}
+        <div className="bg-gray-50 py-16 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="text-center max-w-3xl mx-auto"
-            >
-              <span className="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-600 font-medium text-sm mb-5">
-                {t('how.badge')}
-              </span>
-              <h2 className="text-3xl font-bold sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                {t('how.title')}
-              </h2>
-              <p className="mt-4 text-lg text-gray-600">
-                {t('how.subtitle')}
-              </p>
-            </motion.div>
-
-            <div className="mt-20">
-              <div className="relative">
-                {/* Connecting line */}
-                <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gray-100 -translate-x-1/2 z-0"></div>
-                
-                <div className="grid gap-16">
-                  {[1, 2, 3].map((i) => (
-                    <motion.div 
-                      key={i}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-100px" }}
-                      transition={{ duration: 0.8, delay: i * 0.1 }}
-                      className="relative z-10"
-                    >
-                      <div className="grid md:grid-cols-5 items-center gap-8">
-                        <div className={`md:col-span-2 ${i % 2 === 0 ? 'md:order-1' : 'md:order-2'}`}>
-                          <div className="bg-slate-50 rounded-2xl p-6 shadow-lg">
-                            <div className="aspect-w-16 aspect-h-9 bg-slate-200 rounded-lg"></div>
-                          </div>
-                        </div>
-                        
-                        <div className="mx-auto">
-                          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-xl font-bold text-white">
-                            {i}
-                          </div>
-                        </div>
-                        
-                        <div className={`md:col-span-2 ${i % 2 === 0 ? 'md:order-2' : 'md:order-1'}`}>
-                          <h3 className="text-xl font-bold text-gray-900">
-                            {t(`how.step${i}.title`)}
-                          </h3>
-                          <p className="mt-4 text-gray-600 leading-relaxed">
-                            {t(`how.step${i}.description`)}
-                          </p>
-                          <div className="mt-6">
-                            <button className="text-blue-600 font-medium flex items-center">
-                              {t('how.learnMore')}
-                              <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        
-        {/* Testimonials section */}
-        <section className="py-24 bg-gray-50">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center transform transition-all duration-500 ease-in-out">
-              <h2 className="text-3xl font-bold sm:text-4xl">{t('testimonials.title')}</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-                {t('testimonials.subtitle')}
-              </p>
+            <div className="text-center">
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="text-base font-semibold uppercase tracking-wide text-blue-600"
+              >
+                Tarifs
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl"
+              >
+                Des plans adaptés à vos besoins
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto"
+              >
+                Démarrez gratuitement et évoluez au fur et à mesure de votre croissance
+              </motion.p>
             </div>
 
-            <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {/* Testimonial 1 */}
-              <div className="rounded-xl bg-white p-8 shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                <div className="flex items-center mb-6">
-                  <div className="flex-shrink-0">
-                    <svg className="h-10 w-10 text-blue-400" fill="currentColor" viewBox="0 0 32 32">
-                      <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L25.864 4z" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-lg font-medium text-gray-900">{t('testimonials.person1.name')}</p>
-                    <p className="text-sm text-gray-600">{t('testimonials.person1.role')}</p>
-                  </div>
-                </div>
-                <p className="mt-2 text-gray-600 leading-relaxed">
-                  {t('testimonials.person1.quote')}
-                </p>
-              </div>
-
-              {/* Testimonial 2 */}
-              <div className="rounded-xl bg-white p-8 shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                <div className="flex items-center mb-6">
-                  <div className="flex-shrink-0">
-                    <svg className="h-10 w-10 text-blue-400" fill="currentColor" viewBox="0 0 32 32">
-                      <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L25.864 4z" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-lg font-medium text-gray-900">{t('testimonials.person2.name')}</p>
-                    <p className="text-sm text-gray-600">{t('testimonials.person2.role')}</p>
-                  </div>
-                </div>
-                <p className="mt-2 text-gray-600 leading-relaxed">
-                  {t('testimonials.person2.quote')}
-                </p>
-              </div>
-
-              {/* Testimonial 3 */}
-              <div className="rounded-xl bg-white p-8 shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                <div className="flex items-center mb-6">
-                  <div className="flex-shrink-0">
-                    <svg className="h-10 w-10 text-blue-400" fill="currentColor" viewBox="0 0 32 32">
-                      <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L25.864 4z" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-lg font-medium text-gray-900">{t('testimonials.person3.name')}</p>
-                    <p className="text-sm text-gray-600">{t('testimonials.person3.role')}</p>
-                  </div>
-                </div>
-                <p className="mt-2 text-gray-600 leading-relaxed">
-                  {t('testimonials.person3.quote')}
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-        
-        {/* FAQ section */}
-        <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading FAQs...</div>}>
-          <FAQSection faqs={faqs} activeFaq={activeFaq} toggleFaq={toggleFaq} />
-        </Suspense>
-        
-        {/* CTA section */}
-        <section className="py-16 bg-gradient-to-r from-blue-600 to-indigo-600">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center justify-between lg:flex-row">
-              <div className="max-w-2xl text-center lg:text-left">
-                <h2 className="text-3xl font-bold text-white sm:text-4xl">
-                  {t('cta.title')}
-                </h2>
-                <p className="mt-3 text-xl text-blue-100">
-                  {t('cta.subtitle')}
-                </p>
-              </div>
-              <div className="mt-8 lg:mt-0">
-                <Link
-                  href="/auth/register"
-                  className="rounded-full bg-white px-8 py-3 text-lg font-medium text-blue-600 shadow-lg hover:bg-gray-100 transition-all"
+            <div className="mt-16 grid gap-8 lg:grid-cols-3">
+              {plans.map((plan, index) => (
+                <motion.div
+                  key={plan.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className={`relative flex flex-col rounded-2xl ${
+                    plan.popular 
+                      ? 'bg-white border-2 border-blue-500 shadow-xl z-10' 
+                      : 'bg-white border border-gray-200 shadow-md'
+                  }`}
                 >
-                  {t('cta.button')}
-                </Link>
+                  {plan.popular && (
+                    <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4">
+                      <span className="inline-flex items-center rounded-full bg-blue-100 px-4 py-1 text-xs font-medium text-blue-800">
+                        Le plus populaire
+                      </span>
+                    </div>
+                  )}
+                  
+                  <div className="p-8">
+                    <h3 className="text-xl font-semibold text-gray-900">{plan.name}</h3>
+                    <p className="mt-2 text-gray-500">{plan.description}</p>
+                    <p className="mt-6">
+                      <span className="text-4xl font-extrabold text-gray-900">{plan.price}€</span>
+                      <span className="text-base font-medium text-gray-500">/mois</span>
+                    </p>
+                    
+                    <ul className="mt-8 space-y-4">
+                      {plan.features.map((feature) => (
+                        <li key={feature} className="flex items-start">
+                          <svg className="flex-shrink-0 h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span className="ml-3 text-gray-500">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div className="p-8 pt-0 mt-auto">
+                    <a
+                      href="#"
+                      className={`block w-full rounded-md px-4 py-2 text-center text-sm font-semibold shadow-sm ${
+                        plan.popular
+                          ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                          : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+                      }`}
+                    >
+                      {plan.cta}
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        {/* CTA Section */}
+        <div className="bg-white">
+          <div className="mx-auto max-w-7xl py-16 px-4 sm:px-6 lg:px-8">
+            <div className="overflow-hidden rounded-lg bg-gradient-to-r from-blue-600 to-indigo-700 shadow-xl lg:grid lg:grid-cols-2 lg:gap-4">
+              <div className="px-6 pt-10 pb-12 sm:px-16 sm:pt-16 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
+                <div className="lg:self-center">
+                  <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+                    <span className="block">Prêt à améliorer votre réputation en ligne ?</span>
+                  </h2>
+                  <p className="mt-4 text-lg leading-6 text-blue-100">
+                    Commencez à unifier vos avis et emails critiques dès aujourd'hui. Essai gratuit, aucune carte de crédit requise.
+                  </p>
+                  <a
+                    href="/auth/register"
+                    className="mt-8 inline-flex items-center rounded-md border border-transparent bg-white px-5 py-3 text-base font-medium text-blue-600 shadow-sm hover:bg-blue-50"
+                  >
+                    Démarrer gratuitement
+                  </a>
+                </div>
+              </div>
+              <div className="aspect-w-5 aspect-h-3 -mt-6 md:aspect-w-2 md:aspect-h-1">
+                <div className="transform translate-x-8 translate-y-8 lg:translate-y-16 xl:translate-y-20">
+                  <Image
+                    className="rounded-md shadow-xl"
+                    src="/platform-screenshot.png"
+                    alt="App screenshot"
+                    width={800}
+                    height={450}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
       </main>
       
       <Footer />

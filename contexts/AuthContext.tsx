@@ -1,33 +1,43 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { User, Session } from "@supabase/supabase-js";
+import { useRouter } from 'next/navigation';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { User, Session } from '@supabase/supabase-js';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
-  isLoading: boolean;
   isAuthenticated: boolean;
-  signUp: (email: string, password: string, options?: any) => Promise<any>;
-  signIn: (email: string, password: string) => Promise<any>;
+  isLoading: boolean;
   signOut: () => Promise<void>;
-  resetPassword: (email: string) => Promise<any>;
+  error: string | null;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  session: null,
+  isAuthenticated: false,
+  isLoading: true,
+  signOut: async () => {},
+  error: null,
+});
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export const useAuth = () => useContext(AuthContext);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  const router = useRouter();
   const supabase = createClientComponentClient();
 
   useEffect(() => {
-    const fetchSession = async () => {
+    const getSession = async () => {
       setIsLoading(true);
       try {
-        // Check active session
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
@@ -35,77 +45,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         
         setSession(session);
-        setUser(session?.user ?? null);
-        
-        // Set up auth state change listener
-        const { data: { subscription } } = await supabase.auth.onAuthStateChange(
-          (_event, session) => {
-            setSession(session);
-            setUser(session?.user ?? null);
-            setIsLoading(false);
-          }
-        );
-        
-        return () => {
-          subscription.unsubscribe();
-        };
-      } catch (error) {
-        console.error("Error fetching auth session:", error);
+        setUser(session?.user || null);
+      } catch (error: any) {
+        console.error('Error getting session:', error.message);
+        setError(error.message);
       } finally {
         setIsLoading(false);
       }
     };
-    
-    fetchSession();
+
+    getSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+        setUser(session?.user || null);
+        setIsLoading(false);
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [supabase]);
 
-  // Sign up with email and password
-  const signUp = async (email: string, password: string, options?: any) => {
-    return await supabase.auth.signUp({
-      email,
-      password,
-      options
-    });
-  };
-
-  // Sign in with email and password
-  const signIn = async (email: string, password: string) => {
-    return await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-  };
-
-  // Sign out
   const signOut = async () => {
-    await supabase.auth.signOut();
-  };
-
-  // Reset password
-  const resetPassword = async (email: string) => {
-    return await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/reset-password`,
-    });
+    try {
+      await supabase.auth.signOut();
+      router.push('/');
+    } catch (error: any) {
+      console.error('Error signing out:', error.message);
+      setError(error.message);
+    }
   };
 
   const value = {
-    user,
     session,
-    isLoading,
+    user,
     isAuthenticated: !!user,
-    signUp,
-    signIn,
+    isLoading,
     signOut,
-    resetPassword,
+    error,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-}
+};

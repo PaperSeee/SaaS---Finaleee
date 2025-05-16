@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
+import Link from "next/link";
+import Image from "next/image";
 
 // Import chart components for the stats
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
 type Company = {
   id: string;
   name: string;
@@ -119,26 +118,9 @@ export default function Dashboard() {
               businessName: 'Restaurant Le Gourmet',
             },
           ]);
-          
-          // Mock companies data
-          setCompanies([
-            {
-              id: '1',
-              name: 'Café de Paris',
-              created_at: '2023-01-15',
-              review_count: 32,
-              average_rating: 4.5,
-              user_id: user.id,
-            },
-            {
-              id: '2',
-              name: 'Restaurant Le Gourmet',
-              created_at: '2023-02-28',
-              review_count: 15,
-              average_rating: 3.8,
-              user_id: user.id,
-            },
-          ]);
+
+          // Get business data from Supabase
+          fetchBusinesses();
           
           setLoading(false);
         }, 1000);
@@ -149,24 +131,44 @@ export default function Dashboard() {
       }
     }
     
+    async function fetchBusinesses() {
+      try {
+        const { data, error } = await supabase
+          .from('companies')
+          .select('*')
+          .eq('user_id', user?.id)
+          .order('created_at', { ascending: false });
+          
+        if (error) throw error;
+        
+        setCompanies(data || []);
+      } catch (err) {
+        console.error("Error fetching businesses:", err);
+      }
+    }
+    
     fetchDashboardData();
   }, [user, supabase]);
 
   // Format date in French locale
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    return new Intl.DateTimeFormat('fr-FR', { 
+      day: 'numeric', 
+      month: 'short', 
+      year: 'numeric' 
+    }).format(date);
   };
 
   // Function to render star rating
   const renderStars = (rating: number) => {
     return (
-      <div className="flex items-center">
-        {[...Array(5)].map((_, i) => (
+      <div className="flex">
+        {[1, 2, 3, 4, 5].map((star) => (
           <svg 
-            key={i} 
-            className={`h-4 w-4 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`} 
-            fill="currentColor" 
+            key={star}
+            className={`h-4 w-4 ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}
+            fill="currentColor"
             viewBox="0 0 20 20"
           >
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
@@ -177,258 +179,236 @@ export default function Dashboard() {
   };
 
   return (
-    <DashboardLayout title="Tableau de bord">
-      <div className="px-4 py-6 sm:px-6 lg:px-8">
+    <DashboardLayout>
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Bienvenue sur votre espace de gestion des avis clients
+          </p>
+        </div>
+
         {loading ? (
-          <div className="flex h-64 w-full items-center justify-center">
-            <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
           </div>
         ) : (
           <>
-            {/* Stats section */}
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="overflow-hidden rounded-lg bg-white shadow">
+            {/* Statistics Cards */}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+              <div className="bg-white overflow-hidden shadow rounded-lg">
                 <div className="p-5">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 rounded-md bg-blue-100 p-3">
-                      <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    <div className="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                      <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
                     <div className="ml-5 w-0 flex-1">
                       <dl>
                         <dt className="text-sm font-medium text-gray-500 truncate">Total des avis</dt>
-                        <dd className="flex items-baseline">
-                          <div className="text-2xl font-semibold text-gray-900">{stats.totalReviews}</div>
+                        <dd>
+                          <div className="text-lg font-medium text-gray-900">{stats.totalReviews}</div>
                         </dd>
                       </dl>
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-5 py-3">
-                  <div className="text-sm">
-                    <Link href="/dashboard/reviews" className="font-medium text-blue-600 hover:text-blue-500">
-                      Voir tous les avis
-                    </Link>
-                  </div>
-                </div>
               </div>
-
-              <div className="overflow-hidden rounded-lg bg-white shadow">
+              
+              <div className="bg-white overflow-hidden shadow rounded-lg">
                 <div className="p-5">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 rounded-md bg-orange-100 p-3">
-                      <svg className="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <div className="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                      <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                       </svg>
                     </div>
                     <div className="ml-5 w-0 flex-1">
                       <dl>
                         <dt className="text-sm font-medium text-gray-500 truncate">Avis non lus</dt>
-                        <dd className="flex items-baseline">
-                          <div className="text-2xl font-semibold text-gray-900">{stats.unreadReviews}</div>
+                        <dd>
+                          <div className="text-lg font-medium text-gray-900">{stats.unreadReviews}</div>
                         </dd>
                       </dl>
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-5 py-3">
-                  <div className="text-sm">
-                    <Link href="/dashboard/reviews" className="font-medium text-blue-600 hover:text-blue-500">
-                      Voir les avis non lus
-                    </Link>
-                  </div>
-                </div>
               </div>
-
-              <div className="overflow-hidden rounded-lg bg-white shadow">
+              
+              <div className="bg-white overflow-hidden shadow rounded-lg">
                 <div className="p-5">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 rounded-md bg-red-100 p-3">
-                      <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="flex-shrink-0 bg-yellow-500 rounded-md p-3">
+                      <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                     </div>
                     <div className="ml-5 w-0 flex-1">
                       <dl>
-                        <dt className="text-sm font-medium text-gray-500 truncate">Notifications critiques</dt>
-                        <dd className="flex items-baseline">
-                          <div className="text-2xl font-semibold text-gray-900">{stats.criticalNotifications}</div>
+                        <dt className="text-sm font-medium text-gray-500 truncate">Notif. critiques</dt>
+                        <dd>
+                          <div className="text-lg font-medium text-gray-900">{stats.criticalNotifications}</div>
                         </dd>
                       </dl>
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-5 py-3">
-                  <div className="text-sm">
-                    <Link href="/dashboard/notifications" className="font-medium text-blue-600 hover:text-blue-500">
-                      Voir les notifications
-                    </Link>
-                  </div>
-                </div>
               </div>
-
-              <div className="overflow-hidden rounded-lg bg-white shadow">
+              
+              <div className="bg-white overflow-hidden shadow rounded-lg">
                 <div className="p-5">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 rounded-md bg-green-100 p-3">
-                      <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                    <div className="flex-shrink-0 bg-green-500 rounded-md p-3">
+                      <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                       </svg>
                     </div>
                     <div className="ml-5 w-0 flex-1">
                       <dl>
                         <dt className="text-sm font-medium text-gray-500 truncate">Note moyenne</dt>
-                        <dd className="flex items-center">
-                          <div className="text-2xl font-semibold text-gray-900 mr-2">{stats.averageRating.toFixed(1)}</div>
-                          {renderStars(Math.round(stats.averageRating))}
+                        <dd>
+                          <div className="text-lg font-medium text-gray-900">{stats.averageRating.toFixed(1)}</div>
                         </dd>
                       </dl>
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-5 py-3">
-                  <div className="text-sm">
-                    <Link href="/dashboard/businesses" className="font-medium text-blue-600 hover:text-blue-500">
-                      Voir les entreprises
+              </div>
+            </div>
+            
+            {/* Main content grid */}
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+              {/* Recent Reviews */}
+              <div className="lg:col-span-2">
+                <div className="bg-white shadow sm:rounded-lg overflow-hidden">
+                  <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
+                    <h2 className="text-lg font-medium text-gray-900">Avis récents</h2>
+                    <Link href="/dashboard/reviews" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+                      Voir tous les avis →
                     </Link>
                   </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Chart section */}
-            <div className="mt-8">
-              <div className="overflow-hidden rounded-lg bg-white shadow">
-                <div className="p-6">
-                  <h3 className="text-lg font-medium leading-6 text-gray-900">Évolution des avis</h3>
-                  <div className="mt-2 h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart
-                        data={chartData}
-                        margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Bar dataKey="reviews" fill="#3B82F6" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Recent reviews section */}
-            <div className="mt-8">
-              <div className="sm:flex sm:items-center mb-4">
-                <div className="sm:flex-auto">
-                  <h2 className="text-lg font-medium text-gray-900">Derniers avis</h2>
-                  <p className="mt-1 text-sm text-gray-500">Les avis les plus récents laissés sur vos entreprises.</p>
-                </div>
-                <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                  <Link
-                    href="/dashboard/reviews"
-                    className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  >
-                    Tous les avis
-                  </Link>
-                </div>
-              </div>
-              <div className="space-y-6">
-                {recentReviews.map((review) => (
-                  <div key={review.id} className="bg-white rounded-lg shadow overflow-hidden">
-                    <div className="p-6">
-                      <div className="flex flex-col sm:flex-row justify-between pb-4">
-                        <div className="flex items-center">
-                          <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-medium">
-                            {review.author.charAt(0)}
-                          </div>
-                          <div className="ml-3">
-                            <p className="text-sm font-medium text-gray-900">{review.author}</p>
+                  <div className="border-t border-gray-200 divide-y divide-gray-200">
+                    {recentReviews.length > 0 ? (
+                      recentReviews.map((review) => (
+                        <div key={review.id} className="px-4 py-4 sm:px-6">
+                          <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                              {renderStars(review.rating)}
-                              <span className="ml-2 text-sm text-gray-500">{formatDate(review.date)}</span>
+                              <div className="flex-shrink-0">
+                                <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                  <span className="text-blue-600 font-medium">
+                                    {review.author.charAt(0).toUpperCase()}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="ml-3">
+                                <p className="text-sm font-medium text-gray-900">{review.author}</p>
+                                <div className="flex items-center">
+                                  {renderStars(review.rating)}
+                                  <span className="ml-2 text-xs text-gray-500">
+                                    {formatDate(review.date)}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="ml-2 flex-shrink-0 flex">
+                              <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                review.platform === 'google' 
+                                  ? 'bg-blue-100 text-blue-800' 
+                                  : review.platform === 'facebook' 
+                                  ? 'bg-indigo-100 text-indigo-800' 
+                                  : 'bg-gray-100 text-gray-800'
+                              }`}>
+                                {review.platform === 'google' ? 'Google' : review.platform === 'facebook' ? 'Facebook' : 'Autre'}
+                              </span>
                             </div>
                           </div>
-                        </div>
-                        
-                        <div className="mt-2 sm:mt-0 flex items-center">
-                          <span className={`mr-2 px-2.5 py-0.5 rounded-full text-xs font-medium
-                            ${review.platform === 'google' ? 'bg-blue-100 text-blue-800' : 'bg-indigo-100 text-indigo-800'}`}>
-                            {review.platform === 'google' ? 'Google' : 'Facebook'}
-                          </span>
-                          
-                          <Link href={`/dashboard/businesses/${review.businessId}`} className="text-sm text-gray-600 hover:text-gray-900">
-                            {review.businessName}
-                          </Link>
-                        </div>
-                      </div>
-                      
-                      <div className="text-sm text-gray-700">
-                        {review.content}
-                      </div>
-                      
-                      <div className="mt-4 flex justify-end">
-                        <button
-                          type="button"
-                          className="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        >
-                          Répondre
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Companies section */}
-            <div className="mt-8 mb-6">
-              <div className="sm:flex sm:items-center mb-4">
-                <div className="sm:flex-auto">
-                  <h2 className="text-lg font-medium text-gray-900">Vos entreprises</h2>
-                  <p className="mt-1 text-sm text-gray-500">Aperçu de vos entreprises et leurs statistiques.</p>
-                </div>
-                <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                  <Link
-                    href="/dashboard/businesses"
-                    className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  >
-                    Toutes les entreprises
-                  </Link>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {companies.map((company) => (
-                  <div key={company.id} className="overflow-hidden rounded-lg bg-white shadow">
-                    <div className="p-6">
-                      <div className="flex items-center">
-                        <div className="h-12 w-12 rounded-md bg-blue-100 flex items-center justify-center text-blue-700 font-medium text-xl">
-                          {company.name.charAt(0)}
-                        </div>
-                        <div className="ml-4 flex-1">
-                          <h3 className="text-lg font-medium text-gray-900">{company.name}</h3>
-                          <div className="mt-1 flex items-center">
-                            {renderStars(Math.round(company.average_rating || 0))}
-                            <span className="ml-2 text-sm text-gray-500">
-                              {company.average_rating?.toFixed(1)} ({company.review_count} avis)
-                            </span>
+                          <div className="mt-2 text-sm text-gray-700">
+                            <p>{review.content}</p>
+                          </div>
+                          <div className="mt-2 text-xs text-gray-500">
+                            {review.businessName && (
+                              <span>Pour: {review.businessName}</span>
+                            )}
                           </div>
                         </div>
+                      ))
+                    ) : (
+                      <div className="px-4 py-6 sm:px-6 text-center">
+                        <p className="text-gray-500">Aucun avis récent à afficher</p>
                       </div>
-                      <div className="mt-6 flex justify-end space-x-3">
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Business List */}
+              <div>
+                <div className="bg-white shadow sm:rounded-lg overflow-hidden">
+                  <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
+                    <h2 className="text-lg font-medium text-gray-900">Vos entreprises</h2>
+                    <Link href="/dashboard/businesses" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+                      Gérer →
+                    </Link>
+                  </div>
+                  
+                  <div className="border-t border-gray-200">
+                    {companies.length > 0 ? (
+                      <div className="divide-y divide-gray-200">
+                        {companies.slice(0, 3).map((company) => (
+                          <Link
+                            key={company.id}
+                            href={`/dashboard/businesses/${company.id}`}
+                            className="block px-4 py-4 sm:px-6 hover:bg-gray-50 transition-colors duration-150"
+                          >
+                            <div className="flex items-center">
+                              <div className="flex-shrink-0">
+                                {company.logo_url ? (
+                                  <Image
+                                    src={company.logo_url}
+                                    alt={company.name}
+                                    width={40}
+                                    height={40}
+                                    className="h-10 w-10 rounded-full"
+                                  />
+                                ) : (
+                                  <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                    <span className="text-blue-600 font-medium">
+                                      {company.name.charAt(0).toUpperCase()}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                              <div className="ml-4">
+                                <div className="text-sm font-medium text-gray-900">{company.name}</div>
+                                <div className="text-sm text-gray-500">
+                                  {company.review_count || 0} avis • {(company.average_rating || 0).toFixed(1)}
+                                  <svg 
+                                    className="ml-1 inline-block h-3 w-3 text-yellow-400" 
+                                    fill="currentColor" 
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
+                                  </svg>
+                                </div>
+                              </div>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="px-4 py-6 sm:px-6 text-center">
+                        <p className="text-gray-500 mb-4">Aucune entreprise configurée</p>
                         <Link
-                          href={`/dashboard/businesses/${company.id}`}
-                          className="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                          href="/dashboard/businesses/new"
+                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
                         >
-                          Voir les avis
+                          Ajouter une entreprise
                         </Link>
                       </div>
-                    </div>
+                    )}
                   </div>
-                ))}
+                </div>
               </div>
             </div>
           </>
