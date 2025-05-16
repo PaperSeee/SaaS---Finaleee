@@ -157,19 +157,20 @@ export default function FAQPage() {
 
                     <AnimatePresence>
                       {activeFaq === index && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="px-6 pb-4 text-gray-600 bg-slate-50">
-                            <div className="pt-3 border-t border-gray-200">
-                              {faq.answer}
+                        <div className="overflow-hidden">
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <div className="px-6 pb-4 text-gray-600 bg-slate-50">
+                              <div className="pt-3 border-t border-gray-200">
+                                {faq.answer}
+                              </div>
                             </div>
-                          </div>
-                        </motion.div>
+                          </motion.div>
+                        </div>
                       )}
                     </AnimatePresence>
                   </motion.div>
