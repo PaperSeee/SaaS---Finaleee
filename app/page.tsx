@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -13,6 +13,7 @@ export default function Home() {
   const { t } = useLanguage();
   const { isAuthenticated } = useAuth();
   const router = useRouter();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // For parallax scrolling effect
   const ref = useRef<HTMLDivElement | null>(null);
@@ -231,14 +232,46 @@ export default function Home() {
               <button
                 type="button"
                 className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-                aria-expanded="false"
+                aria-expanded={mobileMenuOpen}
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 <span className="sr-only">Ouvrir le menu</span>
-                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
             </div>
+
+            {/* Mobile dropdown */}
+            {mobileMenuOpen && (
+              <div className="absolute inset-x-0 top-full z-40 bg-white border-t border-gray-100 shadow-md md:hidden">
+                <div className="px-2 pt-2 pb-3 space-y-1">
+                  <Link href="/pricing" className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    Tarifs
+                  </Link>
+                  <Link href="/faq" className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    FAQ
+                  </Link>
+                  <Link href="/contact" className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    Contact
+                  </Link>
+                  {!isAuthenticated ? (
+                    <>
+                      <Link href="/auth/login" className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                        Se connecter
+                      </Link>
+                      <Link href="/auth/register" className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700">
+                        Essayer gratuitement
+                      </Link>
+                    </>
+                  ) : (
+                    <Link href="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700">
+                      Dashboard
+                    </Link>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </header>
