@@ -235,11 +235,19 @@ export default function Home() {
       <main>
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-white" ref={ref}>
-          <motion.div 
-            initial={{ opacity: 0.5 }}
-            className="absolute inset-0 h-full w-full bg-gradient-to-br from-blue-50 to-indigo-50 opacity-50"
-            style={{ y, opacity }}
-          />
+          <div className="absolute inset-0 h-full w-full bg-gradient-to-br from-blue-50 to-indigo-50 opacity-50">
+            <motion.div
+              initial={{ opacity: 0.5 }}
+              style={{ 
+                position: 'absolute',
+                inset: 0,
+                height: '100%',
+                width: '100%',
+                y,
+                opacity
+              }}
+            />
+          </div>
           
           <div className="relative pt-10 pb-16 sm:pt-16 sm:pb-24 lg:pt-24 lg:pb-32">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 lg:grid lg:grid-cols-12 lg:gap-8">
