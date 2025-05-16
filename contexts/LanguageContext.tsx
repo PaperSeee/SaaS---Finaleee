@@ -1,21 +1,38 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 export type Language = "en" | "fr" | "nl";
 
-type Translations = {
-  [key in Language]: {
-    [key: string]: string | { [key: string]: string };
-  }
-};
+// Define the structure for titles that can be split into parts
+interface SplitTitle {
+  part1: string;
+  highlight: string;
+  part2: string;
+}
 
-interface LanguageContextType {
+// Define our translations type, making title accept either string or SplitTitle
+interface TranslationKey {
+  title: string | SplitTitle;
+  [key: string]: any;
+}
+
+interface Translations {
+  [key: string]: {
+    [key: string]: string | TranslationKey;
+  };
+}
+
+// Create the context
+interface LanguageContextProps {
   language: Language;
   setLanguage: (language: Language) => void;
   t: (key: string) => string;
 }
 
+const LanguageContext = createContext<LanguageContextProps | undefined>(undefined);
+
+// Define translations
 const translations: Translations = {
   en: {
     header: {
@@ -182,12 +199,93 @@ const translations: Translations = {
       }
     },
     // Add more translations as needed
+  },
+  nl: {
+    header: {
+      home: "Home",
+      features: "Functies",
+      pricing: "Prijzen",
+      testimonials: "Getuigenissen",
+      contact: "Contact",
+      signIn: "Inloggen",
+      getStarted: "Aan de slag",
+      dashboard: "Dashboard"
+    },
+    hero: {
+      title: "Beheer al uw klantbeoordelingen op één plek",
+      subtitle: "Krijg inzichten, reageer snel en verbeter uw online reputatie met ons beoordelingsbeheerplatform.",
+      cta: "Gratis beginnen",
+      secondaryCta: "Meer informatie",
+      customers: "Vertrouwd door meer dan",
+      businesses: "bedrijven wereldwijd",
+      subtitle: {
+        badge: "Klantbeleving Platform"
+      },
+      title: {
+        part1: "Beheer uw",
+        highlight: "online reputatie",
+        part2: "moeiteloos"
+      },
+      trustedBy: "Vertrouwd door innovatieve bedrijven wereldwijd",
+      cta: {
+        getStarted: "Probeer gratis",
+        pricing: "Bekijk prijzen"
+      }
+    },
+    features: {
+      title: "Functies",
+      centralizeTitle: "Centraliseer Beoordelingen",
+      centralizeDesc: "Verzamel beoordelingen van Google, Facebook en meer op één dashboard.",
+      analyzeTitle: "Analyseer Feedback",
+      analyzeDesc: "Krijg waardevolle inzichten uit de meningen van uw klanten.",
+      respondTitle: "Reageer Snel",
+      respondDesc: "Beantwoord beoordelingen rechtstreeks vanuit ons platform.",
+      monitorTitle: "Bewaken Reputatie",
+      monitorDesc: "Houd uw online reputatie in de gaten met realtime meldingen."
+    },
+    modules: {
+      title: "Twee Krachtige Modulen",
+      subtitle: "Alles wat u nodig heeft om uw klantrelaties efficiënt te beheren",
+      reviews: {
+        title: "Beheer van Beoordelingen",
+        subtitle: "Centraliseer alle klantbeoordelingen in één interface",
+        description: "Verzamel feedback van Google, Facebook, Trustpilot en andere platforms voor een uitgebreid overzicht van uw online reputatie.",
+        feature1: "Bewaken beoordelingen op alle platforms",
+        feature2: "Direct reageren vanuit het dashboard",
+        feature3: "Trends en sentiment analyseren",
+        cta: "Ontdek beoordelingsbeheer"
+      },
+      emails: {
+        title: "Intelligent E-mailbeheer",
+        subtitle: "Prioriteer automatisch uw belangrijke e-mails",
+        description: "Verbind uw professionele inbox en laat onze AI e-mails categoriseren op basis van urgentie en type, zodat u nooit belangrijke berichten mist.",
+        feature1: "Automatische categorisatie op prioriteit",
+        feature2: "Identificeer ontevreden klanten onmiddellijk",
+        feature3: "Slimme antwoordvoorstellen",
+        cta: "Verken e-mailbeheer"
+      }
+    },
+    howItWorks: {
+      title: "Begin in 3 Eenvoudige Stappen",
+      subtitle: "Snelle installatie, directe resultaten",
+      step1: {
+        title: "Verbind uw Accounts",
+        description: "Koppel uw beoordelingsplatforms en e-mailaccounts in slechts een paar klikken met ons veilige integratiesysteem."
+      },
+      step2: {
+        title: "Laat Onze AI Werken",
+        description: "Onze algoritmen analyseren uw beoordelingen en e-mails, en organiseren alles op basis van belangrijkheid en sentiment."
+      },
+      step3: {
+        title: "Reageer en Verbeter",
+        description: "Neem actie op wat het belangrijkst is, bespaar tijd op routinetaken en verbeter uw klantbeleving."
+      }
+    },
+    // Add more translations as needed
   }
 };
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
-
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
+export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>("fr");
 
   useEffect(() => {
@@ -210,19 +308,33 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   // Translation function
   const t = (key: string): string => {
+    // Split the key by dots to navigate nested objects
     const keys = key.split('.');
-    let result: any = translations[language];
     
+    // Start with the current language translations
+    let value: any = translations[language];
+    
+    // Navigate through the nested objects
     for (const k of keys) {
-      if (result && result[k]) {
-        result = result[k];
-      } else {
-        console.warn(`Translation key not found: ${key}`);
-        return key;
+      if (!value[k]) {
+        // Fallback to English if translation is missing
+        value = translations["en"];
+        for (const fallbackKey of keys) {
+          value = value[fallbackKey];
+          if (!value) break;
+        }
+        break;
       }
+      value = value[k];
     }
     
-    return typeof result === 'string' ? result : key;
+    // If we have a SplitTitle object, concatenate its parts
+    if (value && typeof value === 'object' && 'part1' in value && 'highlight' in value && 'part2' in value) {
+      return `${value.part1} ${value.highlight} ${value.part2}`;
+    }
+    
+    // Return the string value or empty string if not found
+    return typeof value === 'string' ? value : '';
   };
 
   return (
