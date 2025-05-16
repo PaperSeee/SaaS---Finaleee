@@ -371,32 +371,35 @@ export default function Home() {
         <div className="py-16 sm:py-24 lg:py-32 bg-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <motion.h2
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="text-base font-semibold uppercase tracking-wide text-blue-600"
               >
-                Fonctionnalités principales
-              </motion.h2>
+                <h2 className="text-base font-semibold uppercase tracking-wide text-blue-600">
+                  Fonctionnalités principales
+                </h2>
+              </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl"
               >
-                Tout ce dont vous avez besoin
+                <div className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                  Tout ce dont vous avez besoin
+                </div>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto"
               >
-                Une solution complète pour gérer votre réputation digitale et rester au top de vos communications clients
+                <div className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                  Une solution complète pour gérer votre réputation digitale et rester au top de vos communications clients
+                </div>
               </motion.div>
             </div>
 
@@ -451,32 +454,35 @@ export default function Home() {
         <div className="bg-blue-700 py-16 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <motion.h2
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="text-base font-semibold uppercase tracking-wide text-blue-200"
               >
-                Processus simplifié
-              </motion.h2>
+                <h2 className="text-base font-semibold uppercase tracking-wide text-blue-200">
+                  Processus simplifié
+                </h2>
+              </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="mt-2 text-3xl font-extrabold text-white sm:text-4xl"
               >
-                Comment ça marche
+                <div className="mt-2 text-3xl font-extrabold text-white sm:text-4xl">
+                  Comment ça marche
+                </div>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="mt-4 max-w-2xl text-xl text-blue-100 mx-auto"
               >
-                Trois étapes simples pour transformer votre gestion de la réputation
+                <div className="mt-4 max-w-2xl text-xl text-blue-100 mx-auto">
+                  Trois étapes simples pour transformer votre gestion de la réputation
+                </div>
               </motion.div>
             </div>
 
@@ -507,23 +513,25 @@ export default function Home() {
         <div className="bg-white py-16 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <motion.h2
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="text-base font-semibold uppercase tracking-wide text-blue-600"
               >
-                Témoignages
-              </motion.h2>
+                <h2 className="text-base font-semibold uppercase tracking-wide text-blue-600">
+                  Témoignages
+                </h2>
+              </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl"
               >
-                Ce que nos clients disent
+                <div className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                  Ce que nos clients disent
+                </div>
               </motion.div>
             </div>
 
@@ -570,32 +578,35 @@ export default function Home() {
         <div className="bg-gray-50 py-16 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <motion.h2
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="text-base font-semibold uppercase tracking-wide text-blue-600"
               >
-                Tarifs
-              </motion.h2>
+                <h2 className="text-base font-semibold uppercase tracking-wide text-blue-600">
+                  Tarifs
+                </h2>
+              </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl"
               >
-                Des plans adaptés à vos besoins
+                <div className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                  Des plans adaptés à vos besoins
+                </div>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto"
               >
-                Démarrez gratuitement et évoluez au fur et à mesure de votre croissance
+                <div className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                  Démarrez gratuitement et évoluez au fur et à mesure de votre croissance
+                </div>
               </motion.div>
             </div>
 
