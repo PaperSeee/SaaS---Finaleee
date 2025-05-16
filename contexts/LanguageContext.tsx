@@ -43,10 +43,10 @@ const translations: Translations = {
       secondaryCta: "Learn more",
       customers: "Trusted by more than",
       businesses: "businesses worldwide",
-      subtitle: {
+      subtitleBadge: {    // renamed from subtitle
         badge: "Customer Experience Platform"
       },
-      title: {
+      splitTitle: {       // renamed from title
         part1: "Manage your",
         highlight: "online reputation",
         part2: "effortlessly"
@@ -126,10 +126,10 @@ const translations: Translations = {
       secondaryCta: "En savoir plus",
       customers: "Utilisé par plus de",
       businesses: "entreprises dans le monde",
-      subtitle: {
+      subtitleBadge: {    // renamed from subtitle
         badge: "Plateforme d'Expérience Client"
       },
-      title: {
+      splitTitle: {       // renamed from title
         part1: "Gérez votre",
         highlight: "réputation en ligne",
         part2: "sans effort"
@@ -209,10 +209,10 @@ const translations: Translations = {
       secondaryCta: "Meer informatie",
       customers: "Vertrouwd door meer dan",
       businesses: "bedrijven wereldwijd",
-      subtitle: {
+      subtitleBadge: {    // renamed from subtitle
         badge: "Klantbeleving Platform"
       },
-      title: {
+      splitTitle: {       // renamed from title
         part1: "Beheer uw",
         highlight: "online reputatie",
         part2: "moeiteloos"
