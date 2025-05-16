@@ -235,9 +235,10 @@ export default function Home() {
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-white" ref={ref}>
           <div className="absolute inset-0 h-full w-full bg-gradient-to-br from-blue-50 to-indigo-50 opacity-50">
-            <motion.div
+            {/* Parallax overlay */}
+            <motion.div<HTMLDivElement>
               initial={{ opacity: 0.5 }}
-              style={{ 
+              style={{
                 position: 'absolute',
                 inset: 0,
                 height: '100%',
@@ -252,7 +253,8 @@ export default function Home() {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 lg:grid lg:grid-cols-12 lg:gap-8">
               <div className="sm:text-center md:mx-auto lg:col-span-6 lg:text-left lg:flex lg:items-center">
                 <div>
-                  <motion.div
+                  {/* Hero “Nouveau” badge */}
+                  <motion.div<HTMLDivElement>
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
@@ -262,8 +264,9 @@ export default function Home() {
                     </span>
                   </motion.div>
                   
+                  {/* Hero title */}
                   <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-gray-900 sm:mt-5 sm:text-5xl lg:mt-6 xl:text-6xl">
-                    <motion.span
+                    <motion.span<HTMLSpanElement>
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.1 }}
@@ -273,7 +276,8 @@ export default function Home() {
                     </motion.span>
                   </h1>
                   
-                  <motion.div
+                  {/* Hero subtitle */}
+                  <motion.div<HTMLDivElement>
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
@@ -283,7 +287,8 @@ export default function Home() {
                     </div>
                   </motion.div>
                   
-                  <motion.div
+                  {/* Hero CTAs */}
+                  <motion.div<HTMLDivElement>
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.3 }}
