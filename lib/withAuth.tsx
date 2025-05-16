@@ -3,7 +3,9 @@ import { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 
 // Higher Order Component (HOC) to wrap protected pages
-export function withAuth<P extends {}>(Component: React.ComponentType<P>) {
+export function withAuth<P extends Record<string, unknown>>(
+  Component: React.ComponentType<P>
+): React.FC<P> {
   return function ProtectedRoute(props: P) {
     const { isAuthenticated, isLoading } = useAuth();
     const router = useRouter();

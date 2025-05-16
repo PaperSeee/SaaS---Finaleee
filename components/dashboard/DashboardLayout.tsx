@@ -212,7 +212,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 }
 
 // Helper component for sidebar icons
-function SidebarIcon({ name, className = "" }) {
+interface SidebarIconProps {
+  name: string;
+  className?: string;
+}
+
+function SidebarIcon({ name, className = "" }: SidebarIconProps) {
   switch (name) {
     case 'chart-bar':
       return (

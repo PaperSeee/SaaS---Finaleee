@@ -1,9 +1,9 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Language } from "@/lib/types";
 
 export default function LanguageSelector() {
   const { language, setLanguage, t } = useLanguage();
