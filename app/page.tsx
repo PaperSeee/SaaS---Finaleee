@@ -99,8 +99,7 @@ export default function Home() {
         "Boîtes email illimitées",
         "API complète",
         "Intégrations personnalisées",
-        "Gestionnaire de compte dédié",
-        "
+        "Gestionnaire de compte dédié"
       ],
       cta: "Contacter le commercial",
       popular: false
