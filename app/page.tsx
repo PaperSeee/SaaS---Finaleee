@@ -274,14 +274,14 @@ export default function Home() {
                     </motion.span>
                   </h1>
                   
-                  <motion.p
+                  <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
                     className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl"
                   >
                     Centralisez vos avis et vos e-mails critiques sur un seul dashboard intelligent pour améliorer votre satisfaction client et votre réputation digitale.
-                  </motion.p>
+                  </motion.div>
                   
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -387,7 +387,7 @@ export default function Home() {
               >
                 Fonctionnalités principales
               </motion.h2>
-              <motion.p
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -395,8 +395,8 @@ export default function Home() {
                 className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl"
               >
                 Tout ce dont vous avez besoin
-              </motion.p>
-              <motion.p
+              </motion.div>
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -404,7 +404,7 @@ export default function Home() {
                 className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto"
               >
                 Une solution complète pour gérer votre réputation digitale et rester au top de vos communications clients
-              </motion.p>
+              </motion.div>
             </div>
 
             <div className="mt-16">
@@ -467,7 +467,7 @@ export default function Home() {
               >
                 Processus simplifié
               </motion.h2>
-              <motion.p
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -475,8 +475,8 @@ export default function Home() {
                 className="mt-2 text-3xl font-extrabold text-white sm:text-4xl"
               >
                 Comment ça marche
-              </motion.p>
-              <motion.p
+              </motion.div>
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -484,7 +484,7 @@ export default function Home() {
                 className="mt-4 max-w-2xl text-xl text-blue-100 mx-auto"
               >
                 Trois étapes simples pour transformer votre gestion de la réputation
-              </motion.p>
+              </motion.div>
             </div>
 
             <div className="mt-16">
@@ -523,7 +523,7 @@ export default function Home() {
               >
                 Témoignages
               </motion.h2>
-              <motion.p
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -531,7 +531,7 @@ export default function Home() {
                 className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl"
               >
                 Ce que nos clients disent
-              </motion.p>
+              </motion.div>
             </div>
 
             <div className="mt-16">
@@ -586,7 +586,7 @@ export default function Home() {
               >
                 Tarifs
               </motion.h2>
-              <motion.p
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -594,8 +594,8 @@ export default function Home() {
                 className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl"
               >
                 Des plans adaptés à vos besoins
-              </motion.p>
-              <motion.p
+              </motion.div>
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -603,7 +603,7 @@ export default function Home() {
                 className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto"
               >
                 Démarrez gratuitement et évoluez au fur et à mesure de votre croissance
-              </motion.p>
+              </motion.div>
             </div>
 
             <div className="mt-16 grid gap-8 lg:grid-cols-3">
