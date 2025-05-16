@@ -310,12 +310,7 @@ export default function Home() {
                 </div>
               </div>
               
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="relative mt-12 sm:mx-auto sm:max-w-lg lg:mt-0 lg:max-w-none lg:col-span-6"
-              >
+              <div className="relative mt-12 sm:mx-auto sm:max-w-lg lg:mt-0 lg:max-w-none lg:col-span-6">
                 <div className="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-md">
                   <div className="relative block w-full overflow-hidden rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                     <Image
@@ -340,7 +335,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>
