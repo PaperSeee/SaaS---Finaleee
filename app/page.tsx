@@ -406,44 +406,44 @@ export default function Home() {
             <div className="mt-16">
               <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
                 {features.map((feature, index) => (
-                  <motion.div
-                    key={feature.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="bg-gray-50 rounded-xl overflow-hidden shadow-lg"
-                  >
-                    <div className="p-8">
-                      <div className="flex items-center">
-                        <div className="h-12 w-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
-                          {feature.icon}
+                  <div key={feature.title} className="bg-gray-50 rounded-xl overflow-hidden shadow-lg">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                    >
+                      <div className="p-8">
+                        <div className="flex items-center">
+                          <div className="h-12 w-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
+                            {feature.icon}
+                          </div>
+                          <h3 className="ml-4 text-xl font-bold text-gray-900">{feature.title}</h3>
                         </div>
-                        <h3 className="ml-4 text-xl font-bold text-gray-900">{feature.title}</h3>
+                        <p className="mt-5 text-gray-600">{feature.description}</p>
+                        
+                        <ul className="mt-8 space-y-3">
+                          {feature.subFeatures.map((subFeature) => (
+                            <li key={subFeature} className="flex items-start">
+                              <svg className="flex-shrink-0 h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                              <span className="ml-2 text-gray-600">{subFeature}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
-                      <p className="mt-5 text-gray-600">{feature.description}</p>
                       
-                      <ul className="mt-8 space-y-3">
-                        {feature.subFeatures.map((subFeature) => (
-                          <li key={subFeature} className="flex items-start">
-                            <svg className="flex-shrink-0 h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span className="ml-2 text-gray-600">{subFeature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    
-                    <div className="bg-blue-600 px-8 py-4">
-                      <a href="/auth/register" className="flex items-center justify-end text-white font-medium">
-                        <span>Découvrir cette fonctionnalité</span>
-                        <svg className="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                      </a>
-                    </div>
-                  </motion.div>
+                      <div className="bg-blue-600 px-8 py-4">
+                        <a href="/auth/register" className="flex items-center justify-end text-white font-medium">
+                          <span>Découvrir cette fonctionnalité</span>
+                          <svg className="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                        </a>
+                      </div>
+                    </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
