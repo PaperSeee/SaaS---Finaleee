@@ -54,7 +54,7 @@ function AddPageContent() {
   const supabase = createClientComponentClient();
   const { user } = useAuth();
 
-  // Get search params
+  // Get search paramsss
   const placeIdParam = searchParams.get("placeId");
   const nameParam = searchParams.get("name");
 
