@@ -633,60 +633,61 @@ function AddPageContent() {
               Facebook Settings
             </h3>
           
-          <div className="bg-white rounded-md border border-indigo-200 p-4">
-            {selectedFacebookPage ? (
-              <div className="mb-4 p-3 bg-indigo-50 border border-indigo-100 rounded-md">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium text-indigo-800">{selectedFacebookPage.name}</h4>
-                    <p className="text-xs text-indigo-600 mt-1">Connected Facebook Page</p>
-                  </div>
-                  <button 
-                    type="button" 
-                    className="text-indigo-600 hover:text-indigo-800"
-                    onClick={() => setSelectedFacebookPage(null)}
-                  >
-                    <span className="sr-only">Remove</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
+            <div className="bg-white rounded-md border border-indigo-200 p-4">
+              {selectedFacebookPage ? (
+                <div className="mb-4 p-3 bg-indigo-50 border border-indigo-100 rounded-md">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium text-indigo-800">{selectedFacebookPage.name}</h4>
+                      <p className="text-xs text-indigo-600 mt-1">Connected Facebook Page</p>
+                    </div>
+                    <button 
+                      type="button" 
+                      className="text-indigo-600 hover:text-indigo-800"
+                      onClick={() => setSelectedFacebookPage(null)}
+                    >
+                      <span className="sr-only">Remove</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div>
+              ) : (
+                <div>
+                  <label htmlFor="facebookUrl" className="block text-sm font-medium text-indigo-700">
+                    Connect your Facebook Page
+                  </label>
+                  <p className="text-xs text-indigo-600 mt-1 mb-3">
+                    Connect your Facebook Page to import reviews and respond directly from Kritiqo.
+                  </p>
+                  <FacebookConnector 
+                    userId={user?.id || ''} 
+                    onPageSelected={handleFacebookPageSelected} 
+                  />
+                </div>
+              )}
+              
+              <div className="mt-4">
                 <label htmlFor="facebookUrl" className="block text-sm font-medium text-indigo-700">
-                  Connect your Facebook Page
+                  Facebook Page URL (Optional)
                 </label>
-                <p className="text-xs text-indigo-600 mt-1 mb-3">
-                  Connect your Facebook Page to import reviews and respond directly from Kritiqo.
-                </p>
-                <FacebookConnector 
-                  userId={user?.id || ''} 
-                  onPageSelected={handleFacebookPageSelected} 
+                <input
+                  id="facebookUrl"
+                  type="url"
+                  className="mt-1 block w-full rounded-md border-indigo-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
+                  value={form.platformData.facebook.url}
+                  onChange={(e) => handlePlatformInputChange("facebook", "url", e.target.value)}
+                  placeholder="https://facebook.com/your-business"
                 />
+                <p className="mt-1 text-xs text-indigo-600">
+                  URL to your Facebook business page
+                </p>
               </div>
-            )}
-            
-            <div className="mt-4">
-              <label htmlFor="facebookUrl" className="block text-sm font-medium text-indigo-700">
-                Facebook Page URL (Optional)
-              </label>
-              <input
-                id="facebookUrl"
-                type="url"
-                className="mt-1 block w-full rounded-md border-indigo-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
-                value={form.platformData.facebook.url}
-                onChange={(e) => handlePlatformInputChange("facebook", "url", e.target.value)}
-                placeholder="https://facebook.com/your-business"
-              />
-              <p className="mt-1 text-xs text-indigo-600">
-                URL to your Facebook business page
-              </p>
             </div>
           </div>
-        </div>
-          
+        )}
+        
         {/* Trustpilot - Removed input fields, replaced with Coming Soon message */}
         {form.platforms.trustpilot && (
           <div className="border rounded-lg p-5 bg-gray-100 space-y-4">
