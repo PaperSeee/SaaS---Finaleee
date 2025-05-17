@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Footer from "@/components/Footer";
 import PublicHeader from "@/components/PublicHeader";
-import { Tab } from "@headlessui/react";
 import { motion } from "framer-motion";
 
 export default function ReviewManagementPage() {

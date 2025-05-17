@@ -311,3 +311,38 @@ export default function NotificationsPage() {
                       {notification.link ? (
                         <Link 
                           href={notification.link || "#"}
+                          className="inline-flex items-center rounded-md bg-blue-600 px-3 py-1 text-sm font-medium text-white hover:bg-blue-700"
+                          onClick={() => handleMarkAsRead(notification.id)}
+                        >
+                          Voir
+                          <svg className="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5-5 5M6 12h12" />
+                          </svg>
+                        </Link>
+                      ) : null}
+                      <div className="flex-shrink-0">
+                        <button
+                          onClick={() => handleDeleteNotification(notification.id)}
+                          className="inline-flex rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+                        >
+                          <span className="sr-only">Supprimer la notification</span>
+                          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-lg bg-gray-50 p-4 text-center text-sm text-gray-500">
+            Aucune notification à afficher
+          </div>
+        )}
+      </div>
+    </DashboardLayout>
+  );
+}

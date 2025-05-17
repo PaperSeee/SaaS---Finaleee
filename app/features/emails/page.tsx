@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Footer from "@/components/Footer";
 import PublicHeader from "@/components/PublicHeader";
-import { Tab } from "@headlessui/react";
 import { motion } from "framer-motion";
 
 export default function EmailManagementPage() {
@@ -482,7 +481,7 @@ export default function EmailManagementPage() {
             </p>
           </div>
           
-          <Tab.Group onChange={setSelectedTab}>
+          {/* <Tab.Group onChange={setSelectedTab}>
             <Tab.List className="flex space-x-2 rounded-xl bg-blue-50 p-1 mb-12">
               {detailedFeatures.map((feature) => (
                 <Tab
@@ -519,7 +518,7 @@ export default function EmailManagementPage() {
                 </Tab.Panel>
               ))}
             </Tab.Panels>
-          </Tab.Group>
+          </Tab.Group> */}
         </div>
       </div>
       
