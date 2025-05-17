@@ -7,6 +7,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import Footer from "@/components/Footer";
 import PublicHeader from "@/components/PublicHeader";
 import { motion } from "framer-motion";
+import { Tab } from '@headlessui/react';
 
 export default function ReviewManagementPage() {
   const { t } = useLanguage();
