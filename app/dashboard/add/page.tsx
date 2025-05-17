@@ -1,54 +1,16 @@
 "use client";
 
-import React, { Suspense, useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useAuth } from "@/contexts/AuthContext";
-import Link from "next/link";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import Link from "next/link";
+import FacebookConnector from '@/components/businesses/FacebookConnector';
 import { Platform, PLATFORM_CONFIGS } from "@/lib/types";
 import { validatePlaceId } from "@/lib/googlePlaces";
-import FacebookConnector from '@/components/businesses/FacebookConnector';
-
-interface BusinessForm {
-  name: string;
-  platforms: Record<Platform, boolean>;
-  platformData: {
-    google: {
-      placeId: string;
-      url: string;
-      verified: boolean;
-      verificationStatus: "idle" | "searching" | "found" | "not-found";
-      businessInfo?: {
-        name: string;
-        rating: number;
-        reviewCount: number;
-      };
-    };
-    facebook: {
-      pageId: string;
-      url: string;
-    };
-    trustpilot: {
-      businessId: string;
-      url: string;
-    };
-    yelp: {
-      businessId: string;
-      url: string;
-    };
-  };
-}
 
 export default function AddPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <AddPageContent />
-    </Suspense>
-  );
-}
-
-function AddPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const supabase = createClientComponentClient();
