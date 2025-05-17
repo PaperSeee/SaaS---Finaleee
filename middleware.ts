@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Define public routes that don't require authentication
-const publicRoutes = ['/', '/contact', '/pricing', '/faq', '/auth/login', '/auth/register', '/auth/forgot-password'];
+const publicRoutes = ['/', '/contact', '/pricing', '/faq', '/auth/login', '/auth/register', '/auth/forgot-password', '/auth/reset-password', '/auth/callback'];
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
