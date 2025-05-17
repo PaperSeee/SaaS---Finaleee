@@ -38,7 +38,7 @@ interface BusinessForm {
       url: string;
     };
   };
-
+}
 
 export default function AddPage() {
   return (
