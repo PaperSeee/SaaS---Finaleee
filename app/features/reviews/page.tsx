@@ -9,6 +9,8 @@ import PublicHeader from "@/components/PublicHeader";
 import { motion } from "framer-motion";
 import { Tab } from '@headlessui/react';
 
+/// <reference path="../../global.d.ts" />
+
 export default function ReviewManagementPage() {
   const { t } = useLanguage();
   const [selectedTab, setSelectedTab] = useState(0);

@@ -8,3 +8,7 @@ declare module "framer-motion" {
     className?: string;
   }
 }
+
+declare global {
+  // Ensures this file is treated as a module and the augmentation is global
+}
