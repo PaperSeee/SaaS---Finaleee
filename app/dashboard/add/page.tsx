@@ -41,7 +41,7 @@ interface BusinessForm {
   };
 }
 
-export default function AddPage() {
+export default function Page() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const supabase = createClientComponentClient();
