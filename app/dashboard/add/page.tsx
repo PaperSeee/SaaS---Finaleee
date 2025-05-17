@@ -10,6 +10,37 @@ import FacebookConnector from '@/components/businesses/FacebookConnector';
 import { Platform, PLATFORM_CONFIGS } from "@/lib/types";
 import { validatePlaceId } from "@/lib/googlePlaces";
 
+// Add back the BusinessForm definition
+interface BusinessForm {
+  name: string;
+  platforms: Record<Platform, boolean>;
+  platformData: {
+    google: {
+      placeId: string;
+      url: string;
+      verified: boolean;
+      verificationStatus: "idle" | "searching" | "found" | "not-found";
+      businessInfo?: {
+        name: string;
+        rating: number;
+        reviewCount: number;
+      };
+    };
+    facebook: {
+      pageId: string;
+      url: string;
+    };
+    trustpilot: {
+      businessId: string;
+      url: string;
+    };
+    yelp: {
+      businessId: string;
+      url: string;
+    };
+  };
+}
+
 export default function AddPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
