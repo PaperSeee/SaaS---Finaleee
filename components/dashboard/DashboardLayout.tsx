@@ -14,9 +14,15 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const supabase = createClientComponentClient();
   
+  // Handle user sign out
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/");
+  };
+
   const menuItems = [
     { icon: 'chart-bar', label: 'Vue d\'ensemble', href: '/dashboard' },
     { icon: 'star', label: 'Avis', href: '/dashboard/reviews' },
