@@ -18,24 +18,11 @@ interface BusinessForm {
       url: string;
       verified: boolean;
       verificationStatus: "idle" | "searching" | "found" | "not-found";
-      businessInfo?: {
-        name: string;
-        rating: number;
-        reviewCount: number;
-      };
+      businessInfo?: { name: string; rating: number; reviewCount: number };
     };
-    facebook: {
-      pageId: string;
-      url: string;
-    };
-    trustpilot: {
-      businessId: string;
-      url: string;
-    };
-    yelp: {
-      businessId: string;
-      url: string;
-    };
+    facebook: { pageId: string; url: string };
+    trustpilot: { businessId: string; url: string };
+    yelp: { businessId: string; url: string };
   };
 }
 
