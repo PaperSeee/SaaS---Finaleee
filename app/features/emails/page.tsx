@@ -52,7 +52,7 @@ export default function EmailManagementPage() {
     },
   ];
   
-  // Email provider integrations
+  // Email provider integrations - Only Gmail and Outlook now
   const emailProviders = [
     {
       name: "Gmail",
@@ -65,18 +65,6 @@ export default function EmailManagementPage() {
       description: "Intégrez vos comptes Outlook et Microsoft 365 pour centraliser votre communication professionnelle.",
       icon: "/logos/outlook.svg",
       features: ["Classement automatique", "Dossiers intelligents", "Aperçus contextuels", "Filtres personnalisés"]
-    },
-    {
-      name: "Exchange",
-      description: "Solution complète pour les entreprises utilisant Microsoft Exchange Server.",
-      icon: "/logos/exchange.svg",
-      features: ["Intégration serveur complète", "Paramètres d'administration", "Gestion des règles", "Support des dossiers partagés"]
-    },
-    {
-      name: "IMAP",
-      description: "Compatible avec tout fournisseur email supportant le protocole IMAP standard.",
-      icon: "/logos/imap.svg",
-      features: ["Support multi-comptes", "Synchronisation sécurisée", "Configuration personnalisée", "Compatibilité étendue"]
     }
   ];
   
@@ -300,7 +288,7 @@ export default function EmailManagementPage() {
   const steps = [
     {
       title: "Connectez vos comptes email",
-      description: "Intégrez facilement vos boîtes mail professionnelles (Gmail, Outlook, Exchange ou autres) via notre interface sécurisée.",
+      description: "Intégrez facilement vos boîtes mail Gmail ou Outlook via notre interface sécurisée.",
       icon: "📧"
     },
     {
@@ -333,7 +321,7 @@ export default function EmailManagementPage() {
     },
     {
       question: "Puis-je connecter plusieurs comptes email différents ?",
-      answer: "Absolument ! Notre solution permet de connecter plusieurs comptes email, qu'ils soient personnels ou partagés au sein d'une équipe. Vous pouvez par exemple intégrer votre Gmail professionnel, votre adresse Outlook d'entreprise et une boîte mail partagée pour le support client, le tout géré depuis notre interface unique."
+      answer: "Absolument ! Notre solution permet de connecter plusieurs comptes Gmail et Outlook, qu'ils soient personnels ou partagés au sein d'une équipe. Vous pouvez par exemple intégrer votre Gmail professionnel, votre adresse Outlook d'entreprise et une boîte mail partagée pour le support client, le tout géré depuis notre interface unique."
     },
     {
       question: "Comment le système détermine-t-il la priorité d'un email ?",
@@ -341,7 +329,7 @@ export default function EmailManagementPage() {
     },
     {
       question: "Est-ce compatible avec mon client de messagerie actuel ?",
-      answer: "Notre solution s'intègre avec la plupart des clients de messagerie populaires. Vous pouvez continuer à utiliser Gmail, Outlook ou votre client préféré, tout en bénéficiant de notre couche d'intelligence ajoutée. Nous proposons également des extensions pour navigateurs et applications mobiles pour une expérience optimale, quel que soit votre environnement de travail."
+      answer: "Notre solution s'intègre parfaitement avec Gmail et Outlook. Vous pouvez continuer à utiliser ces clients de messagerie comme d'habitude, tout en bénéficiant de notre couche d'intelligence ajoutée. Nous proposons également des extensions pour navigateurs et applications mobiles pour une expérience optimale."
     },
     {
       question: "Mon équipe peut-elle collaborer sur les emails importants ?",
@@ -389,62 +377,43 @@ export default function EmailManagementPage() {
         </div>
       </div>
       
-      {/* Key Benefits Section */}
-      <div className="bg-white py-16 sm:py-24">
+      {/* Email provider integrations section - Updated for Gmail and Outlook only */}
+      <div className="py-16 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              Les avantages clés de notre solution
+          <div className="mx-auto max-w-3xl text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900">
+              Intégration avec vos messageries préférées
             </h2>
-            <p className="mt-4 text-lg text-gray-500">
-              Notre technologie d'IA transforme votre boîte de réception en un outil de productivité puissant et intelligent.
+            <p className="mt-4 text-lg text-gray-600">
+              Notre solution s'intègre parfaitement avec Gmail and Outlook pour une gestion optimale de vos emails professionnels.
             </p>
           </div>
           
-          <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {benefits.map((benefit) => (
-              <div key={benefit.title} className="bg-gray-50 rounded-lg p-8 shadow-sm border border-gray-100 transition-all hover:shadow-md hover:-translate-y-1">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-md bg-blue-100 text-blue-600">
-                  {benefit.icon}
-                </div>
-                <h3 className="mt-4 text-xl font-medium text-gray-900">{benefit.title}</h3>
-                <p className="mt-2 text-base text-gray-500">{benefit.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      
-      {/* Email Provider Integrations */}
-      <div className="py-16 sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              Compatibilité avec vos services de messagerie
-            </h2>
-            <p className="mt-4 text-lg text-gray-500">
-              Notre solution s'intègre parfaitement avec tous vos fournisseurs de messagerie professionnelle.
-            </p>
-          </div>
-          
-          <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-2">
+          <div className="mt-12 grid gap-8 lg:grid-cols-2">
             {emailProviders.map((provider) => (
-              <div key={provider.name} className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 transition-transform hover:shadow-md">
+              <div key={provider.name} className="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100 transition-all hover:shadow-xl">
                 <div className="p-8">
-                  <div className="flex items-center">
-                    <div className="h-12 w-12 flex items-center justify-center rounded-full bg-gray-100">
-                      {/* Replace with actual logos in production */}
-                      <svg className="h-6 w-6 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-                      </svg>
+                  <div className="flex items-center mb-6">
+                    <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center">
+                      {provider.name === "Gmail" ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-red-500" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+                        </svg>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M7.88 12.04q0 .45-.11.87-.1.41-.33.74-.22.33-.58.52-.37.2-.87.2t-.85-.2q-.35-.21-.57-.55-.22-.33-.33-.75-.1-.42-.1-.86t.1-.87q.1-.43.34-.76.22-.34.59-.54.36-.2.87-.2t.86.2q.35.21.57.55.22.34.31.77.1.43.1.88zM24 12v9.38q0 .46-.33.8-.33.32-.8.32H7.13q-.46 0-.8-.33-.32-.33-.32-.8V18H1q-.41 0-.7-.3-.3-.29-.3-.7v-7q0-.41.3-.7Q.58 9 1 9h5.13v-2.38q0-.37.2-.72.21-.36.5-.59.3-.22.73-.35.43-.12.82-.12h14.12q.47 0 .8.33.33.33.33.8v2.38h5.13q.41 0 .7.3.3.29.3.7v7q0 .41-.3.7Q21.84 21 21.43 21H17v-4.38q0-.46-.33-.8-.33-.32-.8-.32H8.38q-.46 0-.8.33-.32.33-.32.8V21H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+                        </svg>
+                      )}
                     </div>
                     <h3 className="ml-4 text-xl font-semibold text-gray-900">{provider.name}</h3>
                   </div>
-                  <p className="mt-4 text-gray-600">{provider.description}</p>
-                  <ul className="mt-6 space-y-3">
-                    {provider.features.map((feature) => (
-                      <li key={feature} className="flex items-start">
-                        <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <p className="mb-8 text-gray-600">{provider.description}</p>
+                  
+                  <h4 className="font-medium text-gray-900 mb-3">Caractéristiques</h4>
+                  <ul className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {provider.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start">
+                        <svg className="h-5 w-5 text-green-500 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                         <span className="text-gray-600">{feature}</span>
@@ -452,10 +421,10 @@ export default function EmailManagementPage() {
                     ))}
                   </ul>
                 </div>
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-8 py-4">
+                <div className={`px-8 py-4 ${provider.name === "Gmail" ? "bg-red-50" : "bg-blue-50"}`}>
                   <Link 
                     href="/auth/register" 
-                    className="flex items-center justify-end text-blue-600 font-medium"
+                    className={`flex items-center justify-end text-${provider.name === "Gmail" ? "red" : "blue"}-600 font-medium`}
                   >
                     <span>Connecter {provider.name}</span>
                     <svg className="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -469,56 +438,29 @@ export default function EmailManagementPage() {
         </div>
       </div>
       
-      {/* Features in Detail */}
-      <div className="bg-white py-16 sm:py-24">
+      {/* Key Benefits Section */}
+      <div className="bg-gradient-to-br from-indigo-50 to-blue-50 py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center mb-16">
+          <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              Fonctionnalités en détail
+              Les avantages clés de notre solution
             </h2>
             <p className="mt-4 text-lg text-gray-500">
-              Découvrez comment notre plateforme transforme votre gestion des emails professionnels au quotidien.
+              Notre technologie d'IA transforme votre boîte de réception en un outil de productivité puissant et intelligent.
             </p>
           </div>
           
-          {/* <Tab.Group onChange={setSelectedTab}>
-            <Tab.List className="flex space-x-2 rounded-xl bg-blue-50 p-1 mb-12">
-              {detailedFeatures.map((feature) => (
-                <Tab
-                  key={feature.title}
-                  className={({ selected }) =>
-                    `w-full rounded-lg py-3 text-sm font-medium leading-5 transition-colors
-                    ${
-                      selected
-                        ? 'bg-white text-blue-700 shadow'
-                        : 'text-blue-600 hover:bg-blue-100'
-                    }`
-                  }
-                >
-                  {feature.title}
-                </Tab>
-              ))}
-            </Tab.List>
-            <Tab.Panels>
-              {detailedFeatures.map((feature, idx) => (
-                <Tab.Panel
-                  key={idx}
-                  className={`rounded-xl bg-white p-3 transition-opacity duration-300 ${
-                    selectedTab === idx ? 'opacity-100' : 'opacity-0'
-                  }`}
-                >
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="p-4"
-                  >
-                    {feature.content}
-                  </motion.div>
-                </Tab.Panel>
-              ))}
-            </Tab.Panels>
-          </Tab.Group> */}
+          <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            {benefits.map((benefit) => (
+              <div key={benefit.title} className="bg-white rounded-lg p-8 shadow-sm border border-gray-100 transition-all hover:shadow-md hover:-translate-y-1">
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-md bg-blue-100 text-blue-600">
+                  {benefit.icon}
+                </div>
+                <h3 className="mt-4 text-xl font-medium text-gray-900">{benefit.title}</h3>
+                <p className="mt-2 text-base text-gray-500">{benefit.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       
