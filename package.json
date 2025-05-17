@@ -25,6 +25,8 @@
     "recharts": "^2.15.3"
   },
   "devDependencies": {
+    "@swc/core": "^1.11.24",
+    "@swc/helpers": "^0.5.17",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20.17.46",
     "@types/react": "^19",
