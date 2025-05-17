@@ -1,21 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CustomLogo } from "@/components/CustomLogo";
 
-export default function ResetPassword() {
+// Move all logic into a separate client component
+function ResetPasswordContent() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   // Récupérer le token de réinitialisation depuis l'URL
   const token = searchParams?.get("token");
-  
+
   useEffect(() => {
     if (!token) {
       setMessage({
@@ -27,7 +28,7 @@ export default function ResetPassword() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Vérifier que les mots de passe correspondent
     if (password !== confirmPassword) {
       setMessage({
@@ -36,7 +37,7 @@ export default function ResetPassword() {
       });
       return;
     }
-    
+
     // Vérifier la longueur minimale du mot de passe
     if (password.length < 6) {
       setMessage({
@@ -45,7 +46,7 @@ export default function ResetPassword() {
       });
       return;
     }
-    
+
     setLoading(true);
     setMessage(null);
 
@@ -68,12 +69,12 @@ export default function ResetPassword() {
         text: "Votre mot de passe a été réinitialisé avec succès.",
         type: "success"
       });
-      
+
       // Rediriger vers la page de connexion après quelques secondes
       setTimeout(() => {
         router.push("/auth/login");
       }, 3000);
-      
+
     } catch (error) {
       console.error("Erreur lors de la réinitialisation du mot de passe:", error);
       setMessage({
@@ -97,7 +98,7 @@ export default function ResetPassword() {
         </div>
 
         {message && (
-          <div 
+          <div
             className={`rounded-md p-4 text-sm ${
               message.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"
             }`}
@@ -126,7 +127,7 @@ export default function ResetPassword() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              
+
               <div>
                 <label htmlFor="confirmPassword" className="block text-sm font-medium">
                   Confirmer le mot de passe
@@ -144,7 +145,7 @@ export default function ResetPassword() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </div>
-              
+
               <div>
                 <button
                   type="submit"
@@ -173,5 +174,14 @@ export default function ResetPassword() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Export the page wrapped in Suspense
+export default function ResetPassword() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Chargement...</div>}>
+      <ResetPasswordContent />
+    </Suspense>
   );
 }
