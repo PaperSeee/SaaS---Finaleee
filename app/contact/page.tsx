@@ -1,24 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import Footer from "@/components/Footer";
-import Image from "next/image";
-import { CustomLogo } from "@/components/CustomLogo";
 import PublicHeader from "@/components/PublicHeader";
 
 export default function ContactPage() {
-  const { t } = useLanguage();
-  const { isAuthenticated } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
   });
-  const [_error, _setError] = useState<string | null>(null);
   const [formStatus, setFormStatus] = useState<{
     status: "idle" | "submitting" | "success" | "error";
     message?: string;

@@ -2,13 +2,11 @@
 
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Footer from "@/components/Footer";
 import PublicHeader from "@/components/PublicHeader";
 
 export default function FeaturesPage() {
-  const { t } = useLanguage();
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">

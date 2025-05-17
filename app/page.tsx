@@ -1,18 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { CustomLogo } from "@/components/CustomLogo";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import { CustomLogo } from "@/components/CustomLogo";
 
 export default function Home() {
-  const { t } = useLanguage();
   const { isAuthenticated } = useAuth();
-  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // For parallax scrolling effect
@@ -76,15 +72,6 @@ export default function Home() {
     }
   ];
   
-  // Partner logos
-  const partners = [
-    { name: "Company A", logo: "/logos/company-a.svg" },
-    { name: "Company B", logo: "/logos/company-b.svg" },
-    { name: "Company C", logo: "/logos/company-c.svg" },
-    { name: "Company D", logo: "/logos/company-d.svg" },
-    { name: "Company E", logo: "/logos/company-e.svg" }
-  ];
-
   // Pricing plans data
   const plans = [
     {

@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     businesses.push(newBusiness);
     
     return NextResponse.json(newBusiness, { status: 201 });
-  } catch (_error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to create business" },
       { status: 500 }

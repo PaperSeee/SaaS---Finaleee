@@ -66,7 +66,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
 export function handleExport() {
   try {
     // Implementation
-  } catch (_e) {
+  } catch {
     // Error handling
   }
 }

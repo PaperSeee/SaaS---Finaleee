@@ -83,10 +83,6 @@ export default function FindPlaceIdPage() {
     setTimeout(() => setSuccess(null), 3000);
   };
 
-  function _handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    // Input handling code
-  }
-
   return (
     <DashboardLayout>
       <div className="px-4 py-6 sm:px-6 lg:px-8">

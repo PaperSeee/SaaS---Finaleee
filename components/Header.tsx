@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { ReactNode } from 'react';
 
 interface HeaderProps {
@@ -18,7 +17,6 @@ export default function Header({
   onMenuToggle,
 }: HeaderProps) {
   const { user } = useAuth();
-  const { t } = useLanguage();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   return (

@@ -3,10 +3,6 @@
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
-import ThemeToggle from "@/components/ThemeToggle";
-import { useState } from 'react';
-import { useLanguage } from "@/contexts/LanguageContext";
-import Image from 'next/image';
 import { CustomLogo } from "@/components/CustomLogo";
 
 interface SidebarProps {
@@ -18,7 +14,6 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Sideb
   const pathname = usePathname();
   const router = useRouter();
   const { user, signOut } = useAuth();
-  const { t } = useLanguage();
   
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: (

@@ -28,7 +28,6 @@ export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'unread' | 'action_required'>('all');
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
-  const supabase = createClientComponentClient();
   
   useEffect(() => {
     // In a real application, fetch notifications from the database

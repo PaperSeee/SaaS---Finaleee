@@ -3,15 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
-import { useLanguage } from "@/contexts/LanguageContext";
 import Footer from "@/components/Footer";
-import Image from "next/image";
-import { CustomLogo } from "@/components/CustomLogo";
 import PublicHeader from "@/components/PublicHeader";
 
 export default function PricingPage() {
   const { isAuthenticated } = useAuth();
-  const { t } = useLanguage();
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">("monthly");
 
   const plans = [

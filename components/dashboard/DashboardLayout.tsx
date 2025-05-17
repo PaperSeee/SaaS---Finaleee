@@ -3,7 +3,6 @@
 import React, { useState, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { CustomLogo } from "@/components/CustomLogo";
@@ -15,13 +14,8 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const supabase = createClientComponentClient();
-  
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push('/');
-  };
   
   const menuItems = [
     { icon: 'chart-bar', label: 'Vue d\'ensemble', href: '/dashboard' },

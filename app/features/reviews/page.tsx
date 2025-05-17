@@ -12,7 +12,6 @@ import { motion } from "framer-motion";
 import { Tab } from '@headlessui/react';
 
 export default function ReviewManagementPage() {
-  const { t } = useLanguage();
   const [selectedTab, setSelectedTab] = useState(0);
   
   // Benefits data

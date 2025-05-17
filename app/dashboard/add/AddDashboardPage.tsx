@@ -1,27 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useAuth } from "@/contexts/AuthContext";
-import Link from "next/link";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function AddDashboardPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const supabase = createClientComponentClient();
-  const { user } = useAuth();
 
   // récup params
   const placeidParam = searchParams.get("placeId");
   const nameParam = searchParams.get("name");
 
   const [name, setName] = useState(nameParam || "");
-  const [googleUrl, setGoogleUrl] = useState("");
-  const [facebookUrl, setFacebookUrl] = useState("");
   const [placeId, setPlaceId] = useState(placeidParam || "");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [placeIdStatus, setPlaceIdStatus] = useState<{
     status: "idle" | "searching" | "found" | "not-found";
     placeId?: string;
@@ -30,8 +20,6 @@ export default function AddDashboardPage() {
     status: placeidParam ? "found" : "idle",
     placeId: placeidParam || undefined,
   });
-
-  // ...existing logic code...
 
   return (
     <div className="px-4 py-6 sm:px-6 lg:px-8">

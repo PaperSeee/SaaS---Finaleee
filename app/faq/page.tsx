@@ -5,12 +5,9 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Footer from "@/components/Footer";
-import { CustomLogo } from "@/components/CustomLogo";
 import PublicHeader from "@/components/PublicHeader";
 
 export default function FAQPage() {
-  const { isAuthenticated } = useAuth();
-  const { t } = useLanguage();
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   const toggleFaq = (index: number) => {

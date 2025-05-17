@@ -7,7 +7,6 @@ import ReviewCard from "@/components/businesses/ReviewCard";
 import { Review, Platform, SortOption, FilterOptions } from "@/lib/types";
 import ReviewFilters from "@/components/businesses/ReviewFilters";
 import Link from "next/link";
-import Image from "next/image";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useAuth } from "@/contexts/AuthContext";
 import { CustomLogo } from "@/components/CustomLogo";
