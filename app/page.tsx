@@ -38,25 +38,41 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
-  // Expected outcomes data (replacing testimonials since we're in MVP phase)
+  // Expected outcomes data - enhanced with better descriptions and custom icons
   const expectedOutcomes = [
     {
       title: "Centralisation des avis",
-      description: "Tous vos avis clients en un seul endroit pour une gestion simplifiée",
-      icon: "star",
-      benefit: "Gagnez jusqu'à 5 heures par semaine sur la gestion de votre réputation en ligne"
+      description: "Tous vos avis clients en un seul endroit pour une gestion simplifiée et un gain de temps considérable",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+        </svg>
+      ),
+      benefit: "Gagnez jusqu'à 5 heures par semaine sur la gestion de votre réputation en ligne et augmentez votre visibilité de 40%"
     },
     {
       title: "Intelligence email",
-      description: "Priorisation automatique des emails critiques pour une réactivité optimale",
-      icon: "mail",
-      benefit: "Réduisez votre temps de réponse aux clients insatisfaits de 60%"
+      description: "Priorisation automatique des emails critiques grâce à l'IA pour une réactivité optimale et une meilleure satisfaction client",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 11l3 3 3-3" />
+        </svg>
+      ),
+      benefit: "Réduisez votre temps de réponse aux clients insatisfaits de 60% et diminuez le taux d'attrition de 25%"
     },
     {
       title: "Analyse de sentiments",
-      description: "Comprenez l'opinion de vos clients grâce à l'analyse automatique des avis",
-      icon: "chart",
-      benefit: "Identifiez les axes d'amélioration prioritaires pour votre business"
+      description: "Comprenez l'opinion de vos clients grâce à l'analyse automatique des avis et identifiez les tendances émergentes",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          <circle cx="19" cy="5" r="1" fill="currentColor" />
+          <circle cx="15" cy="9" r="1" fill="currentColor" />
+          <circle cx="12" cy="14" r="1" fill="currentColor" />
+        </svg>
+      ),
+      benefit: "Identifiez les axes d'amélioration prioritaires pour votre business et augmentez votre score de satisfaction client de 35%"
     }
   ];
   
@@ -553,9 +569,11 @@ export default function Home() {
                   >
                     <div className="flex items-center mb-6">
                       <div className="flex-shrink-0">
-                        <svg className="h-12 w-12 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h18v18H3V3z" />
-                        </svg>
+                        {outcome.icon || (
+                          <svg className="h-12 w-12 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h18v18H3V3z" />
+                          </svg>
+                        )}
                       </div>
                       <div className="ml-4">
                         <h3 className="text-lg font-medium text-gray-900">{outcome.title}</h3>
