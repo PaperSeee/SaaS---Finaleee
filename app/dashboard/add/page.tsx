@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Platform, PLATFORM_CONFIGS } from "@/lib/types";
 import { validatePlaceId } from "@/lib/googlePlaces";
 import FacebookConnector from '@/components/businesses/FacebookConnector';
@@ -42,7 +43,9 @@ interface BusinessForm {
 export default function AddPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <AddPageContent />
+      <DashboardLayout>
+        <AddPageContent />
+      </DashboardLayout>
     </Suspense>
   );
 }

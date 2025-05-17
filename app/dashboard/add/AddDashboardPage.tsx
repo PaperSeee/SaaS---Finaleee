@@ -31,13 +31,11 @@ export default function AddDashboardPage() {
     placeId: placeidParam || undefined,
   });
 
-  // ...existing fetchPlaceId, extractBusinessNameFromUrl, useEffect(verifyPlaceId), handleSubmit...
-  // copiez ici tout le code client présent dans l'ancien page.tsx
-  // en vous assurant de ne pas importer DashboardLayout
+  // ...existing logic code...
 
   return (
     <div className="px-4 py-6 sm:px-6 lg:px-8">
-      {/* ...existing form JSX from AddCompany fonction... */}
+      {/* ...existing form JSX... */}
     </div>
   );
 }
