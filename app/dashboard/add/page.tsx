@@ -396,8 +396,8 @@ function AddPageContent() {
             <div 
               className={`relative rounded-lg border p-4 cursor-pointer ${
                 form.platforms.google 
-                  ? `bg-blue-50 border-blue-300` 
-                  : 'bg-white border-gray-200 hover:bg-gray-50'
+                  ? 'bg-blue-50 border-blue-300' 
+                   : 'bg-white border-gray-200 hover:bg-gray-50'
               }`}
               onClick={() => handlePlatformToggle("google")}
             >
@@ -430,8 +430,8 @@ function AddPageContent() {
             <div 
               className={`relative rounded-lg border p-4 cursor-pointer ${
                 form.platforms.facebook 
-                  ? `bg-indigo-50 border-indigo-300` 
-                  : 'bg-white border-gray-200 hover:bg-gray-50'
+                  ? 'bg-indigo-50 border-indigo-300' 
+                   : 'bg-white border-gray-200 hover:bg-gray-50'
               }`}
               onClick={() => handlePlatformToggle("facebook")}
             >
