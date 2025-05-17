@@ -59,7 +59,7 @@ function AddPageContent() {
   const placeIdParam = searchParams.get("placeId");
   const nameParam = searchParams.get("name");
 
-  // Initialize form state with all platforms
+  // Initialize form state with all platformss
   const [form, setForm] = useState<BusinessForm>({
     name: nameParam || "",
     platforms: {
