@@ -516,14 +516,15 @@ export default function ReviewManagementPage() {
                     selectedTab === idx ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="p-4"
-                  >
-                    {feature.content}
-                  </motion.div>
+                  <div className="p-4">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      {feature.content}
+                    </motion.div>
+                  </div>
                 </Tab.Panel>
               ))}
             </Tab.Panels>
