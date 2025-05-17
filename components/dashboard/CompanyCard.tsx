@@ -75,6 +75,7 @@ export default memo(function CompanyCard({ company }: CompanyCardProps) {
         <Link
           href={`/dashboard/businesses/${company.id}`}
           className="flex-1 rounded-md bg-gray-100 px-3 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-200"
+          prefetch={false}
         >
           Détails
         </Link>

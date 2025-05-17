@@ -10,6 +10,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.2.0",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
@@ -24,6 +25,8 @@
     "recharts": "^2.15.3"
   },
   "devDependencies": {
+    "@swc/core": "^1.11.24",
+    "@swc/helpers": "^0.5.17",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20.17.46",
     "@types/react": "^19",

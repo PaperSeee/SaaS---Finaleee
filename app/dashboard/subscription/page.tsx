@@ -287,6 +287,7 @@ export default function SubscriptionPage() {
                       <Link 
                         href="/pricing" 
                         className="ml-4 text-sm text-gray-500 hover:text-gray-700"
+                        prefetch={false}
                       >
                         Comparer tous les plans
                       </Link>

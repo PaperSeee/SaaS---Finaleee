@@ -266,8 +266,9 @@ export default function ImportantNotifications() {
                 {/* Actions */}
                 <div className="flex-shrink-0 flex items-center self-center ml-2">
                   <Link 
-                    href={`/notifications/${notification.id}`} 
+                    href={`/dashboard/notifications/${notification.id}`}
                     className="text-blue-600 hover:text-blue-800 transition-colors"
+                    prefetch={false}
                   >
                     <span className="sr-only">Voir détails</span>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useAuth } from "@/contexts/AuthContext";
+import Link from "next/link";
 
 // Reuse the types from ImportantNotifications component
 type NotificationStatus = 'unread' | 'read' | 'action_required';
@@ -308,29 +309,26 @@ export default function NotificationsPage() {
                     )}
                     <div className="mt-3 flex items-center justify-between">
                       {notification.link ? (
-                        <a 
-                          href={notification.link}
-                          className="text-xs font-medium text-blue-600 hover:text-blue-800"
+                        <Link 
+                          href={notification.link || "#"}
+                          className="inline-flex items-center rounded-md bg-blue-600 px-3 py-1 text-sm font-medium text-white hover:bg-blue-700"
+                          onClick={() => handleMarkAsRead(notification.id)}
                         >
-                          Voir les détails →
-                        </a>
-                      ) : (
-                        <div></div>
-                      )}
-                      <div className="flex space-x-4">
-                        {notification.status !== 'read' && (
-                          <button 
-                            onClick={() => handleMarkAsRead(notification.id)}
-                            className="text-xs font-medium text-gray-500 hover:text-gray-700"
-                          >
-                            Marquer comme lu
-                          </button>
-                        )}
-                        <button 
+                          Voir
+                          <svg className="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5-5 5M6 12h12" />
+                          </svg>
+                        </Link>
+                      ) : null}
+                      <div className="flex-shrink-0">
+                        <button
                           onClick={() => handleDeleteNotification(notification.id)}
-                          className="text-xs font-medium text-gray-500 hover:text-red-600"
+                          className="inline-flex rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
                         >
-                          Supprimer
+                          <span className="sr-only">Supprimer la notification</span>
+                          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
                         </button>
                       </div>
                     </div>
@@ -340,14 +338,8 @@ export default function NotificationsPage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 py-12">
-            <svg className="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-            </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">Pas de notifications</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Vous n'avez pas de notifications {activeTab === 'all' ? '' : activeTab === 'unread' ? 'non lues' : 'requérant une action'} pour le moment.
-            </p>
+          <div className="rounded-lg bg-gray-50 p-4 text-center text-sm text-gray-500">
+            Aucune notification à afficher
           </div>
         )}
       </div>

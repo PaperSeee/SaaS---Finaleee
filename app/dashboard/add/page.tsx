@@ -1,5 +1,6 @@
 "use client";
 
+<<<<<<< HEAD
 import React, { Suspense, useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -736,4 +737,8 @@ function AddPageContent() {
       </div>
     </DashboardLayout>
   );
+=======
+export default function Page() {
+  return <div>Add New Business Page</div>;
+>>>>>>> 83aa2b0fc6b829661e717ac102d49cf7354ccab2
 }

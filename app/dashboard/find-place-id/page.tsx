@@ -240,6 +240,7 @@ export default function FindPlaceIdPage() {
                         <Link
                           href={`/dashboard/add?placeId=${place.place_id}&name=${encodeURIComponent(place.name)}`}
                           className="inline-flex items-center text-sm text-blue-600 hover:text-blue-500"
+                          prefetch={false}
                         >
                           Utiliser pour une nouvelle entreprise →
                         </Link>
@@ -252,7 +253,7 @@ export default function FindPlaceIdPage() {
           )}
           
           <div className="mt-8">
-            <Link href="/dashboard" className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500">
+            <Link href="/dashboard" className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500" prefetch={false}>
               <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>

@@ -651,6 +651,7 @@ export default function SettingsPage() {
                     <Link 
                       href="/pricing" 
                       className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                      prefetch={false}
                     >
                       Upgrade Plan
                     </Link>
@@ -663,7 +664,11 @@ export default function SettingsPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <div className="ml-3">
-                          <h4 className="text-sm font-medium text-blue-800">Upgrade to Pro for advanced features</h4>
+                          <h4 className="text-sm font-medium text-blue-800">
+                            <Link href="/features" className="hover:underline">
+                              Upgrade to Pro for advanced features
+                            </Link>
+                          </h4>
                           <p className="mt-1 text-xs text-blue-700">
                             Get access to unlimited businesses, bulk review management, custom reporting, and more.
                           </p>

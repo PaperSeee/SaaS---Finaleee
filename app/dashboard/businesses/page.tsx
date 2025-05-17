@@ -95,6 +95,7 @@ export default function BusinessesPage() {
           <Link
             href="/dashboard/add"
             className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500"
+            prefetch={false}
           >
             Ajouter une entreprise
           </Link>
@@ -129,6 +130,7 @@ export default function BusinessesPage() {
             <Link
               href="/dashboard/add"
               className="mt-4 inline-block rounded-md bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-200"
+              prefetch={false}
             >
               Ajouter votre première entreprise
             </Link>
