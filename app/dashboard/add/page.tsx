@@ -379,7 +379,7 @@ function AddPageContent() {
             <input
               id="name"
               type="text"
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
               placeholder="Enter business name"
               value={form.name}
               onChange={(e) => setForm(prev => ({...prev, name: e.target.value}))}
@@ -543,7 +543,7 @@ function AddPageContent() {
                 <input
                   id="googlePlaceId"
                   type="text"
-                  className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
+                  className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                   value={form.platformData.google.placeId}
                   onChange={(e) => handlePlatformInputChange("google", "placeId", e.target.value)}
                   placeholder="Ex: ChIJN1t_tDeuEmsRUsoyG83frY4"
@@ -613,7 +613,7 @@ function AddPageContent() {
                 <input
                   id="googleUrl"
                   type="url"
-                  className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
+                  className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                   value={form.platformData.google.url}
                   onChange={(e) => handlePlatformInputChange("google", "url", e.target.value)}
                   placeholder="https://g.page/your-business"
@@ -652,7 +652,7 @@ function AddPageContent() {
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                       </svg>
-                    </button>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -677,7 +677,7 @@ function AddPageContent() {
                 <input
                   id="facebookUrl"
                   type="url"
-                  className="mt-1 block w-full rounded-md border-indigo-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                  className="mt-1 block w-full rounded-md border-indigo-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                   value={form.platformData.facebook.url}
                   onChange={(e) => handlePlatformInputChange("facebook", "url", e.target.value)}
                   placeholder="https://facebook.com/your-business"

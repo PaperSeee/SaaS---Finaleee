@@ -598,7 +598,7 @@ export default function BusinessDetails() {
                             type="text"
                             name="name"
                             id="name"
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                             value={editFormData.name}
                             onChange={handleEditInputChange}
                             required
@@ -617,7 +617,7 @@ export default function BusinessDetails() {
                             type="text"
                             name="placeId"
                             id="placeId"
-                            className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border bg-white"
+                            className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border bg-white dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                             value={editFormData.placeId}
                             onChange={handleEditInputChange}
                             placeholder="Ex: ChIJN1t_tDeuEmsRUsoyG83frY4"
@@ -638,7 +638,7 @@ export default function BusinessDetails() {
                             type="url"
                             name="googleUrl"
                             id="googleUrl"
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                             value={editFormData.googleUrl}
                             onChange={handleEditInputChange}
                             placeholder="https://maps.google.com/place/your-business"
@@ -653,7 +653,7 @@ export default function BusinessDetails() {
                             type="url"
                             name="facebookUrl"
                             id="facebookUrl"
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                             value={editFormData.facebookUrl}
                             onChange={handleEditInputChange}
                             placeholder="https://facebook.com/your-business"

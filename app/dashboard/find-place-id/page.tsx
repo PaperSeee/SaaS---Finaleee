@@ -136,7 +136,7 @@ export default function FindPlaceIdPage() {
                     type="text"
                     name="searchQuery"
                     id="searchQuery"
-                    className="block w-full flex-1 rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                    className="block w-full flex-1 rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                     placeholder="Ex: Restaurant Le Gourmet, Paris"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}

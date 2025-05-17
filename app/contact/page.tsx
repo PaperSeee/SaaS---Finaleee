@@ -117,7 +117,7 @@ export default function ContactPage() {
                             id="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                             required
                           />
                         </div>
@@ -135,7 +135,7 @@ export default function ContactPage() {
                             autoComplete="email"
                             value={formData.email}
                             onChange={handleChange}
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                             required
                           />
                         </div>
@@ -151,7 +151,7 @@ export default function ContactPage() {
                             name="subject"
                             value={formData.subject}
                             onChange={handleChange}
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-900 dark:text-white"
                             required
                           >
                             <option value="">Sélectionnez un sujet</option>
@@ -175,7 +175,7 @@ export default function ContactPage() {
                             rows={6}
                             value={formData.message}
                             onChange={handleChange}
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                             required
                           ></textarea>
                         </div>

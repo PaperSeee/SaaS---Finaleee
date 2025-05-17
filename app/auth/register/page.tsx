@@ -135,7 +135,7 @@ export default function Register() {
                 name="company"
                 type="text"
                 required
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                 placeholder="Nom de votre entreprise"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
@@ -152,7 +152,7 @@ export default function Register() {
                 type="email"
                 autoComplete="email"
                 required
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                 placeholder="votre@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -170,7 +170,7 @@ export default function Register() {
                 autoComplete="new-password"
                 required
                 minLength={6}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                 placeholder="Mot de passe (6 caractères minimum)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

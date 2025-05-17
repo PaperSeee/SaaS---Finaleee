@@ -121,7 +121,7 @@ function ResetPasswordContent() {
                   autoComplete="new-password"
                   required
                   minLength={6}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                   placeholder="Minimum 6 caractères"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -139,7 +139,7 @@ function ResetPasswordContent() {
                   autoComplete="new-password"
                   required
                   minLength={6}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
                   placeholder="Répétez le mot de passe"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}

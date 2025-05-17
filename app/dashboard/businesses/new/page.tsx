@@ -49,7 +49,7 @@ export default function AddBusiness() {
             <input
               id="name"
               type="text"
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
               placeholder="Enter business name"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -64,7 +64,7 @@ export default function AddBusiness() {
             <input
               id="googleUrl"
               type="url"
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
               placeholder="https://g.page/your-business"
               value={googleUrl}
               onChange={(e) => setGoogleUrl(e.target.value)}
@@ -81,7 +81,7 @@ export default function AddBusiness() {
             <input
               id="facebookUrl"
               type="url"
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
               placeholder="https://facebook.com/your-business"
               value={facebookUrl}
               onChange={(e) => setFacebookUrl(e.target.value)}
