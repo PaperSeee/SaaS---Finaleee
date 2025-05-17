@@ -460,7 +460,16 @@ export default function Home() {
                       </div>
                       
                       <div className="bg-blue-600 px-8 py-4">
-                        <a href="/auth/register" className="flex items-center justify-end text-white font-medium">
+                        <a
+                          href={
+                            feature.title === "Centralisation des avis clients"
+                              ? "/features/reviews"
+                              : feature.title === "Gestion intelligente des emails"
+                              ? "/features/emails"
+                              : "#"
+                          }
+                          className="flex items-center justify-end text-white font-medium"
+                        >
                           <span>Découvrir cette fonctionnalité</span>
                           <svg className="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
