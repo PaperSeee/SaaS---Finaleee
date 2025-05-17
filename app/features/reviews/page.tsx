@@ -514,6 +514,7 @@ export default function ReviewManagementPage() {
                     selectedTab === idx ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
+                  {/* @ts-expect-error framer-motion typing issue with className */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
