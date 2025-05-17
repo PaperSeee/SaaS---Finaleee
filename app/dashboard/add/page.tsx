@@ -95,6 +95,24 @@ function AddPageContent() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   
+  // Verify Google Place ID
+  const updatePlatformData = (
+    platform: Platform,
+    field: string, 
+    value: any
+  ) => {
+    setForm(prev => ({
+      ...prev,
+      platformData: {
+        ...prev.platformData,
+        [platform]: {
+          ...prev.platformData[platform],
+          [field]: value
+        }
+      }
+    }));
+  };
+
   // on hoiste et on wrap en useCallback pour la cohérence des deps
   const verifyGooglePlaceId = useCallback(async (placeId: string) => {
     if (!placeId.trim()) {
@@ -134,24 +152,6 @@ function AddPageContent() {
       return () => clearTimeout(timer);
     }
   }, [form.platformData.google.placeId, form.platforms.google, verifyGooglePlaceId]);
-  
-  // Verify Google Place ID
-  const updatePlatformData = (
-    platform: Platform,
-    field: string, 
-    value: any
-  ) => {
-    setForm(prev => ({
-      ...prev,
-      platformData: {
-        ...prev.platformData,
-        [platform]: {
-          ...prev.platformData[platform],
-          [field]: value
-        }
-      }
-    }));
-  };
   
   // Add state for Facebook page
   const [selectedFacebookPage, setSelectedFacebookPage] = useState<{
