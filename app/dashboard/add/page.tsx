@@ -8,6 +8,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import FacebookConnector from '@/components/businesses/FacebookConnector';
 import { Platform, PLATFORM_CONFIGS } from "@/lib/types";
 import { validatePlaceId } from "@/lib/googlePlaces";
+import Link from 'next/link';
+
 
 // Add back the BusinessForm definition
 interface BusinessForm {
