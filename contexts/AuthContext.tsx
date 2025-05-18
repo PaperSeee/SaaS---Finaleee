@@ -4,6 +4,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
+import supabase from "@/lib/supabase";
 
 interface AuthContextType {
   user: User | null;
@@ -32,7 +33,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
   
   const router = useRouter();
-  const supabase = createClientComponentClient();
 
   useEffect(() => {
     const getSession = async () => {
