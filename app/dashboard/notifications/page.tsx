@@ -76,7 +76,7 @@ export default function EmailsPage() {
     negativeSentiment: 0
   });
   
-  // Check if user has connected email account
+  // Check if user has connected emailt account
   useEffect(() => {
     const checkEmailConnection = async () => {
       if (!user) return;
