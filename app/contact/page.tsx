@@ -224,7 +224,7 @@ export default function ContactPage() {
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
                   <div className="aspect-w-16 aspect-h-9 h-64 w-full">
                     <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.146751391478!2d2.337760915437089!3d48.874247179288906!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e3c8be7fb9d%3A0x9508301c4926a84c!2sParis%2C%20France!5e0!3m2!1sen!2sus!4v1624916297551!5m2!1sen!2sus"
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2518.677728728824!2d4.351710315745697!3d50.85034697953247!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c3c38006c7c7a1%3A0x40099ab2f4d6c10!2sBruxelles!5e0!3m2!1sfr!2sbe!4v1717690000000!5m2!1sfr!2sbe"
                       width="100%"
                       height="100%"
                       style={{ border: 0 }}
@@ -237,8 +237,8 @@ export default function ContactPage() {
                   <div className="p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">Siège social</h3>
                     <address className="not-italic text-gray-600">
-                      123 Boulevard Haussmann<br />
-                      75008 Paris, France
+                      Avenue Louise 54<br />
+                      1050 Bruxelles, Belgique
                     </address>
                   </div>
                 </div>
@@ -270,8 +270,8 @@ export default function ContactPage() {
                       </div>
                       <div className="ml-4">
                         <h3 className="text-lg font-semibold text-gray-900">Téléphone</h3>
-                        <a href="tel:+33123456789" className="mt-1 block text-blue-600 hover:text-blue-700">
-                          +33 1 23 45 67 89
+                        <a href="tel:+32489576565" className="mt-1 block text-blue-600 hover:text-blue-700">
+                          +32 489 57 65 65
                         </a>
                       </div>
                     </div>
@@ -283,9 +283,10 @@ export default function ContactPage() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Suivez-nous</h3>
                   <div className="flex space-x-4">
                     <a href="#" className="text-gray-400 hover:text-blue-600">
-                      <span className="sr-only">Twitter</span>
-                      <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                      <span className="sr-only">X</span>
+                      {/* X (Twitter) logo */}
+                      <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 1200 1227">
+                        <path d="M1147 0h-218l-329 417L271 0H53l396 527L0 1227h219l312-396 312 396h218L823 700zm-218 1047l-229-291-229 291H219l381-489 381 489z"/>
                       </svg>
                     </a>
                     <a href="#" className="text-gray-400 hover:text-blue-600">
