@@ -22,7 +22,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      {/* Use the global Sidebar component */}
+      {/* Only one Sidebar component */}
       <Sidebar 
         isMobileMenuOpen={isMobileMenuOpen} 
         setIsMobileMenuOpen={setIsMobileMenuOpen} 
@@ -59,7 +59,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
         
         {/* Page content */}
-        <div className="p-6">
+        <div>
           {children}
         </div>
       </main>
