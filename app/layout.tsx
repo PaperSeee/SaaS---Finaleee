@@ -4,8 +4,6 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { ThemeProvider } from '@/contexts/ThemeContext';
-import PublicHeader from '@/components/PublicHeader'
-import Footer from '@/components/Footer'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,12 +42,9 @@ export default function RootLayout({
           <AuthProvider>
             <LanguageProvider>
               <div className="flex min-h-screen flex-col">
-                {/* The PublicHeader will only appear on non-dashboard pages */}
-                <PublicHeader />
                 <div className="flex-grow pt-16 md:pt-20">
                   {children}
                 </div>
-                <Footer />
               </div>
             </LanguageProvider>
           </AuthProvider>
