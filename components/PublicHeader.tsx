@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
-import ThemeToggle from "./ThemeToggle";
 import { CustomLogo } from "./CustomLogo";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -54,7 +53,7 @@ export default function PublicHeader() {
           </div>
 
           {/* Desktop navigation */}
-          <nav className="hidden md:block">
+          <nav className="flex-1 flex justify-center">
             <ul className="flex items-center space-x-1 lg:space-x-6">
               <li>
                 <Link
@@ -84,19 +83,6 @@ export default function PublicHeader() {
               </li>
               <li>
                 <Link
-                  href="/testimonials"
-                  prefetch={false}
-                  className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                    isActive("/testimonials")
-                      ? "text-blue-600"
-                      : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
-                  }`}
-                >
-                  {t("header.testimonials")}
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/contact"
                   prefetch={false}
                   className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
@@ -111,14 +97,8 @@ export default function PublicHeader() {
             </ul>
           </nav>
 
-          {/* Right side - theme toggler, language selector, auth buttons */}
+          {/* Right side - auth buttons */}
           <div className="flex items-center gap-2 lg:gap-4">
-            <div className="hidden md:flex">
-              <ThemeToggle />
-            </div>
-
-            <div className="flex h-8 border-l border-gray-200 mx-2"></div>
-
             {isAuthenticated ? (
               <Link
                 href="/dashboard"
@@ -217,18 +197,6 @@ export default function PublicHeader() {
             {t("header.pricing")}
           </Link>
           <Link
-            href="/testimonials"
-            prefetch={false}
-            className={`block px-3 py-2 rounded-md text-base font-medium ${
-              isActive("/testimonials")
-                ? "text-blue-600 bg-blue-50"
-                : "text-gray-700 hover:bg-gray-50 hover:text-blue-600"
-            }`}
-            onClick={() => setIsMenuOpen(false)}
-          >
-            {t("header.testimonials")}
-          </Link>
-          <Link
             href="/contact"
             prefetch={false}
             className={`block px-3 py-2 rounded-md text-base font-medium ${
@@ -244,9 +212,7 @@ export default function PublicHeader() {
           {/* Mobile-specific items */}
           <div className="border-t border-gray-200 pt-4 pb-3">
             <div className="flex items-center justify-between px-3">
-              <div className="flex items-center">
-                <ThemeToggle />
-              </div>
+              <div className="flex items-center"></div>
               {!isAuthenticated && (
                 <Link
                   href="/auth/register"

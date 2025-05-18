@@ -62,11 +62,6 @@ export default function Footer() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/testimonials" className="text-base text-gray-500 hover:text-gray-900">
-                      {t('header.testimonials')}
-                    </Link>
-                  </li>
-                  <li>
                     <Link href="/faq" className="text-base text-gray-500 hover:text-gray-900">
                       FAQ
                     </Link>

@@ -18,19 +18,6 @@ export default function ThemeToggle() {
   
   return (
     <div className="relative flex items-center gap-2">
-      <button
-        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
-      >
-        {theme === "dark" ? (
-          <SunIcon className="h-5 w-5" />
-        ) : (
-          <MoonIcon className="h-5 w-5" />
-        )}
-        <span className="sr-only">
-          {theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-        </span>
-      </button>
       
       <div className="absolute right-0 top-full mt-2 w-36 origin-top-right rounded-lg border border-gray-200 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-800" 
            style={{ display: 'none' }} // Hidden by default, add dropdown logic if needed
