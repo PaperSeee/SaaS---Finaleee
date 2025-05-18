@@ -134,14 +134,14 @@ export default function PublicHeader() {
                   prefetch={false}
                   className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
                 >
-                  {t("header.login")}
+                  {t("header.signIn")}
                 </Link>
                 <Link
                   href="/auth/register"
                   prefetch={false}
                   className="inline-flex items-center justify-center rounded-lg border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition-colors hidden sm:inline-flex"
                 >
-                  {t("header.register")}
+                  {t("header.getStarted")}
                 </Link>
               </div>
             )}
@@ -254,7 +254,7 @@ export default function PublicHeader() {
                   className="inline-flex items-center justify-center rounded-lg border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition-colors sm:hidden"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  {t("header.register")}
+                  {t("header.getStarted")}
                 </Link>
               )}
             </div>

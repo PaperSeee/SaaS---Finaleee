@@ -114,8 +114,8 @@ const translations: Translations = {
       pricing: "Tarifs",
       testimonials: "Témoignages",
       contact: "Contact",
-      signIn: "Connexion",
-      getStarted: "Commencer",
+      signIn: "Se connecter",
+      getStarted: "S'inscrire",
       dashboard: "Tableau de bord"
     },
     hero: {
